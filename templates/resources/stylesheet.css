@@ -1,0 +1,14 @@
+.navbar-custom {
+    background-color: #e74c3c;
+}
+
+.nav-link {
+    color : #ffffff;
+    font-weight : bolder;
+    font-size : large;
+}
+
+.card-link-custom {
+    color : #000000;
+    font-weight : bold;
+}
