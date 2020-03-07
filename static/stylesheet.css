@@ -14,3 +14,15 @@
     color : #343a40;
     font-weight : bold;
 }
+
+.h1 {
+    color : #343a40;
+}
+
+.h6 {
+    color : #343a40
+}
+
+#map {
+    height: 100%;
+  }

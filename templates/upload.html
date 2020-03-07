@@ -11,6 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <link href="../static/stylesheet.css" rel="stylesheet">
+    <link href="../static/upload-stylesheet.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -22,6 +23,10 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="../static/functions.js"></script>
+
+    <!--Google Maps API-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"
+    async defer></script>
 </head>
 
 <body>
@@ -56,14 +61,37 @@
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Upload
             File</button>
 
+        <!-- Geolocation Stuff-->
+        <h5>Your Location: </h5>
+        <p id = "locationP">--here--</p>
+        <button onclick="getLocation()"></button>
+        <script>
+            var x = document.getElementById("locationP");
+
+            function getLocation() {
+                x.innerHTML="hi";
+              if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+              } else { 
+                x.innerHTML = "Geolocation is not supported by this browser.";
+              }
+            }
+            
+            function showPosition(position) {
+              x.innerHTML = "Latitude: " + position.coords.latitude + 
+              "<br>Longitude: " + position.coords.longitude;
+            }
+            </script>
+
         <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
 
                 <div class="modal-content">
-                    <div class="modal-body">
+                    <div class = "modal-header">
                         <h1>Upload Your File</h1>
-                        <hr/>
+                    </div>
+                    <div class="modal-body">
                         <form>
                             <div class="form-group">
                                 <h6>File Name:</h6>
@@ -190,5 +218,4 @@
         </form> -->
     </div>
 </body>
-
 </html>
