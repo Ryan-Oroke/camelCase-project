@@ -22,7 +22,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-    <script type="text/javascript" src="../static/functions.js"></script>
+    <script type="text/javascript" src="../static/upload.js"></script>
 
     <!--Google Maps API-->
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"
@@ -31,17 +31,17 @@
 
 <body>
     <nav class="navbar navbar-expand-lg justiy-content-between navbar-custom">
-        <a class="navbar-brand" href="#"><img src="../static/freedrop-logo.png" height="50" alt="LOGO"></a>
+        <a class="navbar-brand" href="#"><img src="../static/freedrop-logo.png" height="35" alt="LOGO"></a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="t01">Upload<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="./upload.html" style="t01">Upload<span class="sr-only">(current></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="navbar-text">Download</a>
+                    <a class="nav-link" href="./download.html" style="navbar-text">Download</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About Us<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="./about.html">About Us<span class="sr-only">(current></span></a>
                 </li>
             </ul>
             <form class="form-inline">
@@ -58,7 +58,7 @@
     <div class="container w-80">
         <!------------------------------------------------------------------------------->
         <!-- Going to try this as a modal here instead!-->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Upload
+        <button type="button" class="btn btn-primary" href="#myModal" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="openModal()">Upload
             File</button>
 
         <!-- Geolocation Stuff-->
@@ -84,12 +84,12 @@
             </script>
 
         <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-            aria-hidden="true">
+            id = "myModal" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
 
                 <div class="modal-content">
                     <div class = "modal-header">
-                        <h1>Upload Your File</h1>
+                        <h1 id="modalHead">Upload Your File</h1>
                     </div>
                     <div class="modal-body">
                         <form>
@@ -126,13 +126,13 @@
                                     <div class="col">
                                         <h6>Visible Distance</h6>
                                     </div>
-                                    <div class="col text-right" id="uploadTimeLabel">
+                                    <div class="col text-right" id="uploadDistLabel">
                                         <h6>1 Mile</h6>
                                     </div>
                                 </div>
 
                                 <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100"
-                                    step="0.5" onclick="distanceSlid(visibleDisctanceSlider)">
+                                    step="0.5" onclick="distanceSlid('uploadDistLabel')">
                             </div>
 
                             <div class="form-group">
@@ -140,13 +140,13 @@
                                     <div class="col">
                                         <h6>Time Online</h6>
                                     </div>
-                                    <div class="col text-right" id="uploadTimeLabel">
-                                        <h6>7 Days</h6>
+                                    <div class="col text-right">
+                                        <h6 id="uploadTimeLabel">7 Days</h6>
                                     </div>
                                 </div>
 
-                                <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100"
-                                    step="0.5" onclick="distanceSlid(visibleDisctanceSlider)">
+                                <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="100"
+                                    step="0.5">
                             </div>
 
                             <br>
@@ -172,7 +172,7 @@
 
                             <br>
 
-                            <button type="button" class="btn btn-primary float-left" disabled>Upload File!</button>
+                            <button type="button" class="btn btn-primary float-left" id = "submitFileBtn">Upload File!</button>
                         </form>
                     </div>
                 </div>
