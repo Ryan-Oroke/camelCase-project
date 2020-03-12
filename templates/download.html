@@ -11,11 +11,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <link href="../resources/stylesheet.css" rel="stylesheet">
-    
+
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script type="text/javascript" src="../resources/functions.js"></script>
+
+    <style>
+      #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
 </head>
 
 <body>
@@ -55,6 +62,46 @@
                     </ul>
                 </div>
             </div>
+            <div class="col-8" >
+                <h3 >Your Location</h3>
+                <div id="map"></div>
+                <script>
+            function initMap() {
+              // The location of Uluru
+              var uluru = {lat: 40.007649, lng: -105.265823};
+              // The map, centered at Uluru
+              var map = new google.maps.Map(
+                  document.getElementById('map'), {zoom: 14, center: uluru});
+              // The marker, positioned at Uluru
+              var marker = new google.maps.Marker({position: uluru, map: map});
+            }
+                </script>
+                <!--Load the API from the specified URL
+                * The async attribute allows the browser to render the page while the API loads
+                * The key parameter will contain your own API key (which is not needed for this tutorial)
+                * The callback parameter executes the initMap() function
+                -->
+                <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
+                </script>
+              </div>
+
+              <div class="col-8" >
+                <h3>Items Around You</h3>
+                <div class="card-deck" >
+                  <div class="card" style="width:250px" >
+                    <div class="card-body">
+                      <p class="card-text">This is a test paragraph <a class="btn btn-sm ml-3" href="#">Download</a></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+
+    </div>
+
+
+
 </body>
 
 </html>
