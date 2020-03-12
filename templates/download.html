@@ -77,7 +77,7 @@
               //need to comment this out after we get pins
               var marker = new google.maps.Marker({position: uluru, map: map});
               {% for fil in fils %}
-                var {{fil.name}} = new google.maps.Marker({lat: {{fil.long}}, lng: {{fil.lat}}}, map: map});
+                var id_{{fil.id}} = new google.maps.Marker({{lat: {{fil.long}}, lng: {{fil.lat}}}, map: map});
               {% endfor %}
             }
                 </script>
