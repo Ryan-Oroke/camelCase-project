@@ -28,7 +28,7 @@ class file_data_html(NamedTuple):
 
 @app.route('/')
 def root_route():
-    return render_template("master.html")
+    return render_template("index.html")
 
 
 @app.route('/upload')
@@ -39,6 +39,7 @@ def upload_page():
 @app.route('/download')
 def download_page():
     test_data = [file_data_html("test1", 40.015869, -105.279517, "dick", "123", 100, 12), file_data_html("test2", 40.016869, -105.279617, "dick", "123", 101, 34)]
+
 
 
     return render_template("download.html", fils=test_data)
