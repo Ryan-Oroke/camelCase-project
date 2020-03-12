@@ -16,8 +16,8 @@ class file_data_entry(NamedTuple):
     #file_path: str
     #file_password: str
 
-    #gps_lat: str
-    #gps_log: str
+    gps_lat: float
+    gps_long: float
     vis_dist: int
     #vis_time: int
 
@@ -28,14 +28,9 @@ class user_data_entry(NamedTuple):
     user_name: str  # plain text
     password_hash: str  # hashlib
 
-    #first_name: str
-    #last_name: str
-    #email: str
-
-
-def to_file_data_entry(dict):
-    dict.pop('_id')
-    return file_data_entry(**dict)
+    first_name: str
+    last_name: str
+    email: str
 
 
 """
@@ -70,7 +65,9 @@ class DB_info:
         self.coll_file = self.db[self.file_coll_name]
         self.coll_user = self.db[self.user_coll_name]
 
-        # collection.create_index([("user_name", ???)])
+        self.coll_file.create_index([("gps_lat", pymongo.DESCENDING), ("gps_long", pymongo.ASCENDING)])
+
+        self.coll_user.create_index("user_name", unique=True, dropDups=1)
 
         self.connected = True
 
@@ -78,39 +75,48 @@ class DB_info:
         bson_data = entry._asdict()
         x = self.coll_file.insert_one(bson_data)
 
-    def find(self, query_info):
-        data = self.coll_file.find(query_info)
-        return map(lambda d: to_file_data_entry(d), data)
+    def get_all_files_in_range(self, lat, long, gps_radius, max_files):
+        lat_min = lat - gps_radius
+        lat_max = lat + gps_radius
+        long_min = long - gps_radius
+        long_max = long + gps_radius
+        cursor = self.coll_file.find({"gps_lat": {"$gte": lat_min, "$lte": lat_max}, "gps_long": {"$gte": long_min, "$lte": long_max}}).limit(max_files)
+        return cursor
 
-    def create_user(self, user_name, password_plain_text):
+    def try_create_user(self, user_name, password_plain_text, first_name, last_name, email):
         password_hash = hashlib.sha256(password_plain_text.encode('utf-8')).hexdigest()
-        user_info = user_data_entry(user_name, password_hash)
+        user_info = user_data_entry(user_name, password_hash, first_name, last_name, email)
         bson_data = user_info._asdict()
-        x = self.coll_user.insert_one(bson_data)
-        return x
+        try:
+            res = self.coll_user.insert_one(bson_data)
+            return res.inserted_id
+        except:
+            return None
 
-    def get_user(self, user_name, password_plain_text):
+    def try_get_user(self, user_name, password_plain_text):
         password_hash = hashlib.sha256(password_plain_text.encode('utf-8')).hexdigest()
         x = self.coll_user.find_one({"user_name": user_name, "password_hash": password_hash})
-        return x
+        return x  # so if x is None then username or password is wrong
 
 
 if __name__ == "__main__":
     db_info = DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")
     db_info.connect()
 
-    for i in range(0,10):
-        sample_data = file_data_entry("test" + str(i),i)  # ._asdict()
-        x = db_info.ins_file(sample_data)
+    db_info.ins_file(file_data_entry("test0", 0, 0, 10))
+    db_info.ins_file(file_data_entry("test1", 1, 1.5, 10))
+    db_info.ins_file(file_data_entry("test2", 1.9, 0.8, 10))
+    db_info.ins_file(file_data_entry("test3", 2.1, 0.1, 10))
+    db_info.ins_file(file_data_entry("test4", 3.2, 3, 10))
+    db_info.ins_file(file_data_entry("test5", 1.3, 2.1, 10))
 
-    data = db_info.find({"vis_dist": { "$gt": 7 }})
+    data = db_info.get_all_files_in_range(0,0,2,6)
 
-    print(x)
-    print(data)
     print(list(data))
 
     # user stuff
-    db_info.create_user("test", "password")
-    x = db_info.get_user("test", "password")
+    x = db_info.try_create_user("test1", "password", "te", "st", "a@b.c")
+    print(x)
+    x = db_info.try_get_user("test2", "password")
     print(x)
 
