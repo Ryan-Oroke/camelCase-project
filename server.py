@@ -6,6 +6,7 @@
 import os
 
 from flask import Flask, render_template, jsonify, abort, request, make_response, url_for
+
 # from flask_cors import CORS  # is this needed
 
 app = Flask(__name__)
@@ -13,9 +14,9 @@ app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption
 
 # CORS(app)
 
-@app.route('/')
+@app.route('/test')
 def start():
-    return render_template("index.html")  # react will make index.html
+    return render_template("home.html", var_name="tests")  # react will make index.html
 
 
 @app.route('/test')
