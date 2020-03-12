@@ -33,11 +33,18 @@
                     <a class="nav-link" href="about">About Us<span class="sr-only">(current></span></a>
                 </li>
             </ul>
-            <form class="form-inline">
-                <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username">
-                <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password">
-                <button class="btn btn-dark my-2 my-sm-0" type="login">Sign In</button>
+            {% if signed_in %}
+            <h2>Hello, {{ cur_user }}.</h2>
+            <form class="form-inline" method="POST">
+                <input class="btn btn-dark" type="submit" name="sign_out" value="Sign Out">
             </form>
+            {% else %}
+            <form class="form-inline" method="POST">
+                <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username" name="username">
+                <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password" name="password">
+                <input class="btn btn-dark" type="submit" name="sign_in" value="Sign In">
+            </form>
+            {% endif %}
         </div>
     </nav>
     <br>

@@ -6,7 +6,7 @@
 import os
 from typing import NamedTuple
 
-from flask import Flask, render_template, jsonify, abort, request, make_response, url_for
+from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session
 
 # from flask_cors import CORS  # is this needed
 
@@ -26,33 +26,84 @@ class file_data_html(NamedTuple):
     id: int
 
 
-@app.route('/')
+def get_signed_in_info():
+    if 'cur_user' in session and session['cur_user'] is not None:
+        cur_user = session['cur_user']
+        signed_in = True
+    else:
+        cur_user = ''
+        signed_in = False
+    return signed_in, cur_user
+
+
+def handle_login_post():
+    if 'sign_in' in request.form:  # we assume that username and password is there
+        username = request.form['username']
+        password_plain_text = request.form['password']
+        print(username, password_plain_text)
+
+        # try login
+        is_valid_user = True
+
+        if True:
+            session['cur_user'] = username
+        else:
+            session['cur_user'] = None
+
+    elif 'sign_out' in request.form:
+        session['cur_user'] = None
+
+
+@app.route('/', methods=['GET', 'POST'])
 def root_route():
-    return render_template("index.html")
+    if request.method == 'POST':
+        handle_login_post()
+
+    signed_in, cur_user = get_signed_in_info()
+
+    return render_template("index.html", signed_in=signed_in, cur_user=cur_user)
 
 
-@app.route('/upload')
+@app.route('/upload', methods=['GET', 'POST'])
 def upload_page():
-    return render_template("upload.html")
+    if request.method == 'POST':
+        handle_login_post()
+
+    signed_in, cur_user = get_signed_in_info()
+
+    return render_template("upload.html", signed_in=signed_in, cur_user=cur_user)
 
 
-@app.route('/download')
+@app.route('/download', methods=['GET', 'POST'])
 def download_page():
+    if request.method == 'POST':
+        handle_login_post()
+
+    signed_in, cur_user = get_signed_in_info()
+
     test_data = [file_data_html("test1", 40.015869, -105.279517, "dick", "123", 100, 12), file_data_html("test2", 40.016869, -105.279617, "dick", "123", 101, 34)]
 
+    return render_template("download.html", fils=test_data, signed_in=signed_in, cur_user=cur_user)
 
 
-    return render_template("download.html", fils=test_data)
-
-
-@app.route('/navbar')
+@app.route('/navbar', methods=['GET', 'POST'])
 def navbar_page():
-    return render_template("navbar.html")
+    if request.method == 'POST':
+        handle_login_post()
+
+    signed_in, cur_user = get_signed_in_info()
+
+    return render_template("navbar.html", signed_in=signed_in, cur_user=cur_user)
 
 
-@app.route('/about')
+@app.route('/about', methods=['GET', 'POST'])
 def about_page():
-    return render_template("about.html")
+    if request.method == 'POST':
+        handle_login_post()
+
+    signed_in, cur_user = get_signed_in_info()
+
+    return render_template("about.html", signed_in=signed_in, cur_user=cur_user)
 
 
 if __name__ == "__main__":
