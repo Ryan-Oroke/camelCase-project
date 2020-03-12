@@ -14,14 +14,35 @@ app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption
 
 # CORS(app)
 
-@app.route('/test')
-def start():
-    return render_template("home.html", var_name="tests")  # react will make index.html
+@app.route('/')
+def root_route():
+    return render_template("master.html")
 
 
-@app.route('/test')
-def test():
-    return jsonify({'hello': True})
+@app.route('/login')
+def login_page():
+    return render_template("login.html")
+
+
+@app.route('/upload')
+def upload_page():
+    return render_template("upload.html")
+
+
+@app.route('/download')
+def download_page():
+    return render_template("download.html")
+
+
+@app.route('/navbar')
+def navbar_page():
+    return render_template("navbar.html")
+
+
+@app.route('/about')
+def about_page():
+    return render_template("about.html")
+
 
 if __name__ == "__main__":
     app.run(threaded=True, host='0.0.0.0', port=5000, debug=True)
