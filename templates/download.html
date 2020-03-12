@@ -68,12 +68,17 @@
                 <script>
             function initMap() {
               // The location of Uluru
+              //will need to replace this with user long/lat
               var uluru = {lat: 40.007649, lng: -105.265823};
               // The map, centered at Uluru
               var map = new google.maps.Map(
                   document.getElementById('map'), {zoom: 14, center: uluru});
               // The marker, positioned at Uluru
+              //need to comment this out after we get pins
               var marker = new google.maps.Marker({position: uluru, map: map});
+              {% for fil in fils %}
+                var {{fil.name}} = new google.maps.Marker({lat: {{fil.long}}, lng: {{fil.lat}}}, map: map});
+              {% endfor %}
             }
                 </script>
                 <!--Load the API from the specified URL
@@ -90,9 +95,25 @@
                 <h3>Items Around You</h3>
                 <div class="card-deck" >
                   <div class="card" style="width:250px" >
-                    <div class="card-body">
-                      <p class="card-text">This is a test paragraph <a class="btn btn-sm ml-3" href="#">Download</a></p>
-                    </div>
+                        {% for fil in fils %}
+                        <div class="card" style="width: 30rem;">
+                            {% if fil.format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico"%}
+                            <img class="card-img-top" src="{{fil.path}}" alt="Card image cap">
+                            {% else %}
+                                <h5 class="card-title">Preview Not Avaliable</h5>
+                            {% endif %}
+                            <div class="card-body">
+                              <h5 class="card-title">{{fil.title}}</h5>
+                             <p class="card-text">{{fil.dist}} meters away/p>
+                                <p class="card-text">Format: {{fil.format}}/p>
+                                <form>
+                                <input type="submit" value="{{fil.id}}">
+                              <a href="#" class="btn btn-primary">Download</a>
+                            </form>
+                            </div>
+                          </div>
+                        {% endfor %}
+                   </div>
                   </div>
                 </div>
               </div>
