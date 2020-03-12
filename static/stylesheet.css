@@ -8,7 +8,21 @@
     font-size : large;
 }
 
+.nav-link:hover {color : #343a40; }
+
 .card-link-custom {
-    color : #000000;
+    color : #343a40;
     font-weight : bold;
 }
+
+.h1 {
+    color : #343a40;
+}
+
+.h6 {
+    color : #343a40
+}
+
+#map {
+    height: 100%;
+  }

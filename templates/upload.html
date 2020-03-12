@@ -10,12 +10,24 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
     <link href="{{ url_for('static', filename='stylesheet.css') }}" rel="stylesheet">
-    
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <link href="{{ url_for('static', filename='upload-stylesheet.css') }}" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='functions.js') }}"></script>
+
+    <!--Google Maps API-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"
+    async defer></script>
 </head>
 
 <body>
@@ -24,13 +36,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="t01">Upload<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="./upload.html" style="t01">Upload<span class="sr-only">(current></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="navbar-text">Download</a>
+                    <a class="nav-link" href="./download.html" style="navbar-text">Download</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About Us<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="./about.html">About Us<span class="sr-only">(current></span></a>
                 </li>
             </ul>
             <form class="form-inline">
@@ -42,44 +54,169 @@
     </nav>
     <br>
 
-    <div class="container-fluid w-80">
-        <div class="row">
-            <div class="col-2">
-                <!--Side Menu-->
-                <div class="card">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a class="card-link-custom" src="./upload.html">Upload a File</a></li>
-                        <li class="list-group-item"><a class="card-link-custom" src="./download.html">Download a File</a>
-                        </li>
-                        <li class="list-group-item"><a class="card-link-custom" src="#">About FreeDrop</a></li>
-                    </ul>
+    <!-- Going to try this as a modal here instead!-->
+
+    <div class="container w-80">
+        <!------------------------------------------------------------------------------->
+        <!-- Going to try this as a modal here instead!-->
+        <button type="button" class="btn btn-primary" href="#myModal" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="openModal()">Upload
+            File</button>
+
+        <!-- Geolocation Stuff-->
+        <h5>Your Location: </h5>
+        <p id = "locationP">--here--</p>
+        <button onclick="getLocation()"></button>
+        <script>
+            var x = document.getElementById("locationP");
+
+            function getLocation() {
+                x.innerHTML="hi";
+              if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+              } else { 
+                x.innerHTML = "Geolocation is not supported by this browser.";
+              }
+            }
+            
+            function showPosition(position) {
+              x.innerHTML = "Latitude: " + position.coords.latitude + 
+              "<br>Longitude: " + position.coords.longitude;
+            }
+            </script>
+
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+            id = "myModal" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+
+                <div class="modal-content">
+                    <div class = "modal-header">
+                        <h1 id="modalHead">Upload Your File</h1>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <h6>File Name:</h6>
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="text" class="form-control" id="inputFileName"
+                                            aria-describedby="fileNameHelp" placeholder="File Name">
+                                        <small id="fileUploadHelp" class="form-text text-muted">This name will help
+                                            others find your
+                                            file.</small>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <input type="file" clas="form-control-file" id="local_image">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+                                <h6>Description:</h6>
+                                <textarea class="form-control" id="inputFileDescription" rows="3"
+                                    placeholder="A little bit about the file you are uploading. This will help others ensure they have the correct file."></textarea>
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6>Visible Distance</h6>
+                                    </div>
+                                    <div class="col text-right" id="uploadDistLabel">
+                                        <h6>1 Mile</h6>
+                                    </div>
+                                </div>
+
+                                <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100"
+                                    step="0.5" onclick="distanceSlid('uploadDistLabel')">
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6>Time Online</h6>
+                                    </div>
+                                    <div class="col text-right">
+                                        <h6 id="uploadTimeLabel">7 Days</h6>
+                                    </div>
+                                </div>
+
+                                <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="100"
+                                    step="0.5">
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6> File Password (Optional):</h6>
+                                        <input type="text" class="form-control" id="inputFilePassword"
+                                            aria-describedby="filePasswordHelp" placeholder="File Password">
+                                        <small id="filePasswordHelp" class="form-text text-muted"> Make your file
+                                            private by adding a password.</small>
+                                    </div>
+                                    <div class="col">
+                                        <h6> Your Password:</h6>
+                                        <input type="password" class="form-control" id="inputAcctPassword"
+                                            aria-describedby="fileAcctHelp" placeholder="Account Password">
+                                        <small id="AcctPasswordHelp" class="form-text text-muted">
+                                            Enter your account password.</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <button type="button" class="btn btn-primary float-left" id = "submitFileBtn">Upload File!</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-
-            <div class="col-8">
-                <!--Upload Main Form-->
-                    <form>
-                        <div class="form-group">
-                            <label for="inputFileName"><h3>File Name:</h3></label>
-                            <input type="text" class="form-control" id="inputFileName"
-                                aria-describedby="fileNameHelp" placeholder="File Name">
-                            <small id="fileUploadHelp" class="form-text text-muted">This name will help other find your file.</small>
-                        </div>
-                        <div class="form-group">
-                            <input type="file" clas="form-control-file" id="local_image">
-                        </div>
-                        <div class="form-group">
-                            <label for="inputFileDescription"><h6>Description:</h6></label>
-                            <textarea class="form-control" id="inputFileDescription" rows="3" placeholder="Description of your file."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="visibleDistanceSlider"><h6>Visible Distance</h6></label>
-                            <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100" step="0.5" onclick="distanceSlid()">
-                            <label for="visibleDistanceSlider" id="visibleDistanceLabel"><h5>1000 Feet</h5></label>
-                        </div>
-                    </form>
-            </div>
         </div>
-</body>
 
+        <!------------------------------------------------------------------------------->
+
+        <!-- <div class="page-header">
+        <h1> Upload A File</h1>
+    </div> -->
+        <!--Upload Main Form-->
+        <!-- <form>
+            <div class="form-group">
+                <label for="inputFileName">
+                    <h6>File Name:</h6>
+                </label>
+                <input type="text" class="form-control" id="inputFileName" aria-describedby="fileNameHelp"
+                    placeholder="File Name">
+                <small id="fileUploadHelp" class="form-text text-muted">This name will help others find your
+                    file.</small>
+            </div>
+            <div class="form-group">
+                <input type="file" clas="form-control-file" id="local_image">
+            </div>
+            <div class="form-group">
+                <label for="inputFileDescription">
+                    <h6>Description:</h6>
+                </label>
+                <textarea class="form-control" id="inputFileDescription" rows="3"
+                    placeholder="A little bit about the file you are uploading. This will help others ensure they have the correct file."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="visibleDistanceSlider">
+                    <h6>Visible Distance</h6>
+                </label>
+                <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100" step="0.5"
+                    onclick="distanceSlid()">
+                <label for="visibleDistanceSlider" id="visibleDistanceLabel">
+                    <h5>1000 Feet</h5>
+                </label>
+            </div>
+        </form> -->
+    </div>
+</body>
 </html>
