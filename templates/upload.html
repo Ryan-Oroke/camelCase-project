@@ -97,15 +97,15 @@
 
                 <div class="modal-content">
                     <div class = "modal-header">
-                        <h1 id="modalHead">Upload Your File</h1>
+                        <h1 id="modalHead">File Upload</h1>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form method="POST">
                             <div class="form-group">
                                 <h6>File Name:</h6>
                                 <div class="row">
                                     <div class="col">
-                                        <input type="text" class="form-control" id="inputFileName"
+                                        <input type="text" class="form-control" id="inputFileName" name="inputFileName"
                                             aria-describedby="fileNameHelp" placeholder="File Name">
                                         <small id="fileUploadHelp" class="form-text text-muted">This name will help
                                             others find your
@@ -123,7 +123,7 @@
 
                             <div class="form-group">
                                 <h6>Description:</h6>
-                                <textarea class="form-control" id="inputFileDescription" rows="3"
+                                <textarea class="form-control" id="inputFileDescription" rows="3" name="inputFileDescription
                                     placeholder="A little bit about the file you are uploading. This will help others ensure they have the correct file."></textarea>
                             </div>
 
@@ -139,7 +139,7 @@
                                     </div>
                                 </div>
 
-                                <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100"
+                                <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100" name="visibleDistance"
                                     step="0.5" onclick="distanceSlid('uploadDistLabel')">
                             </div>
 
@@ -153,7 +153,7 @@
                                     </div>
                                 </div>
 
-                                <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="100"
+                                <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="100"  name="visibleTime"
                                     step="0.5">
                             </div>
 
@@ -163,14 +163,14 @@
                                 <div class="row">
                                     <div class="col">
                                         <h6> File Password (Optional):</h6>
-                                        <input type="text" class="form-control" id="inputFilePassword"
+                                        <input type="text" class="form-control" id="inputFilePassword" name="inputFilePassword"
                                             aria-describedby="filePasswordHelp" placeholder="File Password">
                                         <small id="filePasswordHelp" class="form-text text-muted"> Make your file
                                             private by adding a password.</small>
                                     </div>
                                     <div class="col">
                                         <h6> Your Password:</h6>
-                                        <input type="password" class="form-control" id="inputAcctPassword"
+                                        <input type="password" class="form-control" id="inputAcctPassword" name="filePassword"
                                             aria-describedby="fileAcctHelp" placeholder="Account Password">
                                         <small id="AcctPasswordHelp" class="form-text text-muted">
                                             Enter your account password.</small>
@@ -180,7 +180,7 @@
 
                             <br>
 
-                            <button type="button" class="btn btn-primary float-left" id = "submitFileBtn">Upload File!</button>
+                            <button type="button" class="btn btn-primary float-left" id = "submitFileBtn">Upload</button>
                         </form>
                     </div>
                 </div>
