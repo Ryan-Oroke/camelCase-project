@@ -11,9 +11,7 @@ from flask import Flask, render_template, jsonify, abort, request, make_response
 # from flask_cors import CORS  # is this needed
 
 app = Flask(__name__)
-app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption
-
-# CORS(app)
+app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption (using session)
 
 
 class file_data_html(NamedTuple):
@@ -24,6 +22,11 @@ class file_data_html(NamedTuple):
     path: str
     dist: float
     id: int
+    description: str
+    date: str
+    password_hash: str
+    num_likes: int
+    creator: str
 
 
 def get_signed_in_info():
@@ -36,6 +39,11 @@ def get_signed_in_info():
     return signed_in, cur_user
 
 
+def get_downloadable_files(from_mongo):
+    return [file_data_html("test1", 40.015869, -105.279517, "dick", "123", 100, 12, "abc", "today", "password", 0, "user1"),
+            file_data_html("test2", 40.016869, -105.279617, "dick", "456", 101, 34, "def", "tomorrow", "password", 1, "user2")]
+
+
 def handle_login_post():
     if 'sign_in' in request.form:  # we assume that username and password is there
         username = request.form['username']
@@ -45,7 +53,7 @@ def handle_login_post():
         # try login
         is_valid_user = True
 
-        if True:
+        if is_valid_user:
             session['cur_user'] = username
         else:
             session['cur_user'] = None
@@ -81,9 +89,17 @@ def download_page():
 
     signed_in, cur_user = get_signed_in_info()
 
-    test_data = [file_data_html("test1", 40.015869, -105.279517, "dick", "123", 100, 12), file_data_html("test2", 40.016869, -105.279617, "dick", "123", 101, 34)]
-
-    return render_template("download.html", fils=test_data, signed_in=signed_in, cur_user=cur_user)
+    if request.method == 'POST':
+        test_data = get_downloadable_files(False)
+        for data in test_data:
+            if str(data.id) in request.form:
+                path = data.path
+                break
+        print(path)
+        return render_template("download.html", fils=test_data, signed_in=signed_in, cur_user=cur_user)  # download file
+    else:
+        test_data = get_downloadable_files(True)
+        return render_template("download.html", fils=test_data, signed_in=signed_in, cur_user=cur_user)
 
 
 @app.route('/navbar', methods=['GET', 'POST'])
