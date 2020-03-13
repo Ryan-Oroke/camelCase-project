@@ -4,14 +4,17 @@
 # and the post get stuff
 
 import os
+import hashlib
 from typing import NamedTuple
 
-from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session
+from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory
 
 # from flask_cors import CORS  # is this needed
 
 app = Flask(__name__)
 app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption (using session)
+
+UPLOAD_DIRECTORY = 'upload_files'
 
 
 class file_data_html(NamedTuple):
@@ -25,6 +28,7 @@ class file_data_html(NamedTuple):
     description: str
     date: str
     death_date: float
+    req_password: bool
     password_hash: str
     num_likes: int
     creator: str
@@ -40,9 +44,10 @@ def get_signed_in_info():
     return signed_in, cur_user
 
 
-def get_downloadable_files(from_mongo):
-    return [file_data_html("test1", 40.015869, -105.279517, "dick", "123", 100, 12, "abc", "today", "password", 0, "user1"),
-            file_data_html("test2", 40.016869, -105.279617, "dick", "456", 101, 34, "def", "tomorrow", "password", 1, "user2")]
+def get_downloadable_files():
+
+    return [file_data_html("test1", 40.015869, -105.279517, "dick", "test.jpg", 100, 12, "abc", "today", "tomorrow", True, hashlib.sha256("password".encode('utf-8')).hexdigest(), 0, "user1"),
+            file_data_html("test2", 40.016869, -105.279617, "dick", "test.jpg", 101, 34, "def", "tomorrow", "Mar 3", True, hashlib.sha256("password1".encode('utf-8')).hexdigest(), 1, "user2")]
 
 
 def handle_login_post():
@@ -90,17 +95,29 @@ def download_page():
 
     signed_in, cur_user = get_signed_in_info()
 
+    test_data = get_downloadable_files()
+
     if request.method == 'POST':
-        test_data = get_downloadable_files(False)
+        path = ""
+        password_hash = None
+        req_password = False
         for data in test_data:
             if str(data.id) in request.form:
                 path = data.path
+                password_hash = data.password_hash
+                req_password = data.req_password
                 break
         print(path)
-        return render_template("download.html", fils=test_data, signed_in=signed_in, cur_user=cur_user)  # download file
+
+        if req_password:
+            input_password = 'password'# input_password = request.form['file_password']
+            input_password_hash = hashlib.sha256(input_password.encode('utf-8')).hexdigest()
+            if input_password_hash != password_hash:
+                return render_template("download.html", fils=test_data, signed_in=signed_in, cur_user=cur_user, failed_password=True)
+
+        return send_from_directory(UPLOAD_DIRECTORY, path, as_attachment=True)
     else:
-        test_data = get_downloadable_files(True)
-        return render_template("download.html", fils=test_data, signed_in=signed_in, cur_user=cur_user)
+        return render_template("download.html", fils=test_data, signed_in=signed_in, cur_user=cur_user, failed_password=False)
 
 
 @app.route('/navbar', methods=['GET', 'POST'])

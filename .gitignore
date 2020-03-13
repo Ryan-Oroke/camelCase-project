@@ -2,3 +2,4 @@ venv/
 .idea
 .vscode
 .DS_store
+upload_files/
