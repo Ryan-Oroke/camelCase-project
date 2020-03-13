@@ -5,21 +5,23 @@ import collections
 import bson
 import uuid
 import hashlib
+import time
+import os
 
 
 class file_data_entry(NamedTuple):
-    #user_created_name: int  # change to uuid
+    #user_created_name: int  # change to ObjectID or username
 
     file_name: str
     #file_description: str
-    #file_date: str
-    #file_path: str
+    file_create_time: float  # secs from
+    file_path: str
     #file_password: str
 
     gps_lat: float
     gps_long: float
     vis_dist: int
-    #vis_time: int
+    vis_time: float  # secs
 
     #num_likes: int
 
@@ -75,13 +77,30 @@ class DB_info:
         bson_data = entry._asdict()
         x = self.coll_file.insert_one(bson_data)
 
+    def __remove_end_of_life(self, file_list):
+        now = time.time()
+        end_of_life_files = [f for f in file_list if f['file_create_time'] + f['vis_time'] < now]
+        live_files = [f for f in file_list if f['file_create_time'] + f['vis_time'] >= now]
+
+        test = [{'_id': file['_id']} for file in end_of_life_files]
+        for file in end_of_life_files:
+            self.coll_file.delete_one({"_id": file['_id']})
+            try:
+                os.remove(file['file_path'])
+            except:
+                pass
+
+        return live_files
+
     def get_all_files_in_range(self, lat, long, gps_radius, max_files):
         lat_min = lat - gps_radius
         lat_max = lat + gps_radius
         long_min = long - gps_radius
         long_max = long + gps_radius
         cursor = self.coll_file.find({"gps_lat": {"$gte": lat_min, "$lte": lat_max}, "gps_long": {"$gte": long_min, "$lte": long_max}}).limit(max_files)
-        return cursor
+        file_list = list(cursor)
+        file_list = self.__remove_end_of_life(file_list)
+        return file_list
 
     def try_create_user(self, user_name, password_plain_text, first_name, last_name, email):
         password_hash = hashlib.sha256(password_plain_text.encode('utf-8')).hexdigest()
@@ -103,16 +122,18 @@ if __name__ == "__main__":
     db_info = DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")
     db_info.connect()
 
-    db_info.ins_file(file_data_entry("test0", 0, 0, 10))
-    db_info.ins_file(file_data_entry("test1", 1, 1.5, 10))
-    db_info.ins_file(file_data_entry("test2", 1.9, 0.8, 10))
-    db_info.ins_file(file_data_entry("test3", 2.1, 0.1, 10))
-    db_info.ins_file(file_data_entry("test4", 3.2, 3, 10))
-    db_info.ins_file(file_data_entry("test5", 1.3, 2.1, 10))
+    db_info.ins_file(file_data_entry("test0", time.time(), "", 0, 0, 10, 2.0))
+    db_info.ins_file(file_data_entry("test1", time.time(), "", 1, 1.5, 10, 2.0))
+    db_info.ins_file(file_data_entry("test2", time.time(), "", 1.9, 0.8, 10, 0))
+    db_info.ins_file(file_data_entry("test3", time.time(), "", 2.1, 0.1, 10, 0))
+    db_info.ins_file(file_data_entry("test4", time.time(), "", 3.2, 3, 10, 2.0))
+    db_info.ins_file(file_data_entry("test5", time.time(), "", 1.3, 2.1, 10, 0))
+
+    time.sleep(1)
 
     data = db_info.get_all_files_in_range(0,0,2,6)
 
-    print(list(data))
+    print(data)
 
     # user stuff
     x = db_info.try_create_user("test1", "password", "te", "st", "a@b.c")

@@ -113,9 +113,9 @@
                               <h5 class="card-title">{{fil.title}}</h5>
                              <p class="card-text">{{fil.dist}} meters away </p>
                                 <p class="card-text">Format: {{fil.format}} </p>
-                                <form>
-                                <input class="btn btn-primary" type="submit" name="{{fil.id}}" value="download">
-                            </form>
+                                <form  method="POST">
+                                    <input class="btn btn-primary" type="submit" name="{{fil.id}}" value="download">
+                                </form>
                             </div>
                           </div>
                         {% endfor %}

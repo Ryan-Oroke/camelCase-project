@@ -24,6 +24,7 @@ class file_data_html(NamedTuple):
     id: int
     description: str
     date: str
+    death_date: float
     password_hash: str
     num_likes: int
     creator: str
