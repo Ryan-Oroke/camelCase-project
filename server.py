@@ -82,6 +82,7 @@ def root_route():
 def upload_page():
     if request.method == 'POST':
         handle_login_post()
+        print(request.form)
 
     signed_in, cur_user = get_signed_in_info()
 

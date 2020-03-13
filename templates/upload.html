@@ -88,6 +88,8 @@
             function showPosition(position) {
               x.innerHTML = "Latitude: " + position.coords.latitude + 
               "<br>Longitude: " + position.coords.longitude;
+              document.getElementById("gps_lat_form").value = position.coords.latitude;
+              document.getElementById("gps_long_form").value = position.coords.longitude;
             }
             </script>
 
@@ -123,7 +125,7 @@
 
                             <div class="form-group">
                                 <h6>Description:</h6>
-                                <textarea class="form-control" id="inputFileDescription" rows="3" name="inputFileDescription
+                                <textarea class="form-control" id="inputFileDescription" rows="3" name="inputFileDescription"
                                     placeholder="A little bit about the file you are uploading. This will help others ensure they have the correct file."></textarea>
                             </div>
 
@@ -180,7 +182,10 @@
 
                             <br>
 
-                            <button type="button" class="btn btn-primary float-left" id = "submitFileBtn">Upload</button>
+                            <input type="hidden" name="gps_lat" id="gps_lat_form">
+                            <input type="hidden" name="gps_long" id="gps_long_form">
+
+                            <input class="btn btn-dark float-left" type="submit" name="upload" value="Upload" id="submitFileBtn">
                         </form>
                     </div>
                 </div>
