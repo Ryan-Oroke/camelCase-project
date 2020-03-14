@@ -4,7 +4,7 @@
 <html lang="en">
 
 <head>
-    <title>Form</title>
+    <title>Free Drop</title>
     <!--Bootstrap-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,6 +24,22 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="../static/functions.js"></script>
+    <script type="text/javascript">
+    	function login_request() {
+    		var usrn=document.getElementById("usrn");
+    		var pwd=document.getElementById("pwd");
+    		var strArr=["username=", usrn, "&pwd=", pwd];
+    		var str=strArr.join();
+    		var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				document.getElementById("demo").innerHTML = "Hi, ".concat(usrn);
+				}
+			};
+			xhttp.open("POST", "some_url", true);
+			xhttp.send(str);
+    	}
+    </script>
 </head>
 
 <body>
@@ -41,7 +57,11 @@
                     <a class="nav-link" href="#">About Us<span class="sr-only">(current></span></a>
                 </li>
             </ul>
-            <form class="form-inline">
+            <button class="btn btn-dark my-2 my-sm-0" type="login" onclick="./register.html">Register</button>
+            &thinsp;
+            <b>/</b>
+            &thinsp;
+            <form class="form-inline" action="login_request()">
                 <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username" id="usrn">
                 <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password" id="pwd">
                 <button class="btn btn-dark my-2 my-sm-0" type="login">Sign In</button>
