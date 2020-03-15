@@ -10,61 +10,9 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
             <link href="../static/stylesheet.css" rel="stylesheet">
-            <script type="text/javascript">
-                function validate_pass(){
-                    var lowerCaseLetters = /(?=.*[a-z])/g;
-                    var upperCaseLetters = /(?=.*[A-Z])/g;
-                    var numbers = /(?=.*\d)/g;
-                    var minLength = 8;
-                    var error_lower=false;
-                    var error_upper=false;
-                    var error_digit=false;
-                    var error_min_length=false;
-                    var error_match=false;
-                    if (document.getElementById("thePass1").value.match(lowerCaseLetters)) {
-                        error_lower=true;
-                        document.getElementById("lower").innerHTML="";
-                    }else{
-                        document.getElementById("lower").innerHTML="At least one lower case letter required. ";
-                    }
-                    if (document.getElementById("thePass1").value.match(upperCaseLetters)) {
-                        error_upper=true;
-                        document.getElementById("upper").innerHTML="";
-                    }else{
-                        document.getElementById("upper").innerHTML="At least one upper case letter required. ";
-                    }
-                    
-                    if (document.getElementById("thePass1").value.match(numbers)) {
-                        error_digit=true;
-                        document.getElementById("digit").innerHTML="";
-                    }else{
-                        document.getElementById("digit").innerHTML="At least one digit required. ";
-                    }
-                    if (document.getElementById("thePass1").value.length >= minLength) {
-                        error_min_length=true;
-                        document.getElementById("minlength").innerHTML="";
-                    }else{
-                        document.getElementById("minlength").innerHTML="Password should be at least 8 characters. ";
-                    }
-                    if (document.getElementById("thePass1").value == document.getElementById("thePass2").value) {
-                        error_match=true;
-                        document.getElementById("match").innerHTML="";
-                    }else{
-                        document.getElementById("match").innerHTML="Two passwords are not the same. ";
-                    }
-                    if (error_match && error_digit && error_upper && error_lower && error_min_length) {
-                        return true;
-                    }else{
-                        $("#modal_for_pass_error").modal();
-                        return false;
-                    }
-                    
-
-                }
-            </script>
-            
+            <script type="text/javascript" src="../static/functions.js"></script>
         </head>
-        <body>
+        <body onload="javascript:cookie_handle()">
             <nav class="navbar navbar-expand-lg justiy-content-between navbar-custom">
         <a class="navbar-brand" href="#"><img src="../static/freedrop-logo.png" height="35" alt="LOGO"></a>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -79,13 +27,7 @@
                     <a class="nav-link" href="#">About Us<span class="sr-only">(current></span></a>
                 </li>
             </ul>
-            <form class="form-inline" action="login_request()">
-                <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username" id="usrn">
-                <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password" id="pwd">
-                <button class="btn btn-dark my-2 my-sm-0" type="login">Sign In</button>
-            </form>
-            &thinsp;
-            <button class="btn btn-dark my-2 my-sm-0" type="login" onclick="location.href='forget_password.html';">Forget Password</button>
+            <div class="form-inline" id="login_part"></div>
         </div>
     </nav>
             <br>
