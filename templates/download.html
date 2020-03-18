@@ -12,16 +12,22 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <link href="../static/stylesheet.css" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
     <script type="text/javascript" src="../static/functions.js"></script>
 
     <style>
-      #map {
-        height: 400px;
-        width: 100%;
-       }
+        #map {
+            height: 400px;
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -49,10 +55,10 @@
     </nav>
     <br>
 
-    <div class="container-fluid w-80">
+    <div class="container w-80">
         <div class="row">
             <div class="col-2">
-                <!--Side Menu-->
+                <!-- Side Menu
                 <div class="card">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"><a class="card-link-custom" href="#" src="#">Upload a File</a></li>
@@ -60,21 +66,41 @@
                         </li>
                         <li class="list-group-item"><a class="card-link-custom" href="#" src="#">About FreeDrop</a></li>
                     </ul>
-                </div>
+                </div> -->
             </div>
-            <div class="col-8" >
-                <h3 >Your Location</h3>
+            <div class="col-8">
+                <h3>Nearby Files</h3>
                 <div id="map"></div>
                 <script>
-            function initMap() {
-              // The location of Uluru
-              var uluru = {lat: 40.007649, lng: -105.265823};
-              // The map, centered at Uluru
-              var map = new google.maps.Map(
-                  document.getElementById('map'), {zoom: 14, center: uluru});
-              // The marker, positioned at Uluru
-              var marker = new google.maps.Marker({position: uluru, map: map});
-            }
+                    var latVar = -50, lonVar = 0.0;
+
+                    function getLocation() {
+                      if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(setPosition);
+                      } else {
+                          alert("Could not get location!");
+                      }
+                    }
+
+                    function setPosition(position){
+                        latVar = position.coords.latitude;
+                        lonVar = position.coords.longitude;
+                        
+                    }
+
+                    function initMap()
+                    {
+                        // The location of Uluru
+                        getLocation();
+                        //var uluru = { lat: latVar, lng: lonVar };
+                        var uluru = navigator.geolocation.getCurrentPosition;
+                        // The map, centered at Uluru
+                        alert(latVar);
+                        var map = new google.maps.Map(
+                            document.getElementById('map'), { zoom: 14, center: { lat: latVar, lng: lonVar }});
+                        // The marker, positioned at Uluru
+                        var marker = new google.maps.Marker({ position:{ uluru }, map: map });
+                    }
                 </script>
                 <!--Load the API from the specified URL
                 * The async attribute allows the browser to render the page while the API loads
@@ -82,20 +108,30 @@
                 * The callback parameter executes the initMap() function
                 -->
                 <script async defer
-                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
-                </script>
-              </div>
-
-              <div class="col-8" >
-                <h3>Items Around You</h3>
-                <div class="card-deck" >
-                  <div class="card" style="width:250px" >
-                    <div class="card-body">
-                      <p class="card-text">This is a test paragraph <a class="btn btn-sm ml-3" href="#">Download</a></p>
-                    </div>
-                  </div>
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
+                    </script>
+            </div>
+            <br>
+            <div class="col">
+                <div class="row">
+                    <form class="form-inline">
+                        <h3>Download an Item</h3>
+                        <input class="form-control mr-sm-2 float-right" type="text" placeholder="Search" aria-label="search">
+                        <button type="button" class="btn btn-primary text-right" href="#myModal" data-toggle="modal"
+                            data-target=".bd-example-modal-lg" onclick="openModal()">Upload
+                            File</button>
+                    </form>
                 </div>
-              </div>
+
+                <div class="card-deck">
+                    <div class="card" style="width:250px">
+                        <div class="card-body">
+                            <p class="card-text">This is a test paragraph <a class="btn btn-sm ml-3"
+                                    href="#">Download</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
