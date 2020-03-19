@@ -26,3 +26,11 @@
 #map {
     height: 100%;
   }
+
+.modal-header {
+    background-color : #e74c3c;
+}
+
+.btn-dark .btn-primary{
+    color : #343a40;
+}

@@ -25,25 +25,25 @@
 
     <style>
         #map {
-            height: 400px;
-            width: 100%;
+            height: 450px;
+            width: 155%;
         }
     </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg justiy-content-between navbar-custom">
-        <a class="navbar-brand" href="#"><img src="../static/freedrop-logo.png" height="50" alt="LOGO"></a>
+        <a class="navbar-brand" href="#"><img src="../static/freedrop-logo.png" height="40" alt="LOGO"></a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="t01">Upload<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="#" style="t01">Map<span class="sr-only">(current></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="navbar-text">Download</a>
+                    <a class="nav-link" href="#" style="navbar-text">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About Us<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="#">About<span class="sr-only">(current></span></a>
                 </li>
             </ul>
             <form class="form-inline">
@@ -56,50 +56,47 @@
     <br>
 
     <div class="container w-80">
-        <div class="row">
-            <div class="col-2">
-                <!-- Side Menu
-                <div class="card">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a class="card-link-custom" href="#" src="#">Upload a File</a></li>
-                        <li class="list-group-item"><a class="card-link-custom" href="#" src="#">Download a File</a>
-                        </li>
-                        <li class="list-group-item"><a class="card-link-custom" href="#" src="#">About FreeDrop</a></li>
-                    </ul>
-                </div> -->
-            </div>
+        <div class="row justify-content-left">
             <div class="col-8">
-                <h3>Nearby Files</h3>
+                <!-- <h3>Nearby Files</h3> -->
                 <div id="map"></div>
                 <script>
                     var latVar = -50, lonVar = 0.0;
 
-                    function getLocation() {
-                      if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(setPosition);
-                      } else {
-                          alert("Could not get location!");
-                      }
+                    function getLocation()
+                    {
+
+                        var position = navigator.geolocation.getCurrentPosition(coords.longitude);
+                        alert(position);
+                        if (navigator.geolocation)
+                        {
+                            var latlon = position.coords.latitude + "," + position.coords.longitude;
+                            alert(latlon);
+                        } else
+                        {
+                            alert("Could not get location!");
+                        }
                     }
 
-                    function setPosition(position){
-                        latVar = position.coords.latitude;
-                        lonVar = position.coords.longitude;
-                        
+                    function setPosition(position)
+                    {
+
+
                     }
 
                     function initMap()
                     {
+                        //Add a higher order function/"promises"
                         // The location of Uluru
-                        getLocation();
+                        //getLocation();
                         //var uluru = { lat: latVar, lng: lonVar };
-                        var uluru = navigator.geolocation.getCurrentPosition;
+                        var uluru = { lat: 40.050367699999995, lng: -105.24975579999999 };
                         // The map, centered at Uluru
-                        alert(latVar);
+                        //alert(latVar);
                         var map = new google.maps.Map(
-                            document.getElementById('map'), { zoom: 14, center: { lat: latVar, lng: lonVar }});
+                            document.getElementById('map'), { zoom: 14, center: uluru });
                         // The marker, positioned at Uluru
-                        var marker = new google.maps.Marker({ position:{ uluru }, map: map });
+                        var marker = new google.maps.Marker({ position: uluru, map: map });
                     }
                 </script>
                 <!--Load the API from the specified URL
@@ -111,30 +108,141 @@
                     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
                     </script>
             </div>
-            <br>
-            <div class="col">
-                <div class="row">
-                    <form class="form-inline">
-                        <h3>Download an Item</h3>
-                        <input class="form-control mr-sm-2 float-right" type="text" placeholder="Search" aria-label="search">
-                        <button type="button" class="btn btn-primary text-right" href="#myModal" data-toggle="modal"
-                            data-target=".bd-example-modal-lg" onclick="openModal()">Upload
-                            File</button>
-                    </form>
-                </div>
-
-                <div class="card-deck">
-                    <div class="card" style="width:250px">
-                        <div class="card-body">
-                            <p class="card-text">This is a test paragraph <a class="btn btn-sm ml-3"
-                                    href="#">Download</a></p>
+        </div>
+        <br>
+        <br>
+        <!-- List -->
+        <div class="row justify-content-between">
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="search">
+            </form>
+            <button type="button" class="btn btn-primary mr-sm" href="#myModal" data-toggle="modal"
+                data-target=".bd-example-modal-lg" onclick="openModal()">Upload
+                File</button>
+        </div>
+        <hr>
+        <div class="card-deck">
+            <div class="card" style="width:250px">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <p class="font-weight-bold">Name</p>
+                        </div>
+                        <div class="col">
+                            <p>Description</p>
+                        </div>
+                        <div class="col">
+                            <p>Upload Date</p>
+                        </div>
+                        <div class="col">
+                            <p>Likes</p>
+                        </div>
+                        <div class="col">
+                            <a class="btn btn-dark ml-3" href="#" hidden>Download</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
     </div>
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+            id = "myModal" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+
+                <div class="modal-content">
+                    <div class = "modal-header">
+                        <h1 id="modalHead">Upload Your File</h1>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <h6>File Name:</h6>
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="text" class="form-control" id="inputFileName"
+                                            aria-describedby="fileNameHelp" placeholder="File Name">
+                                        <small id="fileUploadHelp" class="form-text text-muted">This name will help
+                                            others find your
+                                            file.</small>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <input type="file" clas="form-control-file" id="local_image">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+                                <h6>Description:</h6>
+                                <textarea class="form-control" id="inputFileDescription" rows="3"
+                                    placeholder="A little bit about the file you are uploading. This will help others ensure they have the correct file."></textarea>
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6>Visible Distance</h6>
+                                    </div>
+                                    <div class="col text-right" id="uploadDistLabel">
+                                        <h6>1 Mile</h6>
+                                    </div>
+                                </div>
+
+                                <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100"
+                                    step="0.5" onclick="distanceSlid('uploadDistLabel')">
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6>Time Online</h6>
+                                    </div>
+                                    <div class="col text-right">
+                                        <h6 id="uploadTimeLabel">7 Days</h6>
+                                    </div>
+                                </div>
+
+                                <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="100"
+                                    step="0.5">
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6> File Password (Optional):</h6>
+                                        <input type="text" class="form-control" id="inputFilePassword"
+                                            aria-describedby="filePasswordHelp" placeholder="File Password">
+                                        <small id="filePasswordHelp" class="form-text text-muted"> Make your file
+                                            private by adding a password.</small>
+                                    </div>
+                                    <div class="col">
+                                        <h6> Your Password:</h6>
+                                        <input type="password" class="form-control" id="inputAcctPassword"
+                                            aria-describedby="fileAcctHelp" placeholder="Account Password">
+                                        <small id="AcctPasswordHelp" class="form-text text-muted">
+                                            Enter your account password.</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <button type="button" class="btn btn-primary float-left" id = "submitFileBtn">Upload File!</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 
