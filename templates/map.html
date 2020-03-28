@@ -10,6 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="../static/darkly.css" rel="stylesheet">
     <link href="../static/stylesheet.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -43,101 +44,144 @@
                 </li>
             </ul>
             <form class="form-inline">
-                <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username">
-                <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password">
+                <input class="form-control mr-sm-2 border-0" type="text" placeholder="Username" aria-label="Username">
+                <input class="form-control mr-sm-2 border-0" type="password" placeholder="Password"
+                    aria-label="Password">
                 <button class="btn btn-dark my-2 my-sm-0" type="login">Sign In</button>
             </form>
         </div>
     </nav>
     <br>
+    
     <!-- A Side By Side Layout -->
     <div class="container-fluid">
         <div class="row">
-            <div class="col-7">
-                <div id="map"></div>
+            <div class="col-5">
+                <!-- <div id="map"></div>
                 <script async defer
                     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
                     </script>
-                <hr>
-                <button type="button" class="btn btn-dark mr-sm" href="#myModal" data-toggle="modal"
-                    data-target=".bd-example-modal-lg" onclick="openModal()">Upload a
-                    File</button>
+                <hr> -->
+
             </div>
-            <div class="col-5">
+            <div class="col-7">
                 <div class="row">
                     <form class="form-inline">
                         <div class="col" align="right">
-                            <input type="text" class="form-control" id="inputFileSearch" style="width:400px;"
+                            <input type="text" class="form-control" id="inputFileSearch" style="width:500px;"
                                 aria-describedby="fileSearchHelp" placeholder="Search by keyword, date, or location.">
-
+                        </div>
+                        <div class="col justify-content-center">
+                            <button type="button" class="btn btn-danger float-right" href="#uploadModal" data-toggle="modal"
+                                data-target=".bd-upload-modal-lg" onclick="openUploadModal()">Upload a File</button>
                         </div>
                     </form>
                 </div>
                 <br>
-                
-                <div class="card-deck d-flex flex-column">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col">
-                                    <h6 style="font-weight:bold;">Sample_File</h6>
-                                    <p>Distance: X Feet </p>
-                                </div>
-                                <div class="col" align="right">
-                                    <a class="btn btn-dark ml-3" href="#">Download</a>
+
+                <div class="card-deck d-flex flex-column" style="margin-left:2px; margin-right:10px;">
+
+                    <div class="row">
+                        <div class="card justify-content-center">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 style="font-weight:bold;">Sample_File</h5>
+                                    </div>
+                                    <div class="col" align="right">
+                                        <div class="row">
+                                            <button type="button" class="btn btn-dark btn-sm" href="#inspectModal"
+                                                data-toggle="modal" data-target=".bd-inspect-modal-lg"
+                                                onclick="openInspectModal()">Inspect File</button>
+                                            <a class="btn btn-danger btn-sm ml-3" href="#">Download</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <p>First 50 chars of description than a ...</p>
-                            
+                            <div class="card-body">
+                                <p style="font-weight:bold;">Distance: X Feet </p>
+                                <p>First 50 chars of description than a ...</p>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div align="center">
-                                <img src="../static/sample-photo.JPG" width="400px">
+
+                        <div class="card justify-content-center">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 style="font-weight:bold;">Fun Text</h5>
+                                    </div>
+                                    <div class="col" align="right">
+                                        <div class="row">
+                                            <button type="button" class="btn btn-dark btn-sm" href="#insFpectModal"
+                                            data-toggle="modal" data-target=".bd-inspect-modal-lg"
+                                            onclick="openInspectModal()">Inspect File</button>                                            
+                                            <a class="btn btn-danger btn-sm ml-3" href="#">Download</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p style="font-weight:bold;">Distance: 187 ft. </p>
+                                <p>To be, or not to be, that is the question:
+                                    Whether 'tis nobler in the mind to suffer
+                                    The slings and arrows of outrageous fortune,
+                                    Or to take arms against a sea of troubles
+                                    And by opposing end them. To die—to sleep,
+                                    No more; and by a sleep to say we end
+                                    The heart-ache and the thousand natural shocks
+                                    That flesh is heir to: 'tis a consummation
+                                    Devoutly to be wish'd. </p>
                             </div>
                         </div>
                     </div>
                     <hr>
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 style="font-weight:bold;">Sample_File</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <p>Distance: X Feet </p>
-                                </div>
-                                <div class="col" align="right">
-                                    <a class="btn btn-dark ml-3" href="#">Download</a>
+                    <div class="row">
+                        <div class="card justify-content-center">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 style="font-weight:bold;">Photo of Boulder</h5>
+                                    </div>
+                                    <div class="col" align="right">
+                                        <div class="row">
+                                            <button type="button" class="btn btn-dark btn-sm" href="#insFpectModal"
+                                            data-toggle="modal" data-target=".bd-inspect-modal-lg"
+                                            onclick="openInspectModal()">Inspect File</button>                                            
+                                            <a class="btn btn-danger btn-sm ml-3" href="#">Download</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <p>First 50 chars of description than a ...</p>
                             <div class="card-body">
-                                <div align="center">
-                                    <img src="../static/sample-photo.JPG" width="400px">
-                                </div>
+                                <p style="font-weight:bold;">Distance: 27 ft. </p>
+                                <p>A picture taken from the Flagstaff ampitheatre. This was a cold morning in January of
+                                    2019.</p>
                             </div>
+                            <img class="card-img-top" src="../static/sample-photo.JPG">
                         </div>
-                    </div>
-                    <hr>
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h6 style="font-weight:bold;">Sample_File</h6>
-                                    <p>Distance: X Feet </p>
-                                </div>
-                                <div class="col" align="right">
-                                    <a class="btn btn-dark ml-3" href="#">Download</a>
+
+                        <div class="card justify-content-center">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 style="font-weight:bold;">New York City Photo</h5>
+                                    </div>
+                                    <div class="col" align="right">
+                                        <div class="row">
+                                            <button type="button" class="btn btn-dark btn-sm" href="#insFpectModal"
+                                            data-toggle="modal" data-target=".bd-inspect-modal-lg"
+                                            onclick="openInspectModal()">Inspect File</button>                                            
+                                            <a class="btn btn-danger btn-sm ml-3" href="#">Download</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <p>First 50 chars of description than a ...</p>
                             <div class="card-body">
-                                <div align="center">
-                                    <img src="../static/sample-photo.JPG" width="400px">
-                                </div>
+                                <p style="font-weight:bold;">Distance: 290 ft. </p>
+                                <p>A picture from atop a New York skyscraper!</p>
                             </div>
+                            <img class="card-img-top" src="../static/sample-photo-2.JPG">
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -165,60 +209,11 @@
     <hr>
     <br>
 
-    <!-- Footer goes here -->
+    <!--Footer Goes Here-->
 
-
-    <!-- <div class="container w-80">
-        <div class="row justify-content-left">
-            <div class="col-8">
-                <h3>Nearby Files</h3>
-                <div id="map"></div>
-                <script async defer
-                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
-                    </script>
-            </div>
-        </div>
-        <br>
-        <br>
-        
-        <div class="row justify-content-between">
-            <form class="form-inline">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="search">
-            </form>
-            <button type="button" class="btn btn-primary mr-sm" href="#myModal" data-toggle="modal"
-                data-target=".bd-example-modal-lg" onclick="openModal()">Upload
-                File</button>
-        </div>
-        <hr>
-        <div class="card-deck">
-            <div class="card" style="width:250px">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col">
-                            <p class="font-weight-bold">Name</p>
-                        </div>
-                        <div class="col">
-                            <p>Description</p>
-                        </div>
-                        <div class="col">
-                            <p>Upload Date</p>
-                        </div>
-                        <div class="col">
-                            <p>Likes</p>
-                        </div>
-                        <div class="col">
-                            <a class="btn btn-dark ml-3" href="#" hidden>Download</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    </div> -->
-
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        id="myModal" aria-hidden="true">
+    <!-- Upload Modal -->
+    <div class="modal fade bd-upload-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        id="uploadModal" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
 
             <div class="modal-content">
@@ -306,7 +301,7 @@
 
                         <br>
 
-                        <button type="button" class="btn btn-dark float-left" id="submitFileBtn">Upload
+                        <button type="button" class="btn btn-danger float-left" id="submitFileBtn">Upload
                             File!</button>
                     </form>
                 </div>
@@ -314,7 +309,21 @@
         </div>
     </div>
 
+    <!--Inspection Modal-->
+    <div class="modal fade bd-inspect-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        id="inspectModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
 
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 id="modalHead" style="font-weight: bold;">File_Name</h1>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 
