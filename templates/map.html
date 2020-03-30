@@ -7,6 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/aa11b9054d.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
@@ -310,7 +311,7 @@
     </div>
 
     <!--Inspection Modal-->
-    <div class="modal fade bd-inspect-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    <!-- <div class="modal fade bd-inspect-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         id="inspectModal" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
 
@@ -323,7 +324,41 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+
+    <div class="modal fade bd-inspect-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;" 
+    id="inspectModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title" id="myLargeModalLabel">File Name</h1>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <h5> Uploaded by: username</h5>
+                    </div>
+                    <div class="col" align="right">                          
+                            <a class="btn btn-danger btn-sm ml-3" href="#">Download</a>
+                    </div>
+                </div>
+                <br>
+                <p>File Information:</p>
+                <label for="upload data"><span class="fas fa-upload"></span> Uploaded on: 02/03/2020</label> &nbsp  &nbsp  &nbsp 
+                <label for="upload data"><span class="fas fa-clock"></span> Available until: 02/010/2020</label> &nbsp  &nbsp  &nbsp 
+                <label for="likes"><span class="fas fa-heart"></span> 6527</label>   &nbsp  &nbsp  &nbsp 
+                <label for="downloads"><span class="fas fa-download"></span> 6527</label> &nbsp  &nbsp  &nbsp 
+                <label for="distance"><span class="fas fa-people-arrows"></span> 1 mile</label> &nbsp  &nbsp  &nbsp                
+                <embed src="../static/test.pdf" type="application/pdf" width="100%" height="600px" />
+                
+               
+            </div>
+          </div>
+        </div>
+      </div>
 
 </body>
 
