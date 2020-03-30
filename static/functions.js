@@ -127,7 +127,11 @@ function initMap()
     navigator.geolocation.getCurrentPosition(function (position)
     {
       var pos = { lat: position.coords.latitude, lng: position.coords.longitude };
-
+      var cirlcle = new google.maps.Circle({
+          map: map,
+          center: pos,
+          radius: 1000 //In meters
+      });
       infoWindow.setPosition(pos);
       infoWindow.setContent('Location Found');
       infoWindow.open(map);
