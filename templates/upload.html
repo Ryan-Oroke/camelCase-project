@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- ID Names -->
+
 <head>
     <title>Form</title>
     <!--Bootstrap-->
@@ -31,7 +33,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg justiy-content-between navbar-custom">
+    <!-- <nav class="navbar navbar-expand-lg justiy-content-between navbar-custom">
         <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='freedrop-logo.png') }}" height="35" alt="LOGO"></a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
@@ -58,7 +60,8 @@
             </form>
             {% endif %}
         </div>
-    </nav>
+    </nav> -->
+    <!-- <% include ../templates/navbar.html %> -->
     <br>
 
     <!-- Going to try this as a modal here instead!-->
@@ -66,7 +69,7 @@
     <div class="container w-80">
         <!------------------------------------------------------------------------------->
         <!-- Going to try this as a modal here instead!-->
-        <button type="button" class="btn btn-primary" href="#myModal" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="openModal()">Upload
+        <button type="button" class="btn btn-primary float-right" href="#myModal" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="openModal()">Upload
             File</button>
 
         <!-- Geolocation Stuff-->

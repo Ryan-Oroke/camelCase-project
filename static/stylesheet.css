@@ -1,5 +1,58 @@
-.navbar-custom {
+/* NOTE: Styles are arranged in alphabetical order
+    ->Numbers before letters
+    ->Letters before special characters (!,-,@,etc) */
+
+.btn-danger{
+    background-color:#e74c3c;
+}
+
+.btn-dark .btn-primary{
+    color : #343a40;
+}
+
+/* .card-body {
+    background-color:#e9e9e9;
+} */
+
+/* .card-header {
+    background-color: #ff7060;
+} */
+
+.card-link-custom {
+    color : #343a40;
+    font-weight : bold;
+}
+
+/* .custom-range::-ms-thumb {
     background-color: #e74c3c;
+} */
+
+
+.h1 {
+    color : #343a40;
+}
+
+.h6 {
+    color : #343a40
+}
+
+.hr-custom {
+    background-color: #e74c3c;
+    height: 2px;
+}
+
+#map {
+    height: 600px;
+    width: 100%;
+}
+
+.modal-header {
+    background-color : #e74c3c;
+}
+
+.navbar-custom {
+    /* background-color: #e74c3c; */
+    background-color:#e74c3c !important;
 }
 
 .nav-link {
@@ -10,19 +63,3 @@
 
 .nav-link:hover {color : #343a40; }
 
-.card-link-custom {
-    color : #343a40;
-    font-weight : bold;
-}
-
-.h1 {
-    color : #343a40;
-}
-
-.h6 {
-    color : #343a40
-}
-
-#map {
-    height: 100%;
-  }

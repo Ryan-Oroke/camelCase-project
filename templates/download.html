@@ -12,18 +12,27 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <link href="{{ url_for('static', filename='stylesheet.css') }}" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='functions.js') }}"></script>
 
-    <style>
+    <!--<style>
       #map {
         height: 400px;
         width: 100%;
        }
-    </style>
+    </style>-->
 </head>
+<!-- <style>
+    body { background: #414141 !important; }
+</style> -->
 
 {% if failed_password %}
 <body onload="alert('incorrect password')">
@@ -31,7 +40,7 @@
 <body>
 {% endif %}
     <nav class="navbar navbar-expand-lg justiy-content-between navbar-custom">
-        <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='freedrop-logo.png') }}" height="35" alt="LOGO"></a>
+        <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='freedrop-logo.png') }}" height="40" alt="LOGO"></a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
@@ -59,46 +68,153 @@
         </div>
     </nav>
     <br>
-
-    <div class="container-fluid w-80">
+    <!-- A Side By Side Layout -->
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-2">
-                <!--Side Menu-->
-                <div class="card">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a class="card-link-custom" href="#" src="#">Upload a File</a></li>
-                        <li class="list-group-item"><a class="card-link-custom" href="#" src="#">Download a File</a>
-                        </li>
-                        <li class="list-group-item"><a class="card-link-custom" href="#" src="#">About FreeDrop</a></li>
-                    </ul>
+            <div class="col-7">
+                <div id="map"></div>
+                <script async defer
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
+                    </script>
+                <hr>
+                <button type="button" class="btn btn-dark mr-sm" href="#myModal" data-toggle="modal"
+                    data-target=".bd-example-modal-lg" onclick="openModal()">Upload a
+                    File</button>
+            </div>
+            <div class="col-5">
+                <div class="row">
+                    <form class="form-inline">
+                        <div class="col" align="right">
+                            <input type="text" class="form-control" id="inputFileSearch" style="width:400px;"
+                                aria-describedby="fileSearchHelp" placeholder="Search by keyword, date, or location.">
+
+                        </div>
+                    </form>
+                </div>
+                <br>
+                
+                <div class="card-deck d-flex flex-column">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col">
+                                    <h6 style="font-weight:bold;">Sample_File</h6>
+                                    <p>Distance: X Feet </p>
+                                </div>
+                                <div class="col" align="right">
+                                    <a class="btn btn-dark ml-3" href="#">Download</a>
+                                </div>
+                            </div>
+                            <p>First 50 chars of description than a ...</p>
+                            
+                        </div>
+                        <div class="card-body">
+                            <div align="center">
+                                <img src="../static/sample-photo.JPG" width="400px">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 style="font-weight:bold;">Sample_File</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <p>Distance: X Feet </p>
+                                </div>
+                                <div class="col" align="right">
+                                    <a class="btn btn-dark ml-3" href="#">Download</a>
+                                </div>
+                            </div>
+                            <p>First 50 chars of description than a ...</p>
+                            <div class="card-body">
+                                <div align="center">
+                                    <img src="../static/sample-photo.JPG" width="400px">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h6 style="font-weight:bold;">Sample_File</h6>
+                                    <p>Distance: X Feet </p>
+                                </div>
+                                <div class="col" align="right">
+                                    <a class="btn btn-dark ml-3" href="#">Download</a>
+                                </div>
+                            </div>
+                            <p>First 50 chars of description than a ...</p>
+                            <div class="card-body">
+                                <div align="center">
+                                    <img src="../static/sample-photo.JPG" width="400px">
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
                 </div>
             </div>
-            <div class="col-8" >
-                <h3 >Your Location</h3>
+
+            <!-- <div class="col-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div align="center">
+                            <img src="../static/sample-profile.png" width="100px" alt="Profile Photo">
+                            <br>
+                            <h5> User_Name </h5>
+                            <hr>
+                            <h6>#MyTag!</h6>
+                            <button type="button" class="btn btn-dark mr-sm" href="#myModal" data-toggle="modal"
+                                data-target=".bd-example-modal-lg" onclick="openModal()">Upload a
+                                File</button>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+
+    </div>
+    <br>
+    <hr>
+    <br>
+
+    <!-- Footer goes here -->
+
+
+    <div class="container w-80">
+        <!-- <div class="row justify-content-left">
+            <div class="col-8">
+                <h3>Nearby Files</h3>
                 <div id="map"></div>
                 <script>
-            function initMap() {
-              // The location of Uluru
-              //will need to replace this with user long/lat
-              var uluru = {lat: 40.007649, lng: -105.265823};
-              // The map, centered at Uluru
-              var map = new google.maps.Map(
-                  document.getElementById('map'), {zoom: 14, center: uluru});
-              // The marker, positioned at Uluru
-              //need to comment this out after we get pins
-              var marker = new google.maps.Marker({position: uluru, map: map});
-              {% for fil in fils %}
-                var id_{{fil.id}} = new google.maps.Marker({position: {lat: {{fil.lat}}, lng: {{fil.long}} }, map: map});
-              {% endfor %}
-            }
+                function initMap() {
+                // The location of Uluru
+                //will need to replace this with user long/lat
+                var uluru = {lat: 40.007649, lng: -105.265823};
+                // The map, centered at Uluru
+                var map = new google.maps.Map(
+                    document.getElementById('map'), {zoom: 14, center: uluru});
+                // The marker, positioned at Uluru
+                //need to comment this out after we get pins
+                var marker = new google.maps.Marker({position: uluru, map: map});
+                {% for fil in fils %}
+                    var id_{{fil.id}} = new google.maps.Marker({position: {lat: {{fil.lat}}, lng: {{fil.long}} }, map: map});
+                {% endfor %}
+                }
                 </script>
-                <!--Load the API from the specified URL
+                <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
+                /*
+                * Load the API from the specified URL
                 * The async attribute allows the browser to render the page while the API loads
                 * The key parameter will contain your own API key (which is not needed for this tutorial)
                 * The callback parameter executes the initMap() function
-                -->
-                <script async defer
-                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
+                */
                 </script>
               </div>
 
@@ -125,10 +241,142 @@
                         {% endfor %}
                    </div>
                   </div>
-                </div>
-              </div>
+            </div>
+        </div> -->
+        <br>
+        <br>
+        
+        <div class="row justify-content-between">
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="search">
+            </form>
+            <button type="button" class="btn btn-primary mr-sm" href="#myModal" data-toggle="modal"
+                data-target=".bd-example-modal-lg" onclick="openModal()">Upload
+                File</button>
         </div>
+        <hr>
+        <div class="card-deck">
+            <div class="card" style="width:250px">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <p class="font-weight-bold">Name</p>
+                        </div>
+                        <div class="col">
+                            <p>Description</p>
+                        </div>
+                        <div class="col">
+                            <p>Upload Date</p>
+                        </div>
+                        <div class="col">
+                            <p>Likes</p>
+                        </div>
+                        <div class="col">
+                            <a class="btn btn-dark ml-3" href="#" hidden>Download</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        id="myModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 id="modalHead" style="font-weight: bold;">Upload Your File</h1>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <h6>File Name:</h6>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" class="form-control" id="inputFileName"
+                                        aria-describedby="fileNameHelp" placeholder="File Name">
+                                    <small id="fileUploadHelp" class="form-text text-muted">This name will help
+                                        others find your
+                                        file.</small>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <input type="file" clas="form-control-file" id="local_image">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <h6>Description:</h6>
+                            <textarea class="form-control" id="inputFileDescription" rows="3"
+                                placeholder="A little bit about the file you are uploading. This will help others ensure they have the correct file."></textarea>
+                        </div>
+
+                        <br>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <h6>Visible Distance</h6>
+                                </div>
+                                <div class="col text-right" id="uploadDistLabel">
+                                    <h6>1 Mile</h6>
+                                </div>
+                            </div>
+
+                            <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100"
+                                step="0.5" onclick="distanceSlid('uploadDistLabel')">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <h6>Time Online</h6>
+                                </div>
+                                <div class="col text-right">
+                                    <h6 id="uploadTimeLabel">7 Days</h6>
+                                </div>
+                            </div>
+
+                            <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="100"
+                                step="0.5">
+                        </div>
+
+                        <br>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <h6> File Password (Optional):</h6>
+                                    <input type="text" class="form-control" id="inputFilePassword"
+                                        aria-describedby="filePasswordHelp" placeholder="File Password">
+                                    <small id="filePasswordHelp" class="form-text text-muted"> Make your file
+                                        private by adding a password.</small>
+                                </div>
+                                <div class="col">
+                                    <h6> Your Password:</h6>
+                                    <input type="password" class="form-control" id="inputAcctPassword"
+                                        aria-describedby="fileAcctHelp" placeholder="Account Password">
+                                    <small id="AcctPasswordHelp" class="form-text text-muted">
+                                        Enter your account password.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <button type="button" class="btn btn-dark float-left" id="submitFileBtn">Upload
+                            File!</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 
