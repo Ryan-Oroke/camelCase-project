@@ -282,7 +282,9 @@
                                     <img src="{{ url_for('static', filename=fil.path) }}" width="400px">
                                 </div>
                                 {% else %}
-                                <h5 class="card-title">Preview Not Avaliable</h5>
+                                <div align="center">
+                                    <img src="{{ url_for('static', filename='no_preview_available.jfif') }}" width="400px">
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
