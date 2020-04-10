@@ -15,8 +15,9 @@ function getLocation(initMap)
   }
 }
 
+// This code was moved into download.html
 //For more information or much of this code, see: https://developers.google.com/maps/documentation/javascript/geolocation
-// var map, infoWindow;
+var map, infoWindow;
 
 //function initMap()
 //{
@@ -104,33 +105,33 @@ function getLocation(initMap)
 //      }
 //    ]
 //  });
-
-  infoWindow = new google.maps.InfoWindow;
-
-  if (navigator.geolocation)
-  {
-    navigator.geolocation.getCurrentPosition(function (position)
-    {
-      var pos = { lat: position.coords.latitude, lng: position.coords.longitude };
-      var cirlcle = new google.maps.Circle({
-          map: map,
-          center: pos,
-          radius: 1000 //In meters
-      });
-      infoWindow.setPosition(pos);
-      infoWindow.setContent('Location Found');
-      infoWindow.open(map);
-      map.setCenter(pos);
-    }, function ()
-    {
-      handleLocationError(true, infoWindow, map.getCenter());
-    });
-  } else
-  {
-    //Browser does not support geolocation
-    handleLocationError(false, infoWindow, map.getCenter());
-  }
-}
+//
+//  infoWindow = new google.maps.InfoWindow;
+//
+//  if (navigator.geolocation)
+//  {
+//    navigator.geolocation.getCurrentPosition(function (position)
+//    {
+//      var pos = { lat: position.coords.latitude, lng: position.coords.longitude };
+//      var cirlcle = new google.maps.Circle({
+//          map: map,
+//          center: pos,
+//          radius: 1000 //In meters
+//      });
+//      infoWindow.setPosition(pos);
+//      infoWindow.setContent('Location Found');
+//      infoWindow.open(map);
+//      map.setCenter(pos);
+//    }, function ()
+//    {
+//      handleLocationError(true, infoWindow, map.getCenter());
+//    });
+//  } else
+//  {
+//    //Browser does not support geolocation
+//    handleLocationError(false, infoWindow, map.getCenter());
+//  }
+//}
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos)
 {

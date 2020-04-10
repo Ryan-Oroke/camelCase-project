@@ -58,8 +58,8 @@ def get_downloadable_files():
     # I thing mongo will store "test_user/P1540913.JPG" for the path and then we need to add the UPLOAD_DIRECTORY part
     # or we could only store "P1540913.JPG" and add UPLOAD_DIRECTORY and user name
 
-    return [file_data_html("test1", 40.015869, -105.279517, "jpg", os.path.join(UPLOAD_DIRECTORY, "test_user/P1540913.JPG"), 100, 12, "abc", "today", "tomorrow", False, "", 0, "test_user"),
-            file_data_html("test2", 40.016869, -105.279617, "jpg", os.path.join(UPLOAD_DIRECTORY, "test_user/P1540506.JPG"), 101, 34, "def", "tomorrow", "Mar 3", True, hashlib.sha256("password".encode('utf-8')).hexdigest(), 1, "test_user")]
+    return [file_data_html("test1", 40.015869, -105.279517, "jpg", os.path.join(UPLOAD_DIRECTORY, "test_user/P1540913.JPG").replace('\\', '/'), 100, 12, "abc", "today", "tomorrow", False, "", 0, "test_user"),
+            file_data_html("test2", 40.016869, -105.279617, "jpg", os.path.join(UPLOAD_DIRECTORY, "test_user/P1540506.JPG").replace('\\', '/'), 101, 34, "def", "tomorrow", "Mar 3", True, hashlib.sha256("password".encode('utf-8')).hexdigest(), 1, "test_user")]
     # Note, we want to store the path starting in static/ but not including the static part
 
 
