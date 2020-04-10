@@ -74,37 +74,26 @@
             <div class="col-7">
                 <div id="map"></div>
                 <script>
+                //TODO: map markers are not added. I also can not figure out how to clear the map.
+                var map, infoWindow;
                 function initMap()
                 {
-                    // The location of Uluru
-                    //will need to replace this with user long/lat
-                    var uluru = {lat: 40.007649, lng: -105.265823};
-                    getLocation();
-                    var uluru = { lat: latVar, lng: lonVar };
-                    // The map, centered at Uluru
-                    var map = new google.maps.Map(
-                        document.getElementById('map'), {zoom: 14, center: uluru});
-                    // The marker, positioned at Uluru
-                    //need to comment this out after we get pins
-                    var marker = new google.maps.Marker({position: uluru, map: map}); // us
-                    {% for fil in fils %}
-                        var id_{{fil.id}} = new google.maps.Marker({position: {lat: {{fil.lat}}, lng: {{fil.long}} }, map: map});
-                    {% endfor %}
-                }
-                function initMap2()
-                {
-                    //Add a higher order function/"promises"
-                    // The location of Uluru
-                    //getLocation();
-                    //var uluru = { lat: latVar, lng: lonVar };
-                    var uluru = { lat: 40.050367699999995, lng: -105.24975579999999 };
-                    // The map, centered at Uluru
-                    //alert(latVar);
-                    var map = new google.maps.Map(
-                        document.getElementById('map'), { zoom: 14, center: uluru });
-                    // The marker, positioned at Uluru
-                    var marker = new google.maps.Marker({ position: uluru, map: map });
-                }
+                  map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 40.000, lng: -105 },
+                    zoom: 14,
+                    styles: [
+                    {
+                        featureType: "poi",
+                        elementType: "labels",
+                        stylers: [{ visibility: "off" }]
+                    }
+                    ];
+                  });
+                  map.clear();
+                  {% for fil in fils %}
+                        var id_{{fil.id}} = new google.maps.Marker({position: { {{fil.lat}}, {{fil.long}} }, map: map, title: {{fil.name}} });
+                   {% endfor %}
+                 }
                 </script>
                 <script async defer
                     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
@@ -125,9 +114,9 @@
                     </form>
                 </div>
                 <br>
-
+             
                 <div class="card-deck d-flex flex-column">
-                    <div class="card">
+                <!--    <div class="card">
                         <div class="card-header">
                             <div class="row">
                                 <div class="col">
@@ -140,82 +129,58 @@
                                 <div class="col" align="right">
                                     <form  method="POST">
                                         <input class="btn btn-dark ml-3" type="submit" name="12" value="Download">
-                                        <!--<input class="btn btn-dark ml-3" type="submit" name="fil.id" value="Download">-->
+                                        <input class="btn btn-dark ml-3" type="submit" name="fil.id" value="Download">
                                     </form>
                                 </div>
                             </div>
-                            <p>First 50 chars of description than a ...</p>
+                            <p>{fils[i].description}</p>
 
                         </div>
                         <div class="card-body">
                             <div align="center">
                                 <img src="{{ url_for('static', filename='upload_files/test_user/P1540913.JPG') }}" width="400px">
-                                <!--<img src="{{ url_for('static', filename='fil.path') }}" width="400px">-->
+                                <img src="{{ url_for('static', filename='fil.path') }}" width="400px">
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 style="font-weight:bold;">Sample_File</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <p>Distance: X Feet </p>
-                                </div>
-                                <div class="col" align="right">
-                                    <a class="btn btn-dark ml-3" href="#">Download</a>
-                                </div>
-                            </div>
-                            <p>First 50 chars of description than a ...</p>
-                            <div class="card-body">
-                                <div align="center">
-                                    <img src="../static/sample-photo.JPG" width="400px">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
+                    <hr> -->
+
+                    {% for fil in fils %}
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
-                                    <h6 style="font-weight:bold;">Sample_File</h6>
-                                    <p>Distance: X Feet </p>
+                                    <h6 style="font-weight:bold;">{{fil.name}}</h6>
+                                    <p>Distance: {{fil.dist}} Feet </p>
                                 </div>
                                 <div class="col" align="right">
-                                    <a class="btn btn-dark ml-3" href="#">Download</a>
+                                    <form  method="POST">
+                                        <input class="btn btn-dark ml-3" type="submit" name="{{fil.id}}" value="Download">
+                                        <!--<input class="btn btn-dark ml-3" type="submit" name="fil.id" value="Download">-->
+                                    </form>
                                 </div>
                             </div>
-                            <p>First 50 chars of description than a ...</p>
+                            {% if fil.description|length > 50 %}
+                            <p> {{ fil.description[0:50] }} ...</p>
+                            {% else %}
+                                <p>{{ fil.description }}</p>
+                            {% endif %}
                             <div class="card-body">
+                                {% if fil.format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico"%}
                                 <div align="center">
-                                    <img src="../static/sample-photo.JPG" width="400px">
+                                    <img src="{{ url_for('static', filename='fil.path') }}" width="400px">
                                 </div>
+                                {% else %}
+                                <h5 class="card-title">Preview Not Avaliable</h5>
+                                {% endif %}
                             </div>
                         </div>
 
                     </div>
                 </div>
+                <br/>
+                {% endfor %}
             </div>
-
-            <!-- <div class="col-2">
-                <div class="card">
-                    <div class="card-header">
-                        <div align="center">
-                            <img src="../static/sample-profile.png" width="100px" alt="Profile Photo">
-                            <br>
-                            <h5> User_Name </h5>
-                            <hr>
-                            <h6>#MyTag!</h6>
-                            <button type="button" class="btn btn-dark mr-sm" href="#myModal" data-toggle="modal"
-                                data-target=".bd-example-modal-lg" onclick="openModal()">Upload a
-                                File</button>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
         </div>
 
     </div>
