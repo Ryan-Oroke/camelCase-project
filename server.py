@@ -215,7 +215,23 @@ def about_page():
     return render_template("about.html", signed_in=signed_in, cur_user=cur_user)
 
 
+@app.route('/register', methods=['GET', 'POST'])
+def register_page():
+    if request.method == 'POST':
+        if handle_login_post():
+            pass
+        elif 'sign_up' in request.form:
+            print(request.form)
+            pass  # I think all we need to do is pass the data to mongo
+            # should we sign the user in for them or not
+
+    signed_in, cur_user = get_signed_in_info()
+
+    return render_template("register.html", signed_in=signed_in, cur_user=cur_user)
+
+
 if __name__ == "__main__":
-    if not os.path.exists(UPLOAD_DIRECTORY):
-        os.makedirs(UPLOAD_DIRECTORY)
+    up_path = os.path.join('static', UPLOAD_DIRECTORY)
+    if not os.path.exists(up_path):
+        os.makedirs(up_path)
     app.run(threaded=True, host='0.0.0.0', port=5000, debug=True)
