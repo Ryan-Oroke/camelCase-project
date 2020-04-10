@@ -134,8 +134,13 @@
                                     <h6 style="font-weight:bold;">Sample_File</h6>
                                     <p>Distance: X Feet </p>
                                 </div>
+                                <div class="col">
+                                    <p>File type: jpg </p>
+                                </div>
                                 <div class="col" align="right">
-                                    <a class="btn btn-dark ml-3" href="#">Download</a>
+                                    <form  method="POST">
+                                        <input class="btn btn-dark ml-3" type="submit" name="fil_id" value="Download">
+                                    </form>
                                 </div>
                             </div>
                             <p>First 50 chars of description than a ...</p>
@@ -143,7 +148,8 @@
                         </div>
                         <div class="card-body">
                             <div align="center">
-                                <img src="../static/sample-photo.JPG" width="400px">
+                                <img src="{{ url_for('static', filename='upload_files/test_user/P1540913.JPG') }}" width="400px">
+                                <!--<img src="{{ url_for('static', filename='{{fils.path}}') }}" width="400px">-->
                             </div>
                         </div>
                     </div>

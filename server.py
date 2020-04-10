@@ -1,8 +1,3 @@
-# The server written in flask
-# I'm going to start and get something like this working:
-#       https://blog.learningdollars.com/2019/11/29/how-to-serve-a-reactapp-with-a-flask-server/
-# and the post get stuff
-
 import os
 import hashlib
 from typing import NamedTuple
@@ -59,8 +54,8 @@ def get_signed_in_info():
 
 def get_downloadable_files():
 
-    return [file_data_html("test1", 40.015869, -105.279517, "dick", "test.jpg", 100, 12, "abc", "today", "tomorrow", True, hashlib.sha256("password".encode('utf-8')).hexdigest(), 0, "user1"),
-            file_data_html("test2", 40.016869, -105.279617, "dick", "test.jpg", 101, 34, "def", "tomorrow", "Mar 3", True, hashlib.sha256("password1".encode('utf-8')).hexdigest(), 1, "user2")]
+    return [file_data_html("test1", 40.015869, -105.279517, "jpg", "test_user/P1540913.JPG", 100, 12, "abc", "today", "tomorrow", False, "", 0, "test_user"),
+            file_data_html("test2", 40.016869, -105.279617, "jpg", "test_user/P1540506.JPG", 101, 34, "def", "tomorrow", "Mar 3", True, hashlib.sha256("password1".encode('utf-8')).hexdigest(), 1, "test_user")]
 
 
 def handle_login_post():
@@ -76,9 +71,12 @@ def handle_login_post():
             session['cur_user'] = username
         else:
             session['cur_user'] = None
-
+        return True
     elif 'sign_out' in request.form:
         session['cur_user'] = None
+        return True
+    else:
+        return False
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -140,6 +138,7 @@ def handle_upload_post(signed_in, cur_user, file_data):
 
     return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, failed_password=False)
 
+
 def handle_download_post(signed_in, cur_user, this_file_data, file_data):
     path = this_file_data.path
     password_hash = this_file_data.password_hash
@@ -168,21 +167,25 @@ def download_page_get():
 @app.route('/download', methods=['POST'])
 def download_page_post():
     print(request.form)
-    handle_login_post()
+    did_login = handle_login_post()
 
     signed_in, cur_user = get_signed_in_info()
 
     file_data = get_downloadable_files()
 
-    if 'upload_post' in request.form:
+    if did_login:
+        return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
+                               failed_password=False)
+    elif 'upload_post' in request.form:
         return handle_upload_post(signed_in, cur_user, file_data)
     else:
         for this_file_data in file_data:
             if str(this_file_data.id) in request.form:
                 return handle_download_post(signed_in, cur_user, this_file_data, file_data)
 
-    return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
-                           failed_password=False)
+    abort(400)
+    # return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
+    #                       failed_password=False)
 
 
 @app.route('/navbar', methods=['GET', 'POST'])
