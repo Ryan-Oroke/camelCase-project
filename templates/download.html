@@ -74,10 +74,9 @@
             <div class="col-7">
                 <div id="map"></div>
                 <script>
+                //For more information or much of this code, see: https://developers.google.com/maps/documentation/javascript/geolocation
                 function initMap()
                 {
-                    
-                // TODO: map markers are not added. I also can not figure out how to clear the map.
                     map = new google.maps.Map(document.getElementById('map'), {
                         center: { lat: 40.000, lng: -105 },
                         zoom: 14,
@@ -261,6 +260,9 @@
                                 <div class="col">
                                     <h6 style="font-weight:bold;">{{fil.name}}</h6>
                                     <p>Distance: {{fil.dist}} Feet </p>
+                                </div>
+                                <div class="col">
+                                    <p>File Type: {{fil.format}} </p>
                                 </div>
                                 <div class="col" align="right">
                                     <form  method="POST">
