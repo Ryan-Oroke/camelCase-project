@@ -73,9 +73,42 @@
         <div class="row">
             <div class="col-7">
                 <div id="map"></div>
+                <script>
+                function initMap()
+                {
+                    // The location of Uluru
+                    //will need to replace this with user long/lat
+                    var uluru = {lat: 40.007649, lng: -105.265823};
+                    getLocation();
+                    var uluru = { lat: latVar, lng: lonVar };
+                    // The map, centered at Uluru
+                    var map = new google.maps.Map(
+                        document.getElementById('map'), {zoom: 14, center: uluru});
+                    // The marker, positioned at Uluru
+                    //need to comment this out after we get pins
+                    var marker = new google.maps.Marker({position: uluru, map: map}); // us
+                    {% for fil in fils %}
+                        var id_{{fil.id}} = new google.maps.Marker({position: {lat: {{fil.lat}}, lng: {{fil.long}} }, map: map});
+                    {% endfor %}
+                }
+                function initMap2()
+                {
+                    //Add a higher order function/"promises"
+                    // The location of Uluru
+                    //getLocation();
+                    //var uluru = { lat: latVar, lng: lonVar };
+                    var uluru = { lat: 40.050367699999995, lng: -105.24975579999999 };
+                    // The map, centered at Uluru
+                    //alert(latVar);
+                    var map = new google.maps.Map(
+                        document.getElementById('map'), { zoom: 14, center: uluru });
+                    // The marker, positioned at Uluru
+                    var marker = new google.maps.Marker({ position: uluru, map: map });
+                }
+                </script>
                 <script async defer
                     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
-                    </script>
+                </script>
                 <hr>
                 <button type="button" class="btn btn-dark mr-sm" href="#myModal" data-toggle="modal"
                     data-target=".bd-example-modal-lg" onclick="openModal()">Upload a
@@ -291,7 +324,7 @@
                     <h1 id="modalHead" style="font-weight: bold;">Upload Your File</h1>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <!--<form>
                         <div class="form-group">
                             <h6>File Name:</h6>
                             <div class="row">
@@ -373,6 +406,91 @@
 
                         <button type="button" class="btn btn-dark float-left" id="submitFileBtn">Upload
                             File!</button>
+                    </form>-->
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <h6>File Name:</h6>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" class="form-control" id="inputFileName" name="inputFileName"
+                                        aria-describedby="fileNameHelp" placeholder="File Name">
+                                    <small id="fileUploadHelp" class="form-text text-muted">This name will help
+                                        others find your
+                                        file.</small>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <input type="file" clas="form-control-file" id="local_image" name="input_file">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <h6>Description:</h6>
+                            <textarea class="form-control" id="inputFileDescription" rows="3" name="inputFileDescription"
+                                placeholder="A little bit about the file you are uploading. This will help others ensure they have the correct file."></textarea>
+                        </div>
+
+                        <br>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <h6>Visible Distance</h6>
+                                </div>
+                                <div class="col text-right" id="uploadDistLabel">
+                                    <h6>1 Mile</h6>
+                                </div>
+                            </div>
+
+                            <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100" name="visibleDistance"
+                                step="0.5" onclick="distanceSlid('uploadDistLabel')">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <h6>Time Online</h6>
+                                </div>
+                                <div class="col text-right">
+                                    <h6 id="uploadTimeLabel">7 Days</h6>
+                                </div>
+                            </div>
+
+                            <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="100"  name="visibleTime"
+                                step="0.5">
+                        </div>
+
+                        <br>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <h6> File Password (Optional):</h6>
+                                    <input type="text" class="form-control" id="inputFilePassword" name="inputFilePassword"
+                                        aria-describedby="filePasswordHelp" placeholder="File Password">
+                                    <small id="filePasswordHelp" class="form-text text-muted"> Make your file
+                                        private by adding a password.</small>
+                                </div>
+                                <div class="col">
+                                    <h6> Your Password:</h6>
+                                    <input type="password" class="form-control" id="inputAcctPassword" name="filePassword"
+                                        aria-describedby="fileAcctHelp" placeholder="Account Password">
+                                    <small id="AcctPasswordHelp" class="form-text text-muted">
+                                        Enter your account password.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <input type="hidden" name="gps_lat" id="gps_lat_form">
+                        <input type="hidden" name="gps_long" id="gps_long_form">
+
+                        <input class="btn btn-dark float-left" type="submit" name="upload_post" value="Upload" id="submitFileBtn">
                     </form>
                 </div>
             </div>

@@ -9,22 +9,25 @@ from typing import NamedTuple
 
 from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory
 
-# from flask_cors import CORS  # is this needed
-
 app = Flask(__name__)
 app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption (using session)
 
-UPLOAD_DIRECTORY = 'upload_files'
+UPLOAD_DIRECTORY = 'static/upload_files'  # this is in static so we dont have to write any code to expose files for
+                                          # preview. Node: this has a security down side as every file can be accessed.
 
 
 @app.errorhandler(400)
 def not_found(error):
-    return make_response(jsonify( { 'error': 'Bad request' } ), 400)
+    signed_in, cur_user = get_signed_in_info()
+    # return make_response(jsonify( { 'error': 'Bad request' } ), 400)  # TODO: make 400.html
+    return render_template("400.html", signed_in=signed_in, cur_user=cur_user)
 
 
 @app.errorhandler(404)
 def not_found(error):
-    return make_response(jsonify( { 'error': 'Not found' } ), 404)
+    signed_in, cur_user = get_signed_in_info()
+    # return make_response(jsonify( { 'error': 'Not found' } ), 404)  # TODO: make 404.html
+    return render_template("404.html", signed_in=signed_in, cur_user=cur_user)
 
 
 class file_data_html(NamedTuple):
@@ -88,6 +91,7 @@ def root_route():
     return render_template("index.html", signed_in=signed_in, cur_user=cur_user)
 
 
+"""
 @app.route('/upload', methods=['GET'])
 def upload_page_get():
     signed_in, cur_user = get_signed_in_info()
@@ -95,7 +99,7 @@ def upload_page_get():
     return render_template("upload.html", signed_in=signed_in, cur_user=cur_user)
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['POST'])  # TODO: move to
 def upload_page_post():
     handle_login_post()
 
@@ -115,42 +119,70 @@ def upload_page_post():
         input_file.save(os.path.join(UPLOAD_DIRECTORY, filename))
 
     return render_template("upload.html", signed_in=signed_in, cur_user=cur_user)
+"""
+
+
+def handle_upload_post(signed_in, cur_user, file_data):
+    if signed_in:  # have a better else
+        print(request.form)
+        print(request.files)
+
+        if 'input_file' not in request.files or request.files['input_file'].filename == '':
+            return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, failed_password=False)  # look into flash
+
+        # TODO: validate user password
+        input_file = request.files['input_file']
+        if not os.path.exists(os.path.join(UPLOAD_DIRECTORY, cur_user)):
+            os.makedirs(os.path.join(UPLOAD_DIRECTORY, cur_user))
+        filename = os.path.join(cur_user, input_file.filename)
+        input_file.save(os.path.join(UPLOAD_DIRECTORY, filename))  # maybe check if file exists too
+        # TODO: add data to mongo
+
+    return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, failed_password=False)
+
+def handle_download_post(signed_in, cur_user, this_file_data, file_data):
+    path = this_file_data.path
+    password_hash = this_file_data.password_hash
+    req_password = this_file_data.req_password
+
+    if req_password:
+        input_password = 'password'  # input_password = request.form['file_password']
+        input_password_hash = hashlib.sha256(input_password.encode('utf-8')).hexdigest()
+        if input_password_hash != password_hash:
+            return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
+                                   failed_password=True)
+
+    return send_from_directory(UPLOAD_DIRECTORY, path, as_attachment=True)
 
 
 @app.route('/download', methods=['GET'])
 def download_page_get():
     signed_in, cur_user = get_signed_in_info()
 
-    test_data = get_downloadable_files()
+    file_data = get_downloadable_files()
 
-    return render_template("download.html", fils=test_data, signed_in=signed_in, cur_user=cur_user, failed_password=False)
+    return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
+                           failed_password=False)
 
 
 @app.route('/download', methods=['POST'])
 def download_page_post():
+    print(request.form)
     handle_login_post()
 
     signed_in, cur_user = get_signed_in_info()
 
-    test_data = get_downloadable_files()
+    file_data = get_downloadable_files()
 
-    path = ""
-    password_hash = None
-    req_password = False
-    for data in test_data:
-        if str(data.id) in request.form:
-            path = data.path
-            password_hash = data.password_hash
-            req_password = data.req_password
-            break
+    if 'upload_post' in request.form:
+        return handle_upload_post(signed_in, cur_user, file_data)
+    else:
+        for this_file_data in file_data:
+            if str(this_file_data.id) in request.form:
+                return handle_download_post(signed_in, cur_user, this_file_data, file_data)
 
-    if req_password:
-        input_password = 'password'# input_password = request.form['file_password']
-        input_password_hash = hashlib.sha256(input_password.encode('utf-8')).hexdigest()
-        if input_password_hash != password_hash:
-            return render_template("download.html", fils=test_data, signed_in=signed_in, cur_user=cur_user, failed_password=True)
-
-    return send_from_directory(UPLOAD_DIRECTORY, path, as_attachment=True)
+    return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
+                           failed_password=False)
 
 
 @app.route('/navbar', methods=['GET', 'POST'])
