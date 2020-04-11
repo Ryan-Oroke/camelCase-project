@@ -2,7 +2,7 @@ import os
 import hashlib
 from typing import NamedTuple
 
-from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory, send_file
+from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory, send_file, redirect
 
 app = Flask(__name__)
 app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption (using session)
@@ -355,6 +355,28 @@ def map_page_post():
                 return handle_map_download_post(signed_in, cur_user, this_file_data, file_data)
 
     abort(400)  # Bad Request
+
+
+@app.route('/user', methods=['GET'])
+def user_page_get():
+    signed_in, cur_user = get_signed_in_info()
+
+    if not signed_in:
+        return redirect(url_for('register_page'))
+
+    return render_template("user.html", signed_in=signed_in, cur_user=cur_user)
+
+
+@app.route('/user', methods=['POST'])
+def user_page_post():
+    handle_login_post()
+
+    signed_in, cur_user = get_signed_in_info()
+
+    if not signed_in:
+        return redirect(url_for('register_page'))
+
+    return render_template("user.html", signed_in=signed_in, cur_user=cur_user)
 
 
 if __name__ == "__main__":

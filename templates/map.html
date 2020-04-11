@@ -35,13 +35,17 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="t01">Map<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="/map" style="t01">Map<span class="sr-only">(current></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="./user.html" style="navbar-text">Profile</a>
+                    {% if signed_in %}
+                    <a class="nav-link" href="/user" style="navbar-text">Profile</a>
+                    {% else %}
+                    <a class="nav-link" href="/register" style="navbar-text">Register</a>
+                    {% endif %}
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="/about">About<span class="sr-only">(current></span></a>
                 </li>
             </ul>
             {% if signed_in %}
@@ -156,7 +160,6 @@
                     });
                     infoWindow = new google.maps.InfoWindow;
 
-                    // TODO: this does not work
                     {% for fil in fils %}
                     var mkr_{{fil.id}} = new google.maps.Marker({
                         map: map,
