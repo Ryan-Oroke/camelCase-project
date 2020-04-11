@@ -164,8 +164,8 @@ def handle_upload_post(signed_in, cur_user, file_data):
 
         input_file = request.files['input_file']
         # we store files at `static/UPLOAD_DIRECTORY/<username>/<file>` that's what `file_path` will store
-        if not os.path.exists(os.path.join(UPLOAD_DIRECTORY, cur_user)):
-            os.makedirs(os.path.join(UPLOAD_DIRECTORY, cur_user))
+        if not os.path.exists(os.path.join('static', UPLOAD_DIRECTORY, cur_user)):
+            os.makedirs(os.path.join('static', UPLOAD_DIRECTORY, cur_user))
         filename = os.path.join(cur_user, input_file.filename)
         file_path = os.path.join('static', UPLOAD_DIRECTORY, filename)
 

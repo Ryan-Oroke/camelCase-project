@@ -2,12 +2,12 @@
     ->Numbers before letters
     ->Letters before special characters (!,-,@,etc) */
 
-.btn-danger{
-    background-color:#e74c3c;
+.btn-danger {
+    background-color: #e74c3c;
 }
 
-.btn-dark .btn-primary{
-    color : #343a40;
+.btn-dark .btn-primary {
+    color: #343a40;
 }
 
 /* .card-body {
@@ -19,21 +19,20 @@
 } */
 
 .card-link-custom {
-    color : #343a40;
-    font-weight : bold;
+    color: #343a40;
+    font-weight: bold;
 }
 
 /* .custom-range::-ms-thumb {
     background-color: #e74c3c;
 } */
 
-
 .h1 {
-    color : #343a40;
+    color: #343a40;
 }
 
 .h6 {
-    color : #343a40
+    color: #343a40
 }
 
 .hr-custom {
@@ -47,35 +46,77 @@
 }
 
 .modal-header {
-    background-color : #e74c3c;
+    background-color: #e74c3c;
 }
 
 .navbar-custom {
     /* background-color: #e74c3c; */
-    background-color:#e74c3c !important;
+    background-color: #e74c3c !important;
 }
 
 .nav-link {
-    color : #ffffff;
-    font-weight : bolder;
-    font-size : large;
+    color: #ffffff;
+    font-weight: bolder;
+    font-size: large;
 }
 
-.nav-link:hover {color : #343a40; }
+.nav-link:hover {
+    color: #343a40;
+}
 
-
-  .close {
+.close {
     color: white;
     float: right;
     font-size: 28px;
     font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
+}
+
+.close:hover, .close:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+/****************************************************************************/
+/* From Stack Exchange: https://stackoverflow.com/questions/46083615/crop-and-center-image-to-circle-in-bootstrap-4 */
+.circle {
+    width: 100%;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    text-align: center;
+  }
+  
+  .circle:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: 100%;
+  }
+  
+  .circle>img {
+    position: absolute;
+    height: 100%;
+    left: 50%;
+    transform: translateX( -50%);
+    top: 0;
+    right: 0;
+    margin: 0 auto;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity .4s;
+  }
+  
+  .circle>img.tallAndNarrow {
+    width: 100%;
+    top: 50%;
+    transform: translateX(0) translateY( -50%);
+    left: 0;
+    height: auto;
+  }
+  
+  .circle>img.loaded {
+    opacity: 1;
   }
 
-  
+/****************************************************************************/
