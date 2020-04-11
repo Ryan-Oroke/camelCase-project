@@ -13,7 +13,19 @@
             <link href="{{ url_for('static', filename='stylesheet.css') }}" rel="stylesheet">
             <script type="text/javascript" src="{{ url_for('static', filename='functions.js') }}"></script>
         </head>
-        <body>
+<script>
+function on_load()
+{
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      alert('{{ message }}')
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+}
+</script>
+        <body onload="on_load()">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark justiy-content-between">
                 <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='freedrop-logo.png') }}" height="35" alt="LOGO"></a>
                 <div class="collapse navbar-collapse" id="navbarNav">
