@@ -12,8 +12,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <link href="../static/stylesheet.css" rel="stylesheet">
-    <link href="../static/upload-stylesheet.css" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='stylesheet.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='upload-stylesheet.css') }}" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -24,7 +25,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-    <script type="text/javascript" src="../static/upload.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='functions.js') }}"></script>
 
     <!--Google Maps API-->
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"
@@ -33,24 +34,31 @@
 
 <body>
     <!-- <nav class="navbar navbar-expand-lg justiy-content-between navbar-custom">
-        <a class="navbar-brand" href="#"><img src="../static/freedrop-logo.png" height="35" alt="LOGO"></a>
+        <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='freedrop-logo.png') }}" height="35" alt="LOGO"></a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="./upload.html" style="t01">Upload<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="upload" style="t01">Upload<span class="sr-only">(current></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="./download.html" style="navbar-text">Download</a>
+                    <a class="nav-link" href="download" style="navbar-text">Download</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="./about.html">About Us<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="about">About Us<span class="sr-only">(current></span></a>
                 </li>
             </ul>
-            <form class="form-inline">
-                <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username">
-                <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password">
-                <button class="btn btn-dark my-2 my-sm-0" type="login">Sign In</button>
+            {% if signed_in %}
+            <h2>Hello, {{ cur_user }}.</h2>
+            <form class="form-inline" method="POST">
+                <input class="btn btn-dark" type="submit" name="sign_out" value="Sign Out">
             </form>
+            {% else %}
+            <form class="form-inline" method="POST">
+                <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username" name="username">
+                <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password" name="password">
+                <input class="btn btn-dark" type="submit" name="sign_in" value="Sign In">
+            </form>
+            {% endif %}
         </div>
     </nav> -->
     <!-- <% include ../templates/navbar.html %> -->
@@ -83,6 +91,8 @@
             function showPosition(position) {
               x.innerHTML = "Latitude: " + position.coords.latitude + 
               "<br>Longitude: " + position.coords.longitude;
+              document.getElementById("gps_lat_form").value = position.coords.latitude;
+              document.getElementById("gps_long_form").value = position.coords.longitude;
             }
             </script>
 
@@ -92,15 +102,15 @@
 
                 <div class="modal-content">
                     <div class = "modal-header">
-                        <h1 id="modalHead">Upload Your File</h1>
+                        <h1 id="modalHead">File Upload</h1>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form method="POST" enctype="multipart/form-data">
                             <div class="form-group">
                                 <h6>File Name:</h6>
                                 <div class="row">
                                     <div class="col">
-                                        <input type="text" class="form-control" id="inputFileName"
+                                        <input type="text" class="form-control" id="inputFileName" name="inputFileName"
                                             aria-describedby="fileNameHelp" placeholder="File Name">
                                         <small id="fileUploadHelp" class="form-text text-muted">This name will help
                                             others find your
@@ -108,7 +118,7 @@
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
-                                            <input type="file" clas="form-control-file" id="local_image">
+                                            <input type="file" clas="form-control-file" id="local_image" name="input_file">
                                         </div>
                                     </div>
                                 </div>
@@ -118,7 +128,7 @@
 
                             <div class="form-group">
                                 <h6>Description:</h6>
-                                <textarea class="form-control" id="inputFileDescription" rows="3"
+                                <textarea class="form-control" id="inputFileDescription" rows="3" name="inputFileDescription"
                                     placeholder="A little bit about the file you are uploading. This will help others ensure they have the correct file."></textarea>
                             </div>
 
@@ -134,7 +144,7 @@
                                     </div>
                                 </div>
 
-                                <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100"
+                                <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100" name="visibleDistance"
                                     step="0.5" onclick="distanceSlid('uploadDistLabel')">
                             </div>
 
@@ -148,7 +158,7 @@
                                     </div>
                                 </div>
 
-                                <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="100"
+                                <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="100"  name="visibleTime"
                                     step="0.5">
                             </div>
 
@@ -158,14 +168,14 @@
                                 <div class="row">
                                     <div class="col">
                                         <h6> File Password (Optional):</h6>
-                                        <input type="text" class="form-control" id="inputFilePassword"
+                                        <input type="text" class="form-control" id="inputFilePassword" name="inputFilePassword"
                                             aria-describedby="filePasswordHelp" placeholder="File Password">
                                         <small id="filePasswordHelp" class="form-text text-muted"> Make your file
                                             private by adding a password.</small>
                                     </div>
                                     <div class="col">
                                         <h6> Your Password:</h6>
-                                        <input type="password" class="form-control" id="inputAcctPassword"
+                                        <input type="password" class="form-control" id="inputAcctPassword" name="filePassword"
                                             aria-describedby="fileAcctHelp" placeholder="Account Password">
                                         <small id="AcctPasswordHelp" class="form-text text-muted">
                                             Enter your account password.</small>
@@ -175,7 +185,10 @@
 
                             <br>
 
-                            <button type="button" class="btn btn-primary float-left" id = "submitFileBtn">Upload File!</button>
+                            <input type="hidden" name="gps_lat" id="gps_lat_form">
+                            <input type="hidden" name="gps_long" id="gps_long_form">
+
+                            <input class="btn btn-dark float-left" type="submit" name="upload_form" value="Upload" id="submitFileBtn">
                         </form>
                     </div>
                 </div>

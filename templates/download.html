@@ -10,7 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <link href="../static/stylesheet.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='stylesheet.css') }}" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -21,32 +21,50 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-    <script type="text/javascript" src="../static/functions.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='functions.js') }}"></script>
+
+    <!--<style>
+      #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>-->
 </head>
 <!-- <style>
     body { background: #414141 !important; }
 </style> -->
 
+{% if failed_password %}
+<body onload="alert('incorrect password')">
+{% else %}
 <body>
+{% endif %}
     <nav class="navbar navbar-expand-lg justiy-content-between navbar-custom">
-        <a class="navbar-brand" href="#"><img src="../static/freedrop-logo.png" height="40" alt="LOGO"></a>
+        <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='freedrop-logo.png') }}" height="40" alt="LOGO"></a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="t01">Map<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="upload" style="t01">Upload<span class="sr-only">(current></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="navbar-text">Profile</a>
+                    <a class="nav-link" href="download" style="navbar-text">Download</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="about">About Us<span class="sr-only">(current></span></a>
                 </li>
             </ul>
-            <form class="form-inline">
-                <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username">
-                <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password">
-                <button class="btn btn-dark my-2 my-sm-0" type="login">Sign In</button>
+            {% if signed_in %}
+            <h2>Hello, {{ cur_user }}.</h2>
+            <form class="form-inline" method="POST">
+                <input class="btn btn-dark" type="submit" name="sign_out" value="Sign Out">
             </form>
+            {% else %}
+            <form class="form-inline" method="POST">
+                <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username" name="username">
+                <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password" name="password">
+                <input class="btn btn-dark" type="submit" name="sign_in" value="Sign In">
+            </form>
+            {% endif %}
         </div>
     </nav>
     <br>
@@ -55,9 +73,139 @@
         <div class="row">
             <div class="col-7">
                 <div id="map"></div>
+                <script>
+                //For more information or much of this code, see: https://developers.google.com/maps/documentation/javascript/geolocation
+                function initMap()
+                {
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        center: { lat: 40.000, lng: -105 },
+                        zoom: 14,
+                        styles:
+                        [
+                            { elementType: 'geometry', stylers: [{ color: '#252525' }] },
+                            { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+                            { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+                            {
+                            featureType: 'administrative.locality',
+                            elementType: 'labels.text.fill',
+                            stylers: [{ color: '#d59563' }]
+                            },
+                            // {
+                            //   featureType: 'poi',
+                            //   elementType: 'labels.text.fill',
+                            //   stylers: [{color: '#d59563'}]
+                            // },
+                            {
+                            featureType: 'poi.park',
+                            elementType: 'geometry',
+                            stylers: [{ color: '#0d261a' }]
+                            },
+                            // {
+                            //   featureType: 'poi.park',
+                            //   elementType: 'labels.text.fill',
+                            //   stylers: [{color: '#6b9a76'}]
+                            // },
+                            {
+                            featureType: 'road',
+                            elementType: 'geometry',
+                            stylers: [{ color: '#404040' }]
+                            },
+                            {
+                            featureType: 'road',
+                            elementType: 'geometry.stroke',
+                            stylers: [{ color: '#212a37' }]
+                            },
+                            {
+                            featureType: 'road',
+                            elementType: 'labels.text.fill',
+                            stylers: [{ color: '#9ca5b3' }]
+                            },
+                            {
+                            featureType: 'road.highway',
+                            elementType: 'geometry',
+                            stylers: [{ color: '#505050' }]
+                            },
+                            {
+                            featureType: 'road.highway',
+                            elementType: 'geometry.stroke',
+                            stylers: [{ color: '#1f2835' }]
+                            },
+                            {
+                            featureType: 'road.highway',
+                            elementType: 'labels.text.fill',
+                            stylers: [{ color: '#f3d19c' }]
+                            },
+                            {
+                            featureType: 'transit',
+                            elementType: 'geometry',
+                            stylers: [{ color: '#2f3948' }]
+                            },
+                            {
+                            featureType: 'transit.station',
+                            elementType: 'labels.text.fill',
+                            stylers: [{ color: '#d59563' }]
+                            },
+                            {
+                            featureType: 'water',
+                            elementType: 'geometry',
+                            stylers: [{ color: '#17263c' }]
+                            },
+                            {
+                            featureType: 'water',
+                            elementType: 'labels.text.fill',
+                            stylers: [{ color: '#515c6d' }]
+                            },
+                            {
+                            featureType: 'water',
+                            elementType: 'labels.text.stroke',
+                            stylers: [{ color: '#17263c' }]
+                            }
+                        ]
+                    });
+                    infoWindow = new google.maps.InfoWindow;
+
+                    // TODO: this does not work
+                    {% for fil in fils %}
+                    var mkr_{{fil.id}} = new google.maps.Marker({
+                        map: map,
+                        position: { lat: {{fil.lat}}, lng: {{fil.long}} }
+                        //title: {{fil.name}}
+                    });
+                    {% endfor %}
+
+                    if (navigator.geolocation)
+                    {
+                        navigator.geolocation.getCurrentPosition(function (position)
+                        {
+                            document.getElementById("gps_lat_form").value = position.coords.latitude;
+                            document.getElementById("gps_long_form").value = position.coords.longitude;
+                            var pos = { lat: position.coords.latitude, lng: position.coords.longitude };
+                            // var cirlcle = new google.maps.Circle({
+                            //     map: map,
+                            //     center: pos,
+                            //     radius: 1000 //In meters
+                            // });
+
+                            infoWindow.setPosition(pos);
+                            infoWindow.setContent('Location Found');
+                            infoWindow.open(map);
+                            map.setCenter(pos);
+                        }, function ()
+                        {
+                            handleLocationError(true, infoWindow, map.getCenter());
+                        });
+                    }
+                    else
+                    {
+                        //Browser does not support geolocation
+                        handleLocationError(false, infoWindow, map.getCenter());
+                    }
+                    //map.clear();
+                }
+                </script>
                 <script async defer
                     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
-                    </script>
+                </script>
                 <hr>
                 <button type="button" class="btn btn-dark mr-sm" href="#myModal" data-toggle="modal"
                     data-target=".bd-example-modal-lg" onclick="openModal()">Upload a
@@ -74,90 +222,78 @@
                     </form>
                 </div>
                 <br>
-
+             
                 <div class="card-deck d-flex flex-column">
-                    <div class="card">
+                <!--    <div class="card">
                         <div class="card-header">
                             <div class="row">
                                 <div class="col">
                                     <h6 style="font-weight:bold;">Sample_File</h6>
                                     <p>Distance: X Feet </p>
                                 </div>
+                                <div class="col">
+                                    <p>File type: jpg </p>
+                                </div>
                                 <div class="col" align="right">
-                                    <a class="btn btn-dark ml-3" href="#">Download</a>
+                                    <form  method="POST">
+                                        <input class="btn btn-dark ml-3" type="submit" name="12" value="Download">
+                                        <input class="btn btn-dark ml-3" type="submit" name="fil.id" value="Download">
+                                    </form>
                                 </div>
                             </div>
-                            <p>First 50 chars of description than a ...</p>
+                            <p>{fils[i].description}</p>
 
                         </div>
                         <div class="card-body">
                             <div align="center">
-                                <img src="../static/sample-photo.JPG" width="400px">
+                                <img src="{{ url_for('static', filename='upload_files/test_user/P1540913.JPG') }}" width="400px">
+                                <img src="{{ url_for('static', filename='fil.path') }}" width="400px">
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 style="font-weight:bold;">Sample_File</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <p>Distance: X Feet </p>
-                                </div>
-                                <div class="col" align="right">
-                                    <a class="btn btn-dark ml-3" href="#">Download</a>
-                                </div>
-                            </div>
-                            <p>First 50 chars of description than a ...</p>
-                            <div class="card-body">
-                                <div align="center">
-                                    <img src="../static/sample-photo.JPG" width="400px">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
+                    <hr> -->
+
+                    {% for fil in fils %}
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
-                                    <h6 style="font-weight:bold;">Sample_File</h6>
-                                    <p>Distance: X Feet </p>
+                                    <h6 style="font-weight:bold;">{{fil.name}}</h6>
+                                    <p>Distance: {{fil.dist}} Feet </p>
+                                </div>
+                                <div class="col">
+                                    <p>File Type: {{fil.format}} </p>
                                 </div>
                                 <div class="col" align="right">
-                                    <a class="btn btn-dark ml-3" href="#">Download</a>
+                                    <form  method="POST">
+                                        <input class="btn btn-dark ml-3" type="submit" name="{{fil.id}}" value="Download">
+                                        <!--<input class="btn btn-dark ml-3" type="submit" name="fil.id" value="Download">-->
+                                    </form>
                                 </div>
                             </div>
-                            <p>First 50 chars of description than a ...</p>
+                            {% if fil.description|length > 50 %}
+                            <p> {{ fil.description[0:50] }} ...</p>
+                            {% else %}
+                                <p>{{ fil.description }}</p>
+                            {% endif %}
                             <div class="card-body">
+                                {% if fil.format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico"%}
                                 <div align="center">
-                                    <img src="../static/sample-photo.JPG" width="400px">
+                                    <img src="{{ url_for('static', filename=fil.path) }}" width="400px">
                                 </div>
+                                {% else %}
+                                <div align="center">
+                                    <img src="{{ url_for('static', filename='no_preview_available.jfif') }}" width="400px">
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
 
                     </div>
                 </div>
+                <br/>
+                {% endfor %}
             </div>
-
-            <!-- <div class="col-2">
-                <div class="card">
-                    <div class="card-header">
-                        <div align="center">
-                            <img src="../static/sample-profile.png" width="100px" alt="Profile Photo">
-                            <br>
-                            <h5> User_Name </h5>
-                            <hr>
-                            <h6>#MyTag!</h6>
-                            <button type="button" class="btn btn-dark mr-sm" href="#myModal" data-toggle="modal"
-                                data-target=".bd-example-modal-lg" onclick="openModal()">Upload a
-                                File</button>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
         </div>
 
     </div>
@@ -168,16 +304,63 @@
     <!-- Footer goes here -->
 
 
-    <!-- <div class="container w-80">
-        <div class="row justify-content-left">
+    <div class="container w-80">
+        <!-- <div class="row justify-content-left">
             <div class="col-8">
                 <h3>Nearby Files</h3>
                 <div id="map"></div>
+                <script>
+                function initMap() {
+                // The location of Uluru
+                //will need to replace this with user long/lat
+                var uluru = {lat: 40.007649, lng: -105.265823};
+                // The map, centered at Uluru
+                var map = new google.maps.Map(
+                    document.getElementById('map'), {zoom: 14, center: uluru});
+                // The marker, positioned at Uluru
+                //need to comment this out after we get pins
+                var marker = new google.maps.Marker({position: uluru, map: map});
+                {% for fil in fils %}
+                    var id_{{fil.id}} = new google.maps.Marker({position: {lat: {{fil.lat}}, lng: {{fil.long}} }, map: map});
+                {% endfor %}
+                }
+                </script>
                 <script async defer
-                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
-                    </script>
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
+                /*
+                * Load the API from the specified URL
+                * The async attribute allows the browser to render the page while the API loads
+                * The key parameter will contain your own API key (which is not needed for this tutorial)
+                * The callback parameter executes the initMap() function
+                */
+                </script>
+              </div>
+
+              <div class="col-8" >
+                <h3>Items Around You</h3>
+                <div class="card-deck" >
+                  <div class="card" style="width:250px" >
+                        {% for fil in fils %}
+                        <div class="card" style="width: 30rem;">
+                            {% if fil.format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico"%}
+                            <img class="card-img-top" src="{{fil.path}}" alt="Card image cap">
+                            {% else %}
+                                <h5 class="card-title">Preview Not Avaliable</h5>
+                            {% endif %}
+                            <div class="card-body">
+                              <h5 class="card-title">{{fil.title}}</h5>
+                             <p class="card-text">{{fil.dist}} meters away </p>
+                                <p class="card-text">Format: {{fil.format}} </p>
+                                <form  method="POST">
+                                    <input class="btn btn-primary" type="submit" name="{{fil.id}}" value="download">
+                                </form>
+                            </div>
+                          </div>
+                        {% endfor %}
+                   </div>
+                  </div>
             </div>
-        </div>
+        </div> -->
         <br>
         <br>
 
@@ -215,7 +398,7 @@
         </div>
     </div>
 
-    </div> -->
+    </div>
 
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         id="myModal" aria-hidden="true">
@@ -226,7 +409,7 @@
                     <h1 id="modalHead" style="font-weight: bold;">Upload Your File</h1>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <!--<form>
                         <div class="form-group">
                             <h6>File Name:</h6>
                             <div class="row">
@@ -308,6 +491,91 @@
 
                         <button type="button" class="btn btn-dark float-left" id="submitFileBtn">Upload
                             File!</button>
+                    </form>-->
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <h6>File Name:</h6>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" class="form-control" id="inputFileName" name="inputFileName"
+                                        aria-describedby="fileNameHelp" placeholder="File Name">
+                                    <small id="fileUploadHelp" class="form-text text-muted">This name will help
+                                        others find your
+                                        file.</small>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <input type="file" clas="form-control-file" id="local_image" name="input_file">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <h6>Description:</h6>
+                            <textarea class="form-control" id="inputFileDescription" rows="3" name="inputFileDescription"
+                                placeholder="A little bit about the file you are uploading. This will help others ensure they have the correct file."></textarea>
+                        </div>
+
+                        <br>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <h6>Visible Distance</h6>
+                                </div>
+                                <div class="col text-right" id="uploadDistLabel">
+                                    <h6>1 Mile</h6>
+                                </div>
+                            </div>
+
+                            <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100" name="visibleDistance"
+                                step="0.5" onclick="distanceSlid('uploadDistLabel')">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <h6>Time Online</h6>
+                                </div>
+                                <div class="col text-right">
+                                    <h6 id="uploadTimeLabel">7 Days</h6>
+                                </div>
+                            </div>
+
+                            <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="100"  name="visibleTime"
+                                step="0.5">
+                        </div>
+
+                        <br>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <h6> File Password (Optional):</h6>
+                                    <input type="text" class="form-control" id="inputFilePassword" name="inputFilePassword"
+                                        aria-describedby="filePasswordHelp" placeholder="File Password">
+                                    <small id="filePasswordHelp" class="form-text text-muted"> Make your file
+                                        private by adding a password.</small>
+                                </div>
+                                <div class="col">
+                                    <h6> Your Password:</h6>
+                                    <input type="password" class="form-control" id="inputAcctPassword" name="filePassword"
+                                        aria-describedby="fileAcctHelp" placeholder="Account Password">
+                                    <small id="AcctPasswordHelp" class="form-text text-muted">
+                                        Enter your account password.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <input type="hidden" name="gps_lat" id="gps_lat_form">
+                        <input type="hidden" name="gps_long" id="gps_long_form">
+
+                        <input class="btn btn-dark float-left" type="submit" name="upload_post" value="Upload" id="submitFileBtn">
                     </form>
                 </div>
             </div>

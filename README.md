@@ -2,6 +2,7 @@
 info info info
 
 ## How to set up for development
+We are using flask and mongo.
 ### Flask part
 I'm using PyCharm but you can use what you want.
 
@@ -10,7 +11,10 @@ To set up the interpreter you will need to go to `File > Settings...` and then g
 
 You will need to install Flask. In the `Project Interpreter` part click the add button and search for Flask and click install.
 
-To run you can use PyCharm.
+Now when you run you should see flask starting up. Just go to:
+```
+http://localhost:5000/
+```
 
 ##### Linux
 For Linux, you can create a virtualEnv or just do everything globally like the following.
@@ -23,19 +27,12 @@ And then run the following in the `flask-server` directory to run the program.
 python3 server.py
 ```
 
-### React part
-install react
+Now when you run you should see flask starting up. Just go to:
 ```
-npm install react
-npm install create-react-app
+http://localhost:5000/
 ```
 
-To install dependencies you will need to run the following in the `react-app` directory.
-```
-npm install
-```
+### Mongo part
+install mongo here: [https://docs.mongodb.com/manual/administration/install-community/](https://docs.mongodb.com/manual/administration/install-community/)
 
-To build type the following in the `react-app` directory.
-```
-npm run build
-```
+Make sure you also install the python driver. It is called `pymongo`. You can get it the same way you got flask.
