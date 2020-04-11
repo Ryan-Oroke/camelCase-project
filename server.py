@@ -16,14 +16,12 @@ UPLOAD_DIRECTORY = 'upload_files'  # this is in static so we dont have to write 
 @app.errorhandler(400)
 def not_found(error):
     signed_in, cur_user = get_signed_in_info()
-    # return make_response(jsonify( { 'error': 'Bad request' } ), 400)  # TODO: make 400.html
     return render_template("400.html", signed_in=signed_in, cur_user=cur_user)
 
 
-@app.errorhandler(404)
+@app.errorhandler(404)  # I don't know if you can do a POST request so I removed all forms from 404.html
 def not_found(error):
     signed_in, cur_user = get_signed_in_info()
-    # return make_response(jsonify( { 'error': 'Not found' } ), 404)  # TODO: make 404.html
     return render_template("404.html", signed_in=signed_in, cur_user=cur_user)
 
 
@@ -45,6 +43,7 @@ class file_data_html(NamedTuple):
 
 
 def get_signed_in_info():
+    # Note: session is different for each person who views the website.
     if 'cur_user' in session and session['cur_user'] is not None:
         cur_user = session['cur_user']
         signed_in = True
@@ -55,6 +54,8 @@ def get_signed_in_info():
 
 
 def get_downloadable_files():
+    # TODO: update this, this is all hard coded
+
     # I thing mongo will store "test_user/P1540913.JPG" for the path and then we need to add the UPLOAD_DIRECTORY part
     # or we could only store "P1540913.JPG" and add UPLOAD_DIRECTORY and user name
 
@@ -64,15 +65,20 @@ def get_downloadable_files():
 
 
 def handle_login_post():
-    if 'sign_in' in request.form:  # we assume that username and password is there
+    # here we check if we are signing in. In the form I set the submit button's name attribute to be `sign_in`
+    if 'sign_in' in request.form:  # we assume that username and password have been set
+        # In the form there is an input box with the name `username`. The value is then passes in with the POST request.
         username = request.form['username']
         password_plain_text = request.form['password']
-        print(username, password_plain_text)
+        print("username:", username, "password:", password_plain_text)
 
-        # try login
+        # TODO: try login with mongo
+        # TODO: is_valid_user = mongoIO.?.try_get_user(..)
         is_valid_user = True
 
         if is_valid_user:
+            # session is how we can store data for a user.
+            # it works using cookies allowing the user to not have to re-sign in every time.
             session['cur_user'] = username
         else:
             session['cur_user'] = None
@@ -84,13 +90,25 @@ def handle_login_post():
         return False
 
 
+# We need to tell flask what to do.
 @app.route('/', methods=['GET', 'POST'])
 def root_route():
+    # if you go to `http://localhost:5000/` this function will be called. Note we would be using the request method GET.
+    print("root_route was called with", request.method)  # flask will have print this out
+    # GET normally doesn't have any data associated with it.
+    # We also need to handle POST.
     if request.method == 'POST':
+        # if we are a POST request the data is stored in request.form (try to log in or out).
+        print(request.form)
+        # A post request is made for us when you have a form in HTML. It will use the name attribute as the key
+        # and the value attribute as the value
+        # the login form is the same for each page
         handle_login_post()
 
+    # get data from the session
     signed_in, cur_user = get_signed_in_info()
 
+    # we then render the index.html file with the sign in info.
     return render_template("index.html", signed_in=signed_in, cur_user=cur_user)
 
 
@@ -126,22 +144,34 @@ def upload_page_post():
 
 
 def handle_upload_post(signed_in, cur_user, file_data):
-    if signed_in:  # have a better else
+    # We only want to allow for upload if the user is signed in
+    # TODO: really we should also remove the upload model if we are not signed in
+    if signed_in:
         print(request.form)
+        # if the form includes a file upload, the data is stored in request.files
         print(request.files)
 
         if 'input_file' not in request.files or request.files['input_file'].filename == '':
-            return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, failed_password=False)  # look into flash
+            # if they left the file blank
+            # TODO: look into flash
+            return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, failed_password=False)
 
         # TODO: validate user password
+
         input_file = request.files['input_file']
+        # we store files at `static/UPLOAD_DIRECTORY/<username>/<file>` that's what `file_path` will store
         if not os.path.exists(os.path.join(UPLOAD_DIRECTORY, cur_user)):
             os.makedirs(os.path.join(UPLOAD_DIRECTORY, cur_user))
         filename = os.path.join(cur_user, input_file.filename)
         file_path = os.path.join('static', UPLOAD_DIRECTORY, filename)
-        input_file.save(file_path)  # maybe check if file exists too
+
+        # We save the file to the file system
+        input_file.save(file_path)  # TODO: maybe check if file exists too as to not overwrite
+
         # TODO: add data to mongo (Note we will store filename)
 
+    # TODO: have a better else
+    # TODO: look into flash
     return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, failed_password=False)
 
 
@@ -151,17 +181,20 @@ def handle_download_post(signed_in, cur_user, this_file_data, file_data):
     req_password = this_file_data.req_password
 
     if req_password:
-        input_password = 'password'  # input_password = request.form['file_password']
+        input_password = 'password'  # TODO: input_password = request.form['file_password']
         input_password_hash = hashlib.sha256(input_password.encode('utf-8')).hexdigest()
         if input_password_hash != password_hash:
             return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
                                    failed_password=True)
+            # TODO: look into flash
     # print(os.path.join('static', path))
+    # send file is how we have the user download the file.
     return send_file(os.path.join('static', path), as_attachment=True)
 
 
 @app.route('/download', methods=['GET'])
 def download_page_get():
+    # Note: for GET all we want to do is render the page
     signed_in, cur_user = get_signed_in_info()
 
     file_data = get_downloadable_files()
@@ -172,29 +205,36 @@ def download_page_get():
 
 @app.route('/download', methods=['POST'])
 def download_page_post():
+    # The request.form is different depending of which form you submit. You can only submit one at a time.
     print(request.form)
     did_login = handle_login_post()
 
+    # this is not POST specific, but data is still needed in the POST.
     signed_in, cur_user = get_signed_in_info()
 
+    # will call mongo, TODO: pass in current location
     file_data = get_downloadable_files()
 
     if did_login:
+        # TODO: should we have a notification that the login was successful
         return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
                                failed_password=False)
     elif 'upload_post' in request.form:
+        # This is the form in the upload model
         return handle_upload_post(signed_in, cur_user, file_data)
     else:
+        # each download button is its own form with a unique ID
         for this_file_data in file_data:
             if str(this_file_data.id) in request.form:
                 print('hit')
                 return handle_download_post(signed_in, cur_user, this_file_data, file_data)
 
-    abort(400)
+    abort(400)  # Bad Request
     # return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
     #                       failed_password=False)
 
 
+# IDK what to do with this page
 @app.route('/navbar', methods=['GET', 'POST'])
 def navbar_page():
     if request.method == 'POST':
@@ -234,4 +274,5 @@ if __name__ == "__main__":
     up_path = os.path.join('static', UPLOAD_DIRECTORY)
     if not os.path.exists(up_path):
         os.makedirs(up_path)
+    # starts the app
     app.run(threaded=True, host='0.0.0.0', port=5000, debug=True)
