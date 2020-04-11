@@ -9,11 +9,38 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-            <link href="../static/darkly.css" rel="stylesheet">
-            <link href="../static/stylesheet.css" rel="stylesheet">
-            <script type="text/javascript" src="../static/functions.js"></script>
+            <link href="{{ url_for('static', filename='darkly.css') }}" rel="stylesheet">
+            <link href="{{ url_for('static', filename='stylesheet.css') }}" rel="stylesheet">
+            <script type="text/javascript" src="{{ url_for('static', filename='functions.js') }}"></script>
         </head>
-        <body onload="javascript:cookie_handle()">
+        <body>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark justiy-content-between">
+                <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='freedrop-logo.png') }}" height="35" alt="LOGO"></a>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="upload" style="t01">Upload<span class="sr-only">(current></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="download" style="navbar-text">Download</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about">About Us<span class="sr-only">(current></span></a>
+                        </li>
+                    </ul>
+                    {% if signed_in %}
+                    <h2>Hello, {{ cur_user }}.</h2>
+                    <form class="form-inline" method="POST">
+                        <input class="btn btn-dark" type="submit" name="sign_out" value="Sign Out">
+                    </form>
+                    {% else %}
+                    <form class="form-inline" method="POST">
+                        <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username" name="username">
+                        <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password" name="password">
+                        <input class="btn btn-dark" type="submit" name="sign_in" value="Sign In">
+                    </form>
+                    {% endif %}
+        <!--<body onload="javascript:cookie_handle()">
             <nav class="navbar navbar-expand-lg justiy-content-between navbar-custom">
         <a class="navbar-brand" href="#"><img src="../static/freedrop-logo.png" height="35" alt="LOGO"></a>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -29,7 +56,7 @@
                 </li>
             </ul>
             <div class="form-inline" id="login_part"></div>
-        </div>
+        </div>-->
     </nav>
             <br>
             <div class="container-fluid">
@@ -41,18 +68,18 @@
                     <div class="card">
                     <div class="card-body">
                     <h5 class="card-title">Sign Up for Uploading Your Files</h5>
-                    <form action="some_url_for_sign_up" onsubmit="return validate_pass()" method="post"><!-- Url need update -->
+                    <form onsubmit="return validate_pass()" method="post">
                         <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" class="form-control" id="username" placeholder="Enter Username" required="required">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" required="required">
                         </div>
                         <div class="form-group">
                         <label for="email_c">Email</label>
-                        <input type="email" class="form-control" id="email_c" placeholder="Enter Email" required="required">
+                        <input type="email" class="form-control" id="email_c" name="email" placeholder="Enter Email" required="required">
                         </div>
                         <div class="form-group">
                         <label for="thePass1">Password</label>
-                        <input type="password" class="form-control" id="thePass1" placeholder="Password" required="required">
+                        <input type="password" class="form-control" id="thePass1" name="password" placeholder="Password" required="required">
                         </div>
                         <div class="form-group">
                         <label for="thePass2">Confirm Your Password</label>
@@ -63,14 +90,16 @@
                         <label class="form-check-label" for="termCheck">By checking this box, you agree to our <a href="#" data-toggle="modal" data-target="#modal_for_terms">Terms</a> and <a href="#" data-toggle="modal" data-target="#modal_for_policy">Data Policy.</a> </label>
                         </div>
                         <br>
-                        <button type="submit" class="btn btn-primary">Sign up</button>
+                        <button type="submit" name="sign_up" class="btn btn-primary">Sign up</button>
                     </form>
                     </div>
                     </div>
                     </div>
-                </div>
+                    </div>
                 
             </div>
+
+                
             <div class="modal" id="modal_for_terms">
                 <div class="modal-dialog">
                 <div class="modal-content">
