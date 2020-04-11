@@ -49,13 +49,30 @@
             <div class="col-7">
                 <div class="card">
                     <div class="card-header">
-                        <h3 style="font-weight:bold">User_Name</h3>
+                        <div class="row">
+                            <h3 style=";font-weight: bold; padding-left:1%;">User_Name</h3>
+                            <button type="button" href="#editProfileModal" toggle="modal" data-target=".bd-editProfile-modal-lg" onclick="openEditProfileModal" class="btn">
+                                <svg class="bi bi-pencil" width="1em" height="1em" viewBox="0 0 16 16"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M11.293 1.293a1 1 0 011.414 0l2 2a1 1 0 010 1.414l-9 9a1 1 0 01-.39.242l-3 1a1 1 0 01-1.266-1.265l1-3a1 1 0 01.242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z"
+                                        clip-rule="evenodd" />
+                                    <path fill-rule="evenodd"
+                                        d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 00.5.5H4v.5a.5.5 0 00.5.5H5v.5a.5.5 0 00.5.5H6v-1.5a.5.5 0 00-.5-.5H5v-.5a.5.5 0 00-.5-.5H3z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+
                     </div>
 
                     <div class="card-body">
                         <div class="row">
                             <div class="col-4">
-                                <img src="../static/sample-profile.png" alt="ID Photo" height="200px">
+                                <div class="circle">
+                                    <img class="img-circle" src="../static/sample-photo.jpg" alt="ID Photo"
+                                        onload='fixAspect(this);'>
+                                </div>
                             </div>
                             <div class="col">
                                 <h6 style="font-weight:bold;">Files Uploaded:</h6>
@@ -63,7 +80,8 @@
                                 <h6 style="font-weight:bold;">Lifetime Likes:</h6>
                                 <p id="userNumLifetimeLikes">17</p>
                                 <h6 style="font-weight:bold;">Bio:</h6>
-                                <p id="userBio">This is a really cool idea for an app! How fun is it to have the ability to drop files places. This is also a fun test bio too.</p>
+                                <p id="userBio">This is a really cool idea for an app! How fun is it to have the ability
+                                    to drop files places. This is also a fun test bio too.</p>
                             </div>
                         </div>
                     </div>
@@ -72,10 +90,10 @@
 
             <div class="col-5">
                 <!--Map-->
-                <div id="map" style="height:350px"></div>
+                <!-- <div id="map" style="height:350px"></div>
                 <script async defer
                     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
-                    </script>
+                    </script> -->
                 <hr>
             </div>
 
@@ -194,4 +212,17 @@
                     </div>
                 </div>
             </div>
+
+        <div class="modal fade bd-editProfile-modal-lg" tabindex="-1" role="dialouge" aria-labledby="myLargeModalLabel" id="editProfileModal" aria-hidden="true">
+            <div class="modal-dialoug modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 id="modalHead" style="font-weight: bold;">Edit Profile</h1>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 </body>

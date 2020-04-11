@@ -1,19 +1,19 @@
 var latVar = -50, lonVar = 0.0;
 
-function getLocation(initMap)
-{
+// function getLocation(initMap)
+// {
 
-  var position = navigator.geolocation.getCurrentPosition(coords.longitude);
-  alert(position);
-  if (navigator.geolocation)
-  {
-    var latlon = position.coords.latitude + "," + position.coords.longitude;
-    alert(latlon);
-  } else
-  {
-    alert("Could not get location!");
-  }
-}
+//   var position = navigator.geolocation.getCurrentPosition(coords.longitude);
+//   alert(position);
+//   if (navigator.geolocation)
+//   {
+//     var latlon = position.coords.latitude + "," + position.coords.longitude;
+//     alert(latlon);
+//   } else
+//   {
+//     alert("Could not get location!");
+//   }
+// }
 
 //For more information or much of this code, see: https://developers.google.com/maps/documentation/javascript/geolocation
 var map, infoWindow;
@@ -161,6 +161,7 @@ function openUploadModal(){
 function openInspectModal(){
 
 }
+
 function setCookie(cname, cvalue, exdays) {
 	var d = new Date();
 	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -256,4 +257,16 @@ function validate_pass(){
 		$("#modal_for_pass_error").modal();
 		return false;
 	}
+}
+
+// From Stack Exchange: https://stackoverflow.com/questions/46083615/crop-and-center-image-to-circle-in-bootstrap-4
+function fixAspect(img) {
+  var $img = $(img),
+    width = $img.width(),
+    height = $img.height(),
+    tallAndNarrow = width / height < 1;
+  if (tallAndNarrow) {
+    $img.addClass('tallAndNarrow');
+  }
+  $img.addClass('loaded');
 }
