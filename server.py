@@ -2,7 +2,7 @@ import os
 import hashlib
 from typing import NamedTuple
 
-from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory, send_file, flash
+from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory, send_file, flash, send_file, redirect
 
 app = Flask(__name__)
 app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption (using session)
@@ -197,6 +197,55 @@ def handle_download_post(signed_in, cur_user, this_file_data, file_data):
     return send_file(os.path.join('static', path), as_attachment=True)
 
 
+# I made duplicates but at some point we will just make these the real ones
+def handle_map_upload_post(signed_in, cur_user, file_data):
+    # We only want to allow for upload if the user is signed in
+    # TODO: really we should also remove the upload model if we are not signed in
+    if signed_in:
+        print(request.form)
+        # if the form includes a file upload, the data is stored in request.files
+        print(request.files)
+
+        if 'input_file' not in request.files or request.files['input_file'].filename == '':
+            # if they left the file blank
+            # TODO: look into flash
+            return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+
+        # TODO: validate user password
+
+        input_file = request.files['input_file']
+        # we store files at `static/UPLOAD_DIRECTORY/<username>/<file>` that's what `file_path` will store
+        if not os.path.exists(os.path.join('static', UPLOAD_DIRECTORY, cur_user)):
+            os.makedirs(os.path.join('static', UPLOAD_DIRECTORY, cur_user))
+        filename = os.path.join(cur_user, input_file.filename)
+        file_path = os.path.join('static', UPLOAD_DIRECTORY, filename)
+
+        # We save the file to the file system
+        input_file.save(file_path)  # TODO: maybe check if file exists too as to not overwrite
+
+        # TODO: add data to mongo (Note we will store filename)
+
+    # TODO: have a better else
+    # TODO: look into flash (in branch flask-flash)
+    return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+
+
+def handle_map_download_post(signed_in, cur_user, this_file_data, file_data):
+    path = this_file_data.path
+    password_hash = this_file_data.password_hash
+    req_password = this_file_data.req_password
+
+    if req_password:
+        input_password = 'password'  # TODO: input_password = request.form['file_password']
+        input_password_hash = hashlib.sha256(input_password.encode('utf-8')).hexdigest()
+        if input_password_hash != password_hash:
+            return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+            # TODO: look into flash
+    # print(os.path.join('static', path))
+    # send file is how we have the user download the file.
+    return send_file(os.path.join('static', path), as_attachment=True)
+
+
 @app.route('/download', methods=['GET'])
 def download_page_get():
     # Note: for GET all we want to do is render the page
@@ -269,6 +318,66 @@ def register_page():
     signed_in, cur_user = get_signed_in_info()
 
     return render_template("register.html", signed_in=signed_in, cur_user=cur_user)
+
+
+@app.route('/map', methods=['GET'])
+def map_page_get():
+    # Note: for GET all we want to do is render the page
+    signed_in, cur_user = get_signed_in_info()
+
+    file_data = get_downloadable_files()
+
+    return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+
+
+@app.route('/map', methods=['POST'])
+def map_page_post():
+    # The request.form is different depending of which form you submit. You can only submit one at a time.
+    print(request.form)
+    did_login = handle_login_post()
+
+    # this is not POST specific, but data is still needed in the POST.
+    signed_in, cur_user = get_signed_in_info()
+
+    # will call mongo, TODO: pass in current location
+    file_data = get_downloadable_files()
+
+    if did_login:
+        # TODO: should we have a notification that the login was successful
+        return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+    elif 'upload_post' in request.form:
+        # This is the form in the upload model
+        return handle_map_upload_post(signed_in, cur_user, file_data)
+    else:
+        # each download button is its own form with a unique ID
+        for this_file_data in file_data:
+            if str(this_file_data.id) in request.form:
+                print('hit')
+                return handle_map_download_post(signed_in, cur_user, this_file_data, file_data)
+
+    abort(400)  # Bad Request
+
+
+@app.route('/user', methods=['GET'])
+def user_page_get():
+    signed_in, cur_user = get_signed_in_info()
+
+    if not signed_in:
+        return redirect(url_for('register_page'))
+
+    return render_template("user.html", signed_in=signed_in, cur_user=cur_user)
+
+
+@app.route('/user', methods=['POST'])
+def user_page_post():
+    handle_login_post()
+
+    signed_in, cur_user = get_signed_in_info()
+
+    if not signed_in:
+        return redirect(url_for('register_page'))
+
+    return render_template("user.html", signed_in=signed_in, cur_user=cur_user)
 
 
 if __name__ == "__main__":

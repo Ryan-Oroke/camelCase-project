@@ -10,8 +10,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <link href="../static/darkly.css" rel="stylesheet">
-    <link href="../static/stylesheet.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='darkly.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='stylesheet.css') }}" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -22,22 +22,22 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-    <script type="text/javascript" src="../static/functions.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='functions.js') }}"></script>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg justiy-content-between navbar-custom">
-        <a class="navbar-brand" href="#"><img src="../static/freedrop-logo.png" height="50" alt="LOGO"></a>
+        <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='freedrop-logo.png') }}" height="50" alt="LOGO"></a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="map.html" style="t01">Map<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="/map" style="t01">Map<span class="sr-only">(current></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="user.html" style="navbar-text">Profile</a>
+                    <a class="nav-link" href="/user" style="navbar-text">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About<span class="sr-only">(current></span></a>
+                    <a class="nav-link" href="/about">About<span class="sr-only">(current></span></a>
                 </li>
             </ul>
         </div>
@@ -50,7 +50,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
-                            <h3 style=";font-weight: bold; padding-left:1%;">User_Name</h3>
+                            <h3 style=";font-weight: bold; padding-left:1%;">{{ cur_user }}</h3>
                             <button type="button" href="#editProfileModal" toggle="modal" data-target=".bd-editProfile-modal-lg" onclick="openEditProfileModal" class="btn">
                                 <svg class="bi bi-pencil" width="1em" height="1em" viewBox="0 0 16 16"
                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -70,7 +70,7 @@
                         <div class="row">
                             <div class="col-4">
                                 <div class="circle">
-                                    <img class="img-circle" src="../static/sample-photo.jpg" alt="ID Photo"
+                                    <img class="img-circle" src="{{ url_for('static', filename='sample-photo.jpg') }}" alt="ID Photo"
                                         onload='fixAspect(this);'>
                                 </div>
                             </div>
