@@ -81,14 +81,14 @@ def handle_login_post():
             # it works using cookies allowing the user to not have to re-sign in every time.
             session['cur_user'] = username
             # We use flash to tell the user things
-            flash('You were successfully logged in')
+            # flash('You were successfully logged in')
         else:
             session['cur_user'] = None
-            flash('Logged in failed.')
+            flash('Log in in failed, username or password is incorrect.')
         return True
     elif 'sign_out' in request.form:
         session['cur_user'] = None
-        flash('You were successfully logged out')
+        # flash('You were successfully logged out')
         return True
     else:
         return False
