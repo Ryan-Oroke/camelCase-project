@@ -51,9 +51,13 @@
                                             <button type="button" class="btn btn-dark btn-sm" href="#inspectModal"
                                                 data-toggle="modal" data-target=".bd-inspect-modal-{{fils[i].id}}-lg"
                                                 onclick="openInspectModal()">Inspect File</button>
+                                            {% if fils[i].req_password %}
+                                                <p>Password Required</p>
+                                            {% else %}
                                             <form  method="POST">
                                                 <input class="btn btn-danger btn-sm ml-3" type="submit" name="{{fils[i].id}}" value="Download">
                                             </form>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
@@ -66,9 +70,17 @@
                             {% else %}
                                 <p>{{ fils[i].description }}</p>
                             {% endif %}
-                            {% if fils[i].format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico"%}
+                            {% if fils[i].format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico jfif"%}
                                 <div align="center">
                                     <img src="{{ url_for('static', filename=fils[i].path) }}" width="400px">
+                                </div>
+                            {% elif fils[i].req_password %}
+                               <div align="center">
+                                    <img class="card-img-top" src="{{ url_for('static', filename='no_preview_available.jfif') }}">
+                                </div>
+                             {% else %}
+                                <div align="center">
+                                    <img class="card-img-top" src="{{ url_for('static', filename='no_preview_available.jfif') }}">
                                 </div>
                             {% endif %}
                             </div>
@@ -86,9 +98,13 @@
                                             <button type="button" class="btn btn-dark btn-sm" href="#insFpectModal"
                                                 data-toggle="modal" data-target=".bd-inspect-modal-{{fils[i+1].id}}-lg"
                                                 onclick="openInspectModal()">Inspect File</button>
+                                            {% if fils[i+1].req_password %}
+                                                <p>Password Required</p>
+                                            {% else %}
                                             <form  method="POST">
                                                 <input class="btn btn-danger btn-sm ml-3" type="submit" name="{{fils[i+1].id}}" value="Download">
                                             </form>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
@@ -101,9 +117,17 @@
                             {% else %}
                                 <p>{{ fils[i+1].description }}</p>
                             {% endif %}
-                            {% if fils[i+1].format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico"%}
+                            {% if fils[i+1].req_password %}
                                 <div align="center">
+                                   <img class="card-img-top" src="{{ url_for('static', filename='no_preview_available.jfif') }}">
+                                </div>
+                             {% elif fils[i+1].format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico jfif" %}
+                               <div align="center">
                                     <img class="card-img-top" src="{{ url_for('static', filename=fils[i+1].path) }}">
+                                </div>
+                             {% else %}
+                                <div align="center">
+                                    <img class="card-img-top" src="{{ url_for('static', filename='no_preview_available.jfif') }}">
                                 </div>
                             {% endif %}
                             </div>
