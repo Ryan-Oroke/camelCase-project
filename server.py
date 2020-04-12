@@ -2,7 +2,7 @@ import os
 import hashlib
 from typing import NamedTuple
 
-from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory, send_file, redirect
+from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory, send_file, flash, send_file, redirect
 
 app = Flask(__name__)
 app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption (using session)
@@ -80,11 +80,15 @@ def handle_login_post():
             # session is how we can store data for a user.
             # it works using cookies allowing the user to not have to re-sign in every time.
             session['cur_user'] = username
+            # We use flash to tell the user things
+            flash('You were successfully logged in')
         else:
             session['cur_user'] = None
+            flash('Logged in failed.')
         return True
     elif 'sign_out' in request.form:
         session['cur_user'] = None
+        flash('You were successfully logged out')
         return True
     else:
         return False
@@ -152,9 +156,9 @@ def handle_upload_post(signed_in, cur_user, file_data):
         print(request.files)
 
         if 'input_file' not in request.files or request.files['input_file'].filename == '':
-            # if they left the file blank
-            # TODO: look into flash
-            return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, failed_password=False)
+            # flash is how we tell the user things
+            flash("No file to upload found")
+            return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
 
         # TODO: validate user password
 
@@ -167,12 +171,13 @@ def handle_upload_post(signed_in, cur_user, file_data):
 
         # We save the file to the file system
         input_file.save(file_path)  # TODO: maybe check if file exists too as to not overwrite
+        flash("File uploaded successfully")
 
         # TODO: add data to mongo (Note we will store filename)
 
-    # TODO: have a better else
-    # TODO: look into flash
-    return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, failed_password=False)
+    else:
+        flash("You must be signed in to upload files.")
+    return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
 
 
 def handle_download_post(signed_in, cur_user, this_file_data, file_data):
@@ -184,9 +189,9 @@ def handle_download_post(signed_in, cur_user, this_file_data, file_data):
         input_password = 'password'  # TODO: input_password = request.form['file_password']
         input_password_hash = hashlib.sha256(input_password.encode('utf-8')).hexdigest()
         if input_password_hash != password_hash:
-            return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
-                                   failed_password=True)
-            # TODO: look into flash
+            flash("Incorrect password to download file")
+            return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+
     # print(os.path.join('static', path))
     # send file is how we have the user download the file.
     return send_file(os.path.join('static', path), as_attachment=True)
@@ -202,8 +207,8 @@ def handle_map_upload_post(signed_in, cur_user, file_data):
         print(request.files)
 
         if 'input_file' not in request.files or request.files['input_file'].filename == '':
-            # if they left the file blank
-            # TODO: look into flash
+            # flash is how we tell the user things
+            flash("No file to upload found")
             return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
 
         # TODO: validate user password
@@ -217,11 +222,12 @@ def handle_map_upload_post(signed_in, cur_user, file_data):
 
         # We save the file to the file system
         input_file.save(file_path)  # TODO: maybe check if file exists too as to not overwrite
+        flash("File uploaded successfully")
 
         # TODO: add data to mongo (Note we will store filename)
 
-    # TODO: have a better else
-    # TODO: look into flash (in branch flask-flash)
+    else:
+        flash("You must be signed in to upload files.")
     return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
 
 
@@ -234,8 +240,8 @@ def handle_map_download_post(signed_in, cur_user, this_file_data, file_data):
         input_password = 'password'  # TODO: input_password = request.form['file_password']
         input_password_hash = hashlib.sha256(input_password.encode('utf-8')).hexdigest()
         if input_password_hash != password_hash:
+            flash("Incorrect password to download file")
             return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
-            # TODO: look into flash
     # print(os.path.join('static', path))
     # send file is how we have the user download the file.
     return send_file(os.path.join('static', path), as_attachment=True)
@@ -248,8 +254,7 @@ def download_page_get():
 
     file_data = get_downloadable_files()
 
-    return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
-                           failed_password=False)
+    return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
 
 
 @app.route('/download', methods=['POST'])
@@ -265,9 +270,7 @@ def download_page_post():
     file_data = get_downloadable_files()
 
     if did_login:
-        # TODO: should we have a notification that the login was successful
-        return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
-                               failed_password=False)
+        return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
     elif 'upload_post' in request.form:
         # This is the form in the upload model
         return handle_upload_post(signed_in, cur_user, file_data)
@@ -279,14 +282,13 @@ def download_page_post():
                 return handle_download_post(signed_in, cur_user, this_file_data, file_data)
 
     abort(400)  # Bad Request
-    # return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user,
-    #                       failed_password=False)
 
 
 # IDK what to do with this page
 @app.route('/navbar', methods=['GET', 'POST'])
 def navbar_page():
     if request.method == 'POST':
+        # if the html template does not support flash then nothing will happen
         handle_login_post()
 
     signed_in, cur_user = get_signed_in_info()
