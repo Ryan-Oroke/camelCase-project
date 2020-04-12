@@ -1,4 +1,5 @@
-<div class="modal fade bd-inspect-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+{% for fil in fils %}
+<div class="modal fade bd-inspect-modal-{{fil.id}}-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         style="display: none;" id="inspectModal" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -11,25 +12,30 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col">
-                            <h5> Uploaded by: username</h5>
+                            <h5> Uploaded by: {{fil.creator}}</h5>
                         </div>
                         <div class="col" align="right">
                             <form  method="POST">
-                                <input class="btn btn-danger btn-sm ml-3" type="submit" name="12" value="Download">
+                                <input class="btn btn-danger btn-sm ml-3" type="submit" name="{{fil.id}}" value="Download">
                             </form>
                         </div>
                     </div>
                     <br>
                     <p>File Information:</p>
-                    <label for="upload data"><span class="fas fa-upload"></span> Uploaded on: 02/03/2020</label> &nbsp
+                    <label for="upload data"><span class="fas fa-upload"></span> Uploaded on: {{fil.date}}</label> &nbsp
                     &nbsp &nbsp
-                    <label for="upload data"><span class="fas fa-clock"></span> Available until: 02/010/2020</label>
+                    <label for="upload data"><span class="fas fa-clock"></span> Available until: {{fil.death_date}}</label>
                     &nbsp &nbsp &nbsp
-                    <label for="likes"><span class="fas fa-heart"></span> 6527</label> &nbsp &nbsp &nbsp
-                    <label for="downloads"><span class="fas fa-download"></span> 6527</label> &nbsp &nbsp &nbsp
-                    <label for="distance"><span class="fas fa-people-arrows"></span> 1 mile</label> &nbsp &nbsp &nbsp
-                    <embed src="../static/sample-photo.JPG" type="application/pdf" width="100%" height="600px" />
+                    <label for="likes"><span class="fas fa-heart"></span> {{fil.num_likes}}</label> &nbsp &nbsp &nbsp
+                    <label for="downloads"><span class="fas fa-download"></span> {{fil.downloads}} </label> &nbsp &nbsp &nbsp
+                    <label for="distance"><span class="fas fa-people-arrows"></span> {{fil.dist}} </label> &nbsp &nbsp &nbsp
+                    {% if fil.format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico"%}
+                        <img class="card-img-top" src="{{ url_for('static', filename=fil.path) }}">
+                    {% elif fil.format.lower() in "pdf" %}
+                        <embed src="{{ url_for('static', filename=fil.path) }}" type="application/pdf" width="100%" height="600px" />
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+{% endfor %}
