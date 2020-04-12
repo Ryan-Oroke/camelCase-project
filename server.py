@@ -61,7 +61,10 @@ def get_downloadable_files():
     # or we could only store "P1540913.JPG" and add UPLOAD_DIRECTORY and user name
 
     return [file_data_html("test1", 40.015869, -105.279517, "jpg", os.path.join(UPLOAD_DIRECTORY, "test_user/P1540913.JPG").replace('\\', '/'), 100, 12, "abc", "today", "tomorrow", False, "", 0, "test_user", 420),
-            file_data_html("test2", 40.016869, -105.279617, "jpg", os.path.join(UPLOAD_DIRECTORY, "test_user/P1540506.JPG").replace('\\', '/'), 101, 34, "def", "tomorrow", "Mar 3", True, hashlib.sha256("password".encode('utf-8')).hexdigest(), 1, "test_user", 69)]
+            file_data_html("test2", 40.016869, -105.278617, "jpg", os.path.join(UPLOAD_DIRECTORY, "test_user/P1540506.JPG").replace('\\', '/'), 101, 34, "def", "tomorrow", "Mar 3", True, hashlib.sha256("password".encode('utf-8')).hexdigest(), 1, "test_user", 69),
+            file_data_html("test3", 40.017869, -105.275517, "jpg", os.path.join(UPLOAD_DIRECTORY, "test_user/P1540915.JPG").replace('\\', '/'), 100, 56, "111", "today", "tomorrow", False, "", 0, "test_user", 1),
+            file_data_html("test4", 40.014869, -105.276617, "pdf", os.path.join(UPLOAD_DIRECTORY, "test_user/test_pdf.pdf").replace('\\', '/'), 101, 78, "222", "tomorrow", "Mar 3", True, hashlib.sha256("password1".encode('utf-8')).hexdigest(), 1, "test_user", 2),
+            file_data_html("test5", 40.013869, -105.277617, "jpg", os.path.join(UPLOAD_DIRECTORY, "test_user/LkgdAgN.jpg").replace('\\', '/'), 101, 90, "333", "tomorrow", "Mar 3", True, hashlib.sha256("password2".encode('utf-8')).hexdigest(), 1, "test_user", 3)]
     # Note, we want to store the path starting in static/ but not including the static part
 
 
