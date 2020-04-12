@@ -4,7 +4,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title" id="myLargeModalLabel">File Name</h1>
+                    <h1 class="modal-title" id="myLargeModalLabel">{{fil.name}}</h1>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -17,6 +17,8 @@
                         <div class="col" align="right">
                             <form  method="POST">
                                 <input class="btn btn-danger btn-sm ml-3" type="submit" name="{{fil.id}}" value="Download">
+                                <input type="text" class="form-control" id="inputFileSearch" name='file_password' style="width:500px;"
+                                aria-describedby="fileSearchHelp" placeholder="Password Required">
                             </form>
                         </div>
                     </div>
@@ -29,10 +31,14 @@
                     <label for="likes"><span class="fas fa-heart"></span> {{fil.num_likes}}</label> &nbsp &nbsp &nbsp
                     <label for="downloads"><span class="fas fa-download"></span> {{fil.downloads}} </label> &nbsp &nbsp &nbsp
                     <label for="distance"><span class="fas fa-people-arrows"></span> {{fil.dist}} </label> &nbsp &nbsp &nbsp
-                    {% if fil.format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico"%}
-                        <img class="card-img-top" src="{{ url_for('static', filename=fil.path) }}">
-                    {% elif fil.format.lower() in "pdf" %}
-                        <embed src="{{ url_for('static', filename=fil.path) }}" type="application/pdf" width="100%" height="600px" />
+                    {% if fil.req_password %}
+                         <img class="card-img-top" src="{{ url_for('static', filename='no_preview_available.jfif') }}">
+                    {% else %}
+                        {% if fil.format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico"%}
+                            <img class="card-img-top" src="{{ url_for('static', filename=fil.path) }}">
+                        {% elif fil.format.lower() in "pdf" %}
+                            <embed src="{{ url_for('static', filename=fil.path) }}" type="application/pdf" width="100%" height="600px" />
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

@@ -158,7 +158,7 @@ def handle_download_post(signed_in, cur_user, this_file_data, file_data):
     req_password = this_file_data.req_password
 
     if req_password:
-        input_password = 'password'  # TODO: input_password = request.form['file_password']
+        input_password = request.form['file_password']
         input_password_hash = hashlib.sha256(input_password.encode('utf-8')).hexdigest()
         if input_password_hash != password_hash:
             flash("Incorrect password to download file")
