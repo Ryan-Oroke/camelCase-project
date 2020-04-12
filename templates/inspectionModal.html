@@ -17,8 +17,10 @@
                         <div class="col" align="right">
                             <form  method="POST">
                                 <input class="btn btn-danger btn-sm ml-3" type="submit" name="{{fil.id}}" value="Download">
+                                {% if fil.req_password %}
                                 <input type="text" class="form-control" id="inputFileSearch" name='file_password' style="width:500px;"
                                 aria-describedby="fileSearchHelp" placeholder="Password Required">
+                                {% endif %}
                             </form>
                         </div>
                     </div>
