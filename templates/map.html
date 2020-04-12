@@ -70,13 +70,13 @@
                             {% else %}
                                 <p>{{ fils[i].description }}</p>
                             {% endif %}
-                            {% if fils[i].format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico jfif"%}
+                            {% if fils[i].req_password %}
                                 <div align="center">
-                                    <img src="{{ url_for('static', filename=fils[i].path) }}" width="400px">
-                                </div>
-                            {% elif fils[i].req_password %}
-                               <div align="center">
                                     <img class="card-img-top" src="{{ url_for('static', filename='no_preview_available.jfif') }}">
+                                </div>
+                            {% elif fils[i].format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico jfif"%}
+                               <div align="center">
+                                   <img src="{{ url_for('static', filename=fils[i].path) }}" width="400px">
                                 </div>
                              {% else %}
                                 <div align="center">
