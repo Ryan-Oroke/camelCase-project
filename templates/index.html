@@ -2,75 +2,12 @@
 <html lang="en">
 
 <head>
-    <title>Form</title>
-    <!--Bootstrap-->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    {# Instead of manually linking to ../static/stylesheet.css you should use url_for #}
-    <link href="{{ url_for('static', filename='stylesheet.css') }}" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='functions.js') }}"></script>
+    <title>Test Page</title>
+    {% include "header.html" %}
 </head>
-<script>
-function on_load()
-{
-{# when someone uses `flash()` that gets added to the messages list #}
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-  // We just create an alert.
-    {% for message in messages %}
-      alert('{{ message }}')
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-}
-</script>
+
 <body onload="on_load()">
-    <nav class="navbar navbar-expand-lg justiy-content-between navbar-custom">
-        <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='freedrop-logo.png') }}" height="35" alt="LOGO"></a>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="upload" style="t01">Upload<span class="sr-only">(current></span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="download" style="navbar-text">Download</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="about">About Us<span class="sr-only">(current></span></a>
-                </li>
-            </ul>
-            {# signed_in is a python bool. You can think of the if and a compiler flag #}
-            {% if signed_in %}
-            <h2>Hello, {{ cur_user }}.</h2>
-            {# Here is a form that will make a POST request #}
-            <form class="form-inline" method="POST">
-                <input class="btn btn-dark" type="submit" name="sign_out" value="Sign Out">
-            </form>
-            {% else %}
-            {# Here is the form that will make the sign_in POST request #}
-            <form class="form-inline" method="POST">
-                {# Notice the name attribute, this is how we will access it in flask #}
-                <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username" name="username">
-                <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password" name="password">
-                <input class="btn btn-dark" type="submit" name="sign_in" value="Sign In">
-            </form>
-            {% endif %}
-        </div>
-    </nav>
+    {% include "./navbar.html" %}
     <br>
 </body>
 

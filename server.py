@@ -2,7 +2,7 @@ import os
 import hashlib
 from typing import NamedTuple
 
-from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory, send_file, flash, send_file, redirect
+from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory, flash, send_file, redirect
 
 app = Flask(__name__)
 app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption (using session)
@@ -94,11 +94,13 @@ def handle_login_post():
         return False
 
 
-# We need to tell flask what to do.
-@app.route('/', methods=['GET', 'POST'])
-def root_route():
-    # if you go to `http://localhost:5000/` this function will be called. Note we would be using the request method GET.
-    print("root_route was called with", request.method)  # flask will have print this out
+# this is an example, it is not intended to be used for the website
+# We need to tell flask what to do when the route `/test_example` receives a request
+@app.route('/test_example', methods=['GET', 'POST'])
+def test_example_route():
+    # if you go to `http://localhost:5000/test_example` this function will be called.
+    # Note, when you view you would be using the request method GET.
+    print("test_example_route was called with", request.method)  # flask will have print this out
     # GET normally doesn't have any data associated with it.
     # We also need to handle POST.
     if request.method == 'POST':
@@ -116,89 +118,7 @@ def root_route():
     return render_template("index.html", signed_in=signed_in, cur_user=cur_user)
 
 
-"""
-@app.route('/upload', methods=['GET'])
-def upload_page_get():
-    signed_in, cur_user = get_signed_in_info()
-
-    return render_template("upload.html", signed_in=signed_in, cur_user=cur_user)
-
-
-@app.route('/upload', methods=['POST'])  # TODO: move to
-def upload_page_post():
-    handle_login_post()
-
-    signed_in, cur_user = get_signed_in_info()
-
-    if signed_in:
-        print(request.form)
-        print(request.files)
-
-        if 'input_file' not in request.files or request.files['input_file'].filename == '':
-            return render_template("upload.html", signed_in=signed_in, cur_user=cur_user)  # look into flash
-
-        input_file = request.files['input_file']
-        if not os.path.exists(os.path.join(UPLOAD_DIRECTORY, cur_user)):
-            os.makedirs(os.path.join(UPLOAD_DIRECTORY, cur_user))
-        filename = os.path.join(cur_user, input_file.filename)
-        input_file.save(os.path.join(UPLOAD_DIRECTORY, filename))
-
-    return render_template("upload.html", signed_in=signed_in, cur_user=cur_user)
-"""
-
-
 def handle_upload_post(signed_in, cur_user, file_data):
-    # We only want to allow for upload if the user is signed in
-    # TODO: really we should also remove the upload model if we are not signed in
-    if signed_in:
-        print(request.form)
-        # if the form includes a file upload, the data is stored in request.files
-        print(request.files)
-
-        if 'input_file' not in request.files or request.files['input_file'].filename == '':
-            # flash is how we tell the user things
-            flash("No file to upload found")
-            return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
-
-        # TODO: validate user password
-
-        input_file = request.files['input_file']
-        # we store files at `static/UPLOAD_DIRECTORY/<username>/<file>` that's what `file_path` will store
-        if not os.path.exists(os.path.join('static', UPLOAD_DIRECTORY, cur_user)):
-            os.makedirs(os.path.join('static', UPLOAD_DIRECTORY, cur_user))
-        filename = os.path.join(cur_user, input_file.filename)
-        file_path = os.path.join('static', UPLOAD_DIRECTORY, filename)
-
-        # We save the file to the file system
-        input_file.save(file_path)  # TODO: maybe check if file exists too as to not overwrite
-        flash("File uploaded successfully")
-
-        # TODO: add data to mongo (Note we will store filename)
-
-    else:
-        flash("You must be signed in to upload files.")
-    return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
-
-
-def handle_download_post(signed_in, cur_user, this_file_data, file_data):
-    path = this_file_data.path
-    password_hash = this_file_data.password_hash
-    req_password = this_file_data.req_password
-
-    if req_password:
-        input_password = 'password'  # TODO: input_password = request.form['file_password']
-        input_password_hash = hashlib.sha256(input_password.encode('utf-8')).hexdigest()
-        if input_password_hash != password_hash:
-            flash("Incorrect password to download file")
-            return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
-
-    # print(os.path.join('static', path))
-    # send file is how we have the user download the file.
-    return send_file(os.path.join('static', path), as_attachment=True)
-
-
-# I made duplicates but at some point we will just make these the real ones
-def handle_map_upload_post(signed_in, cur_user, file_data):
     # We only want to allow for upload if the user is signed in
     # TODO: really we should also remove the upload model if we are not signed in
     if signed_in:
@@ -231,7 +151,7 @@ def handle_map_upload_post(signed_in, cur_user, file_data):
     return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
 
 
-def handle_map_download_post(signed_in, cur_user, this_file_data, file_data):
+def handle_download_post(signed_in, cur_user, this_file_data, file_data):
     path = this_file_data.path
     password_hash = this_file_data.password_hash
     req_password = this_file_data.req_password
@@ -247,6 +167,7 @@ def handle_map_download_post(signed_in, cur_user, this_file_data, file_data):
     return send_file(os.path.join('static', path), as_attachment=True)
 
 
+"""
 @app.route('/download', methods=['GET'])
 def download_page_get():
     # Note: for GET all we want to do is render the page
@@ -282,18 +203,7 @@ def download_page_post():
                 return handle_download_post(signed_in, cur_user, this_file_data, file_data)
 
     abort(400)  # Bad Request
-
-
-# IDK what to do with this page
-@app.route('/navbar', methods=['GET', 'POST'])
-def navbar_page():
-    if request.method == 'POST':
-        # if the html template does not support flash then nothing will happen
-        handle_login_post()
-
-    signed_in, cur_user = get_signed_in_info()
-
-    return render_template("navbar.html", signed_in=signed_in, cur_user=cur_user)
+"""
 
 
 @app.route('/about', methods=['GET', 'POST'])
@@ -321,7 +231,7 @@ def register_page():
     return render_template("register.html", signed_in=signed_in, cur_user=cur_user)
 
 
-@app.route('/map', methods=['GET'])
+@app.route('/', methods=['GET'])
 def map_page_get():
     # Note: for GET all we want to do is render the page
     signed_in, cur_user = get_signed_in_info()
@@ -331,7 +241,7 @@ def map_page_get():
     return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
 
 
-@app.route('/map', methods=['POST'])
+@app.route('/', methods=['POST'])
 def map_page_post():
     # The request.form is different depending of which form you submit. You can only submit one at a time.
     print(request.form)
@@ -348,13 +258,13 @@ def map_page_post():
         return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
     elif 'upload_post' in request.form:
         # This is the form in the upload model
-        return handle_map_upload_post(signed_in, cur_user, file_data)
+        return handle_upload_post(signed_in, cur_user, file_data)
     else:
         # each download button is its own form with a unique ID
         for this_file_data in file_data:
             if str(this_file_data.id) in request.form:
                 print('hit')
-                return handle_map_download_post(signed_in, cur_user, this_file_data, file_data)
+                return handle_download_post(signed_in, cur_user, this_file_data, file_data)
 
     abort(400)  # Bad Request
 
@@ -385,5 +295,5 @@ if __name__ == "__main__":
     up_path = os.path.join('static', UPLOAD_DIRECTORY)
     if not os.path.exists(up_path):
         os.makedirs(up_path)
-    # starts the app
+    # starts the app at `http://localhost:5000/`
     app.run(threaded=True, host='0.0.0.0', port=5000, debug=True)
