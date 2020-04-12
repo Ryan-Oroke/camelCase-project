@@ -7,22 +7,27 @@
 </head>
 
 <body>
-    {% include "navbar.html"}
+    {% include "navbar.html" %}
     <br>
 
-    <div class="container-fluid w-80">
+    <div class="container w-80 text-center">
+        <img class="img-fluid.max-width=75%" src="{{ url_for('static', filename='freedrop-logo-white.svg') }}" alt="Free Drop">
+        <h3>A revolution in the way files are shared. </h3>
+        <h6>Ever since the beginning of file sharing software users have upload millions of files which are only important for a short period of time, and then needlessly occupy server spaces despite becomming irrelevant. Here at Free Drop we have set out to revolutionize the way we use file sharing systems by allowing users to limit their file distribution over a limited time frame and in a limited location. With this twist on file sharing Free Drop not only makes you sharing experience more efficient, easier, and more secure. Try Free Drop for free today!</h6>
+        <br>
+        <hr>
+        <br>
         <div class="row">
-            <div class="col-2">
-                <!--Side Menu-->
-                <div class="card">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a class="card-link-custom" href="#" src="#">Upload a File</a></li>
-                        <li class="list-group-item"><a class="card-link-custom" href="#" src="#">Download a File</a>
-                        </li>
-                        <li class="list-group-item"><a class="card-link-custom" href="#" src="#">About FreeDrop</a></li>
-                    </ul>
-                </div>
-            </div>
+            <div class="col"><a class="btn-lg btn-danger" href="#">Search for Nearby Files</a></div>
+            <div class="col"><a class="btn-lg btn-danger" href="#">Register for Free Drop</a></div>
+<!--            <div class="col"><a class="btn-lg btn-danger" href="#">Log In</a></div>-->
+        </div>
+        <br>
+        <hr>
+        <br>
+    </div>
+
+    {% include "footer.html" %}
 </body>
 
 </html>

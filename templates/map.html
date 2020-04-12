@@ -17,139 +17,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-5">
-<!--                <div id="map"></div>-->
-<!--                <script>-->
-<!--                //For more information or much of this code, see: https://developers.google.com/maps/documentation/javascript/geolocation-->
-<!--                function initMap()-->
-<!--                {-->
-<!--                    map = new google.maps.Map(document.getElementById('map'), {-->
-<!--                        center: { lat: 40.000, lng: -105 },-->
-<!--                        zoom: 14,-->
-<!--                        styles:-->
-<!--                        [-->
-<!--                            { elementType: 'geometry', stylers: [{ color: '#252525' }] },-->
-<!--                            { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },-->
-<!--                            { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },-->
-<!--                            {-->
-<!--                            featureType: 'administrative.locality',-->
-<!--                            elementType: 'labels.text.fill',-->
-<!--                            stylers: [{ color: '#d59563' }]-->
-<!--                            },-->
-<!--                            // {-->
-<!--                            //   featureType: 'poi',-->
-<!--                            //   elementType: 'labels.text.fill',-->
-<!--                            //   stylers: [{color: '#d59563'}]-->
-<!--                            // },-->
-<!--                            {-->
-<!--                            featureType: 'poi.park',-->
-<!--                            elementType: 'geometry',-->
-<!--                            stylers: [{ color: '#0d261a' }]-->
-<!--                            },-->
-<!--                            // {-->
-<!--                            //   featureType: 'poi.park',-->
-<!--                            //   elementType: 'labels.text.fill',-->
-<!--                            //   stylers: [{color: '#6b9a76'}]-->
-<!--                            // },-->
-<!--                            {-->
-<!--                            featureType: 'road',-->
-<!--                            elementType: 'geometry',-->
-<!--                            stylers: [{ color: '#404040' }]-->
-<!--                            },-->
-<!--                            {-->
-<!--                            featureType: 'road',-->
-<!--                            elementType: 'geometry.stroke',-->
-<!--                            stylers: [{ color: '#212a37' }]-->
-<!--                            },-->
-<!--                            {-->
-<!--                            featureType: 'road',-->
-<!--                            elementType: 'labels.text.fill',-->
-<!--                            stylers: [{ color: '#9ca5b3' }]-->
-<!--                            },-->
-<!--                            {-->
-<!--                            featureType: 'road.highway',-->
-<!--                            elementType: 'geometry',-->
-<!--                            stylers: [{ color: '#505050' }]-->
-<!--                            },-->
-<!--                            {-->
-<!--                            featureType: 'road.highway',-->
-<!--                            elementType: 'geometry.stroke',-->
-<!--                            stylers: [{ color: '#1f2835' }]-->
-<!--                            },-->
-<!--                            {-->
-<!--                            featureType: 'road.highway',-->
-<!--                            elementType: 'labels.text.fill',-->
-<!--                            stylers: [{ color: '#f3d19c' }]-->
-<!--                            },-->
-<!--                            {-->
-<!--                            featureType: 'transit',-->
-<!--                            elementType: 'geometry',-->
-<!--                            stylers: [{ color: '#2f3948' }]-->
-<!--                            },-->
-<!--                            {-->
-<!--                            featureType: 'transit.station',-->
-<!--                            elementType: 'labels.text.fill',-->
-<!--                            stylers: [{ color: '#d59563' }]-->
-<!--                            },-->
-<!--                            {-->
-<!--                            featureType: 'water',-->
-<!--                            elementType: 'geometry',-->
-<!--                            stylers: [{ color: '#17263c' }]-->
-<!--                            },-->
-<!--                            {-->
-<!--                            featureType: 'water',-->
-<!--                            elementType: 'labels.text.fill',-->
-<!--                            stylers: [{ color: '#515c6d' }]-->
-<!--                            },-->
-<!--                            {-->
-<!--                            featureType: 'water',-->
-<!--                            elementType: 'labels.text.stroke',-->
-<!--                            stylers: [{ color: '#17263c' }]-->
-<!--                            }-->
-<!--                        ]-->
-<!--                    });-->
-<!--                    infoWindow = new google.maps.InfoWindow;-->
-
-<!--                    {% for fil in fils %}-->
-<!--                    var mkr_{{fil.id}} = new google.maps.Marker({-->
-<!--                        map: map,-->
-<!--                        position: { lat: {{fil.lat}}, lng: {{fil.long}} }-->
-<!--                        //title: {{fil.name}}-->
-<!--                    });-->
-<!--                    {% endfor %}-->
-
-<!--                    if (navigator.geolocation)-->
-<!--                    {-->
-<!--                        navigator.geolocation.getCurrentPosition(function (position)-->
-<!--                        {-->
-<!--                            document.getElementById("gps_lat_form").value = position.coords.latitude;-->
-<!--                            document.getElementById("gps_long_form").value = position.coords.longitude;-->
-<!--                            var pos = { lat: position.coords.latitude, lng: position.coords.longitude };-->
-<!--                            // var cirlcle = new google.maps.Circle({-->
-<!--                            //     map: map,-->
-<!--                            //     center: pos,-->
-<!--                            //     radius: 1000 //In meters-->
-<!--                            // });-->
-
-<!--                            infoWindow.setPosition(pos);-->
-<!--                            infoWindow.setContent('Location Found');-->
-<!--                            infoWindow.open(map);-->
-<!--                            map.setCenter(pos);-->
-<!--                        }, function ()-->
-<!--                        {-->
-<!--                            handleLocationError(true, infoWindow, map.getCenter());-->
-<!--                        });-->
-<!--                    }-->
-<!--                    else-->
-<!--                    {-->
-<!--                        //Browser does not support geolocation-->
-<!--                        handleLocationError(false, infoWindow, map.getCenter());-->
-<!--                    }-->
-<!--                    //map.clear();-->
-<!--                }-->
-<!--                </script>-->
-<!--                <script async defer-->
-<!--                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">-->
-<!--                </script>-->
+                <div id="map"></div>
+                <!-- For the scripts associated with this, see the bottom of the file -->
             </div>
             <div class="col-7">
                 <div class="row">
@@ -303,160 +172,148 @@
     <!--Footer Goes Here-->
 
     <!-- Upload Modal -->
-    <div class="modal fade bd-upload-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        id="uploadModal" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 id="modalHead" style="font-weight: bold;">Upload Your File</h1>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <h6>File Name:</h6>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="text" class="form-control" id="inputFileName" name="inputFileName"
-                                        aria-describedby="fileNameHelp" placeholder="File Name">
-                                    <small id="fileUploadHelp" class="form-text text-muted">This name will help
-                                        others find your
-                                        file.</small>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <input type="file" clas="form-control-file" id="local_image" name="input_file">
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-
-                        <div class="form-group">
-                            <h6>Description:</h6>
-                            <textarea class="form-control" id="inputFileDescription" rows="3" name="inputFileDescription"
-                                placeholder="A little bit about the file you are uploading. This will help others ensure they have the correct file."></textarea>
-                        </div>
-
-                        <br>
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col">
-                                    <h6>Visible Distance</h6>
-                                </div>
-                                <div class="col text-right" id="uploadDistLabel">
-                                    <h6>1 Mile</h6>
-                                </div>
-                            </div>
-
-                            <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100" name="visibleDistance"
-                                step="0.5" onclick="distanceSlid('uploadDistLabel')">
-                        </div>
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col">
-                                    <h6>Time Online</h6>
-                                </div>
-                                <div class="col text-right">
-                                    <h6 id="uploadTimeLabel">7 Days</h6>
-                                </div>
-                            </div>
-
-                            <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="100"  name="visibleTime"
-                                step="0.5">
-                        </div>
-
-                        <br>
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col">
-                                    <h6> File Password (Optional):</h6>
-                                    <input type="text" class="form-control" id="inputFilePassword" name="inputFilePassword"
-                                        aria-describedby="filePasswordHelp" placeholder="File Password">
-                                    <small id="filePasswordHelp" class="form-text text-muted"> Make your file
-                                        private by adding a password.</small>
-                                </div>
-                                <div class="col">
-                                    <h6> Your Password:</h6>
-                                    <input type="password" class="form-control" id="inputAcctPassword" name="filePassword"
-                                        aria-describedby="fileAcctHelp" placeholder="Account Password">
-                                    <small id="AcctPasswordHelp" class="form-text text-muted">
-                                        Enter your account password.</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <br>
-
-                        <input type="hidden" name="gps_lat" id="gps_lat_form">
-                        <input type="hidden" name="gps_long" id="gps_long_form">
-
-                        <input class="btn btn-danger float-left" type="submit" name="upload_post" value="Upload" id="submitFileBtn">
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- See uploadModal.html -->
+    {% include "uploadModal.html" %}
 
     <!--Inspection Modal-->
-    <!-- <div class="modal fade bd-inspect-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        id="inspectModal" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+    <!-- See inspectionModal.html -->
+    {% include "inspectionModal.html" %}
 
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 id="modalHead" style="font-weight: bold;">File_Name</h1>
-                </div>
-                <div class="modal-body">
-                    
-                </div>
-            </div>
-        </div>
-    </div> -->
+    {% include "footer.html" %}
 
-    <div class="modal fade bd-inspect-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        style="display: none;" id="inspectModal" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title" id="myLargeModalLabel">File Name</h1>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col">
-                            <h5> Uploaded by: username</h5>
-                        </div>
-                        <div class="col" align="right">
-                            <form  method="POST">
-                                <input class="btn btn-danger btn-sm ml-3" type="submit" name="12" value="Download">
-                            </form>
-                        </div>
-                    </div>
-                    <br>
-                    <p>File Information:</p>
-                    <label for="upload data"><span class="fas fa-upload"></span> Uploaded on: 02/03/2020</label> &nbsp
-                    &nbsp &nbsp
-                    <label for="upload data"><span class="fas fa-clock"></span> Available until: 02/010/2020</label>
-                    &nbsp &nbsp &nbsp
-                    <label for="likes"><span class="fas fa-heart"></span> 6527</label> &nbsp &nbsp &nbsp
-                    <label for="downloads"><span class="fas fa-download"></span> 6527</label> &nbsp &nbsp &nbsp
-                    <label for="distance"><span class="fas fa-people-arrows"></span> 1 mile</label> &nbsp &nbsp &nbsp
-                    <embed src="../static/sample-photo.JPG" type="application/pdf" width="100%" height="600px" />
-                </div>
-            </div>
-        </div>
-    </div>
+<!--    Map Code-->
+<script>
+                //For more information or much of this code, see: https://developers.google.com/maps/documentation/javascript/geolocation
+                function initMap()
+                {
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        center: { lat: 40.000, lng: -105 },
+                        zoom: 14,
+                        styles:
+                        [
+                            { elementType: 'geometry', stylers: [{ color: '#252525' }] },
+                            { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+                            { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+                            {
+                            featureType: 'administrative.locality',
+                            elementType: 'labels.text.fill',
+                            stylers: [{ color: '#d59563' }]
+                            },
+                            // {
+                            //   featureType: 'poi',
+                            //   elementType: 'labels.text.fill',
+                            //   stylers: [{color: '#d59563'}]
+                            // },
+                            {
+                            featureType: 'poi.park',
+                            elementType: 'geometry',
+                            stylers: [{ color: '#0d261a' }]
+                            },
+                            // {
+                            //   featureType: 'poi.park',
+                            //   elementType: 'labels.text.fill',
+                            //   stylers: [{color: '#6b9a76'}]
+                            // },
+                            {
+                            featureType: 'road',
+                            elementType: 'geometry',
+                            stylers: [{ color: '#404040' }]
+                            },
+                            {
+                            featureType: 'road',
+                            elementType: 'geometry.stroke',
+                            stylers: [{ color: '#212a37' }]
+                            },
+                            {
+                            featureType: 'road',
+                            elementType: 'labels.text.fill',
+                            stylers: [{ color: '#9ca5b3' }]
+                            },
+                            {
+                            featureType: 'road.highway',
+                            elementType: 'geometry',
+                            stylers: [{ color: '#505050' }]
+                            },
+                            {
+                            featureType: 'road.highway',
+                            elementType: 'geometry.stroke',
+                            stylers: [{ color: '#1f2835' }]
+                            },
+                            {
+                            featureType: 'road.highway',
+                            elementType: 'labels.text.fill',
+                            stylers: [{ color: '#f3d19c' }]
+                            },
+                            {
+                            featureType: 'transit',
+                            elementType: 'geometry',
+                            stylers: [{ color: '#2f3948' }]
+                            },
+                            {
+                            featureType: 'transit.station',
+                            elementType: 'labels.text.fill',
+                            stylers: [{ color: '#d59563' }]
+                            },
+                            {
+                            featureType: 'water',
+                            elementType: 'geometry',
+                            stylers: [{ color: '#17263c' }]
+                            },
+                            {
+                            featureType: 'water',
+                            elementType: 'labels.text.fill',
+                            stylers: [{ color: '#515c6d' }]
+                            },
+                            {
+                            featureType: 'water',
+                            elementType: 'labels.text.stroke',
+                            stylers: [{ color: '#17263c' }]
+                            }
+                        ]
+                    });
+                    infoWindow = new google.maps.InfoWindow;
 
+                    {% for fil in fils %}
+                    var mkr_{{fil.id}} = new google.maps.Marker({
+                        map: map,
+                        position: { lat: {{fil.lat}}, lng: {{fil.long}} }
+                        //title: {{fil.name}}
+                    });
+                    {% endfor %}
+
+                    if (navigator.geolocation)
+                    {
+                        navigator.geolocation.getCurrentPosition(function (position)
+                        {
+                            document.getElementById("gps_lat_form").value = position.coords.latitude;
+                            document.getElementById("gps_long_form").value = position.coords.longitude;
+                            var pos = { lat: position.coords.latitude, lng: position.coords.longitude };
+                            // var cirlcle = new google.maps.Circle({
+                            //     map: map,
+                            //     center: pos,
+                            //     radius: 1000 //In meters
+                            // });
+
+                            infoWindow.setPosition(pos);
+                            infoWindow.setContent('Location Found');
+                            infoWindow.open(map);
+                            map.setCenter(pos);
+                        }, function ()
+                        {
+                            handleLocationError(true, infoWindow, map.getCenter());
+                        });
+                    }
+                    else
+                    {
+                        //Browser does not support geolocation
+                        handleLocationError(false, infoWindow, map.getCenter());
+                    }
+                    //map.clear();
+                }
+                </script>
+                <script async defer
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
+                </script>
 </body>
 
 </html>
