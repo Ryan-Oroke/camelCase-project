@@ -76,7 +76,7 @@
                                 </div>
                             {% elif fils[i].format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico jfif"%}
                                <div align="center">
-                                   <img src="{{ url_for('static', filename=fils[i].path) }}" width="400px">
+                                   <img class="card-img-top" src="{{ url_for('static', filename=fils[i].path) }}">
                                 </div>
                              {% else %}
                                 <div align="center">

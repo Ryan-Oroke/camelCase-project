@@ -18,14 +18,14 @@
                             <form  method="POST">
                                 <input class="btn btn-danger btn-sm ml-3" type="submit" name="{{fil.id}}" value="Download">
                                 {% if fil.req_password %}
-                                <input type="text" class="form-control" id="inputFileSearch" name='file_password' style="width:500px;"
+                                <input type="password" class="form-control" id="inputFileSearch" name='file_password' style="width:500px;"
                                 aria-describedby="fileSearchHelp" placeholder="Password Required">
                                 {% endif %}
                             </form>
                         </div>
                     </div>
                     <br>
-                    <p>File Information:</p>
+                    <p>File Information: {{fil.description}}</p>
                     <label for="upload data"><span class="fas fa-upload"></span> Uploaded on: {{fil.date}}</label> &nbsp
                     &nbsp &nbsp
                     <label for="upload data"><span class="fas fa-clock"></span> Available until: {{fil.death_date}}</label>
