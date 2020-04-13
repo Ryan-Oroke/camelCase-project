@@ -59,7 +59,7 @@ def get_signed_in_info():
     return signed_in, cur_user
 
 
-def get_downloadable_files():
+def get_downloadable_files(lat, long):
     # TODO: update this, this is all hard coded
 
     # I thing mongo will store "test_user/P1540913.JPG" for the path and then we need to add the UPLOAD_DIRECTORY part
@@ -86,13 +86,13 @@ def get_downloadable_files():
                            os.path.join(UPLOAD_DIRECTORY, "test_user/LkgdAgN.jpg").replace('\\', '/'), 101, 90, "333",
                            "tomorrow", "Mar 3", True, hashlib.sha256("password".encode('utf-8')).hexdigest(), 1,
                            "test_user", 3)]
-    # Note, we want to store the path starting in static/ but not including the static part
+    # Note, we want to store the path starting in `static/` but it is not including the path
 
 
 def handle_login_post():
     # here we check if we are signing in. In the form I set the submit button's name attribute to be `sign_in`
     if 'sign_in' in request.form:  # we assume that username and password have been set
-        # In the form there is an input box with the name `username`. The value is then passes in with the POST request.
+        # In the form there is an input box with the name `username`. The value is then passed in with the POST request.
         username = request.form['username']
         password_plain_text = request.form['password']
         print("username:", username, "password:", password_plain_text)
@@ -142,7 +142,7 @@ def test_example_route():
     # get data from the session
     signed_in, cur_user = get_signed_in_info()
 
-    # we then render the index.html file with the sign in info.
+    # we then render the `index.html` file with the sign in info.
     return render_template("index.html", signed_in=signed_in, cur_user=cur_user)
 
 
@@ -151,7 +151,7 @@ def handle_upload_post(signed_in, cur_user, file_data):
     # TODO: really we should also remove the upload model if we are not signed in
     if signed_in:
         print(request.form)
-        # if the form includes a file upload, the data is stored in request.files
+        # if the form includes a file upload, the data is stored in `request.files`
         print(request.files)
 
         if 'input_file' not in request.files or request.files['input_file'].filename == '':
@@ -197,45 +197,6 @@ def handle_download_post(signed_in, cur_user, this_file_data, file_data):
     return send_file(os.path.join('static', path), as_attachment=True)
 
 
-"""
-@app.route('/download', methods=['GET'])
-def download_page_get():
-    # Note: for GET all we want to do is render the page
-    signed_in, cur_user = get_signed_in_info()
-
-    file_data = get_downloadable_files()
-
-    return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
-
-
-@app.route('/download', methods=['POST'])
-def download_page_post():
-    # The request.form is different depending of which form you submit. You can only submit one at a time.
-    print(request.form)
-    did_login = handle_login_post()
-
-    # this is not POST specific, but data is still needed in the POST.
-    signed_in, cur_user = get_signed_in_info()
-
-    # will call mongo, TODO: pass in current location
-    file_data = get_downloadable_files()
-
-    if did_login:
-        return render_template("download.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
-    elif 'upload_post' in request.form:
-        # This is the form in the upload model
-        return handle_upload_post(signed_in, cur_user, file_data)
-    else:
-        # each download button is its own form with a unique ID
-        for this_file_data in file_data:
-            if str(this_file_data.id) in request.form:
-                print('hit')
-                return handle_download_post(signed_in, cur_user, this_file_data, file_data)
-
-    abort(400)  # Bad Request
-"""
-
-
 @app.route('/about', methods=['GET', 'POST'])
 def about_page():
     if request.method == 'POST':
@@ -267,12 +228,32 @@ def register_page():
 
 @app.route('/', methods=['GET'])
 def map_page_get():
-    # Note: for GET all we want to do is render the page
+    # We don't really care about GET here
     signed_in, cur_user = get_signed_in_info()
 
-    file_data = get_downloadable_files()
+    # test.html will get location data and then send a POST to `/`
+    # thus we will call `map_page_post`
+    return render_template("auto_submit.html", signed_in=signed_in, cur_user=cur_user)
 
-    return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+
+def get_lat_long():
+    if 'auto_sub_hidden' in request.form or 'auto_sub_button' in request.form:
+        lat = request.form['gps_lat']
+        long = request.form['gps_long']
+        session['cur_lat'] = lat
+        session['cur_long'] = long
+        res = True
+        return lat, long, res
+    elif 'cur_lat' in session:
+        lat = session['cur_lat']
+        long = session['cur_long']
+        res = False
+        return lat, long, res
+    else:
+        lat = 0
+        long = 0
+        res = False
+        return lat, long, res
 
 
 @app.route('/', methods=['POST'])
@@ -281,14 +262,16 @@ def map_page_post():
     print(request.form)
     did_login = handle_login_post()
 
+    lat, long, did_lat_long_post = get_lat_long()
+
     # this is not POST specific, but data is still needed in the POST.
     signed_in, cur_user = get_signed_in_info()
 
-    # will call mongo, TODO: pass in current location
-    file_data = get_downloadable_files()
+    # will call mongo to get files
+    file_data = get_downloadable_files(lat, long)
 
-    if did_login:
-        # TODO: should we have a notification that the login was successful
+    if did_login or did_lat_long_post:
+        # all rendering of `map.html` is done in this post
         return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
     elif 'upload_post' in request.form:
         # This is the form in the upload model
