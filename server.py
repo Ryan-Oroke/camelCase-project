@@ -2,6 +2,8 @@ import os
 import hashlib
 from typing import NamedTuple
 
+import mongoIO
+
 from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory, flash, send_file, redirect
 
 app = Flask(__name__)
@@ -11,6 +13,9 @@ UPLOAD_DIRECTORY = 'upload_files'  # this is in static so we dont have to write 
                                    # preview. Note: this has a security down side as every file can be accessed.
 # The static is implied. You must use url_for('static', filename='...') or an os.path.join('static', ...)
 # or would it make sense to have a folder for preview images in static and the full files in UPLOAD_DIRECTORY.
+
+db_info = mongoIO.DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")  # should we make a new connection for each user
+db_info.connect()
 
 
 @app.errorhandler(400)
@@ -92,9 +97,12 @@ def handle_login_post():
         password_plain_text = request.form['password']
         print("username:", username, "password:", password_plain_text)
 
-        # TODO: try login with mongo
-        # TODO: is_valid_user = mongoIO.?.try_get_user(..)
-        is_valid_user = True
+        res = db_info.try_get_user(username, password_plain_text)
+        if res is not None:
+            is_valid_user = True
+            # should we store more info about user in session?
+        else:
+            is_valid_user = False
 
         if is_valid_user:
             # session is how we can store data for a user.
@@ -104,7 +112,7 @@ def handle_login_post():
             # flash('You were successfully logged in')
         else:
             session['cur_user'] = None
-            flash('Log in in failed, username or password is incorrect.')
+            flash('Log in failed, username or password is incorrect.')
         return True
     elif 'sign_out' in request.form:
         session['cur_user'] = None
@@ -151,20 +159,22 @@ def handle_upload_post(signed_in, cur_user, file_data):
             flash("No file to upload found")
             return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
 
-        # TODO: validate user password
+        res = db_info.try_get_user(cur_user, request.form['user_password'])
+        if res is not None:
+            input_file = request.files['input_file']
+            # we store files at `static/UPLOAD_DIRECTORY/<username>/<file>` that's what `file_path` will store
+            if not os.path.exists(os.path.join('static', UPLOAD_DIRECTORY, cur_user)):
+                os.makedirs(os.path.join('static', UPLOAD_DIRECTORY, cur_user))
+            filename = os.path.join(cur_user, input_file.filename)
+            file_path = os.path.join('static', UPLOAD_DIRECTORY, filename)
 
-        input_file = request.files['input_file']
-        # we store files at `static/UPLOAD_DIRECTORY/<username>/<file>` that's what `file_path` will store
-        if not os.path.exists(os.path.join('static', UPLOAD_DIRECTORY, cur_user)):
-            os.makedirs(os.path.join('static', UPLOAD_DIRECTORY, cur_user))
-        filename = os.path.join(cur_user, input_file.filename)
-        file_path = os.path.join('static', UPLOAD_DIRECTORY, filename)
+            # We save the file to the file system
+            input_file.save(file_path)  # TODO: maybe check if file exists too as to not overwrite
+            flash("File uploaded successfully")
 
-        # We save the file to the file system
-        input_file.save(file_path)  # TODO: maybe check if file exists too as to not overwrite
-        flash("File uploaded successfully")
-
-        # TODO: add data to mongo (Note we will store filename)
+            # TODO: add data to mongo (Note we will store filename)
+        else:
+            flash("The password you entered is incorrect.")
 
     else:
         flash("You must be signed in to upload files.")
@@ -243,7 +253,11 @@ def register_page():
             pass
         elif 'sign_up' in request.form:
             print(request.form)
-            pass  # I think all we need to do is pass the data to mongo
+            res = db_info.try_create_user(request.form['username'], request.form['password'], 'first name', 'last name', request.form['email'])
+            if res is None:
+                flash("Failed to create user. Username might be taken.")
+            else:
+                flash("User created successfully.")
             # should we sign the user in for them or not
 
     signed_in, cur_user = get_signed_in_info()
