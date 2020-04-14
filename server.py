@@ -61,14 +61,11 @@ def get_signed_in_info():
 
 
 def get_downloadable_files(lat, long):
-    # TODO: update this, this is all hard coded
-
     # I thing mongo will store "test_user/P1540913.JPG" for the path and then we need to add the UPLOAD_DIRECTORY part
-    # or we could only store "P1540913.JPG" and add UPLOAD_DIRECTORY and user name
 
+    """
     # The files can be found at https://drive.google.com/file/d/1obNPWyEka1e1D4-jvuvVS3x3gegCDf_x/view?usp=sharing
     # just put the unzipped file into the static file
-    """
     return [file_data_html("test1", 40.015869, -105.279517, "jpg",
                            os.path.join(UPLOAD_DIRECTORY, "test_user/P1540913.JPG").replace('\\', '/'), 100, 12, "abc",
                            "today", "tomorrow", False, "", 0, "test_user", 420),
@@ -91,14 +88,14 @@ def get_downloadable_files(lat, long):
     # Note, we want to store the path starting in `static/` but it is not including the path
     """
 
-    mongo_data = db_info.get_all_files_in_range(float(lat), float(long), 2, 20)  # TODO:change range
+    mongo_data = db_info.get_all_files_in_range(float(lat), float(long), 0.1, 20)  # TODO: change range
 
     data = [file_data_html(mfd['file_name'], mfd['gps_lat'], mfd['gps_long'], os.path.splitext(mfd['file_path'])[1].lstrip('.'),
                            os.path.join(UPLOAD_DIRECTORY, mfd['file_path']).replace('\\', '/'), mfd['vis_dist'],
                            str(mfd['_id']), mfd['file_description'], 'date', 'death_data', mfd['file_req_password'],
                            mfd['file_password_hash'], mfd['num_likes'], mfd['creator_name'], mfd['num_downloads'])
             for mfd in mongo_data]
-    print(data)
+    # print(data)
     return data
 
 
@@ -184,14 +181,20 @@ def handle_upload_post(signed_in, cur_user, file_data):
             # We save the file to the file system
             input_file.save(file_path)  # TODO: maybe check if file exists too as to not overwrite
 
-            db_info.ins_file(mongoIO.file_data_entry(session['cur_user'], request.form['inputFileName'],
-                                                     request.form['inputFileDescription'], time.time(), filename, False,
-                                                     "", float(request.form['gps_lat']),
-                                                     float(request.form['gps_long']),
-                                                     float(request.form['visibleDistance']),
-                                                     10000000.0, 0, 0))
+            req_pass = False
+            pass_hash = ''
+            if request.form['file_password'] != '':
+                req_pass = True
+                pass_hash = hashlib.sha256(request.form['file_password'].encode('utf-8')).hexdigest()
 
-            flash("File uploaded successfully")
+            ret = db_info.ins_file(mongoIO.file_data_entry(session['cur_user'], request.form['inputFileName'],
+                                                           request.form['inputFileDescription'], time.time(), filename,
+                                                           req_pass, pass_hash, float(request.form['gps_lat']),
+                                                           float(request.form['gps_long']),
+                                                           float(request.form['visibleDistance']),
+                                                           10000000.0, 0, 0))
+
+            flash("File uploaded successfully") # check rets of `.save` and `.ins_file`
         else:
             flash("The password you entered is incorrect.")
 
