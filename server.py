@@ -1,6 +1,7 @@
 import os
 import hashlib
 from typing import NamedTuple
+import time
 
 import mongoIO
 
@@ -182,9 +183,15 @@ def handle_upload_post(signed_in, cur_user, file_data):
 
             # We save the file to the file system
             input_file.save(file_path)  # TODO: maybe check if file exists too as to not overwrite
-            flash("File uploaded successfully")
 
-            # TODO: add data to mongo (Note we will store filename)
+            db_info.ins_file(mongoIO.file_data_entry(session['cur_user'], request.form['inputFileName'],
+                                                     request.form['inputFileDescription'], time.time(), filename, False,
+                                                     "", float(request.form['gps_lat']),
+                                                     float(request.form['gps_long']),
+                                                     float(request.form['visibleDistance']),
+                                                     10000000.0, 0, 0))
+
+            flash("File uploaded successfully")
         else:
             flash("The password you entered is incorrect.")
 

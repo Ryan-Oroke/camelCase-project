@@ -21,7 +21,7 @@ class file_data_entry(NamedTuple):
 
     gps_lat: float
     gps_long: float
-    vis_dist: int
+    vis_dist: float
     vis_time: float  # secs
 
     num_likes: int
@@ -124,7 +124,7 @@ if __name__ == "__main__":
     db_info = DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")
     db_info.connect()
 
-    if False:
+    if True:
         db_info.ins_file(
             file_data_entry("test_user", "test1", "abc", time.time(), "test_user/P1540913.JPG", False, "", 40.015869,
                             -105.279517, 10, 100000.0, 69, 1))
