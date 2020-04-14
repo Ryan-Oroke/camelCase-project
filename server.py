@@ -2,6 +2,7 @@ import os
 import hashlib
 from typing import NamedTuple
 import time
+import datetime
 
 import mongoIO
 
@@ -90,9 +91,13 @@ def get_downloadable_files(lat, long):
 
     mongo_data = db_info.get_all_files_in_range(float(lat), float(long), 0.1, 20)  # TODO: change range
 
-    data = [file_data_html(mfd['file_name'], mfd['gps_lat'], mfd['gps_long'], os.path.splitext(mfd['file_path'])[1].lstrip('.'),
+    data = [file_data_html(mfd['file_name'], mfd['gps_lat'], mfd['gps_long'],
+                           os.path.splitext(mfd['file_path'])[1].lstrip('.'),
                            os.path.join(UPLOAD_DIRECTORY, mfd['file_path']).replace('\\', '/'), mfd['vis_dist'],
-                           str(mfd['_id']), mfd['file_description'], 'date', 'death_data', mfd['file_req_password'],
+                           str(mfd['_id']), mfd['file_description'],
+                           time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(mfd['file_create_time'])),
+                           time.strftime('%Y-%m-%d %H:%M:%S', time.localtime((mfd['file_create_time'] + mfd['vis_time']))),
+                           mfd['file_req_password'],
                            mfd['file_password_hash'], mfd['num_likes'], mfd['creator_name'], mfd['num_downloads'])
             for mfd in mongo_data]
     # print(data)
@@ -103,12 +108,13 @@ def handle_login_post():
     # here we check if we are signing in. In the form I set the submit button's name attribute to be `sign_in`
     if 'sign_in' in request.form:  # we assume that username and password have been set
         # In the form there is an input box with the name `username`. The value is then passed in with the POST request.
-        username = request.form['username']
+        username_or_email = request.form['username']  # Note this could also be an email
         password_plain_text = request.form['password']
-        print("username:", username, "password:", password_plain_text)
+        print("username:", username_or_email, "password:", password_plain_text)
 
-        res = db_info.try_get_user(username, password_plain_text)
+        res = db_info.try_get_user(username_or_email, password_plain_text)
         if res is not None:
+            username = res['user_name']  # if you sign in with email
             is_valid_user = True
             # should we store more info about user in session?
         else:
@@ -238,7 +244,7 @@ def register_page():
             print(request.form)
             res = db_info.try_create_user(request.form['username'], request.form['password'], 'first name', 'last name', request.form['email'])
             if res is None:
-                flash("Failed to create user. Username might be taken.")
+                flash("Failed to create user, username or email might be taken.")
             else:
                 flash("User created successfully.")
             # should we sign the user in for them or not

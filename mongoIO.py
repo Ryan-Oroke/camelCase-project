@@ -72,6 +72,7 @@ class DB_info:
         self.coll_file.create_index([("gps_lat", pymongo.DESCENDING), ("gps_long", pymongo.ASCENDING)])
 
         self.coll_user.create_index("user_name", unique=True, dropDups=1)
+        self.coll_user.create_index("email", unique=True, dropDups=1)
 
         self.connected = True
 
@@ -88,7 +89,8 @@ class DB_info:
         for file in end_of_life_files:
             self.coll_file.delete_one({"_id": file['_id']})
             try:
-                os.remove(file['file_path'])
+                pass  # os.remove(file['file_path'])
+                # I think we would use a call back to do this
             except:
                 pass
 
@@ -114,9 +116,12 @@ class DB_info:
         except:
             return None
 
-    def try_get_user(self, user_name, password_plain_text):
+    def try_get_user(self, user_name_or_email, password_plain_text):
         password_hash = hashlib.sha256(password_plain_text.encode('utf-8')).hexdigest()
-        x = self.coll_user.find_one({"user_name": user_name, "password_hash": password_hash})
+        x = self.coll_user.find_one({"user_name": user_name_or_email, "password_hash": password_hash})
+        if x is None:
+            x = self.coll_user.find_one({"email": user_name_or_email, "password_hash": password_hash})
+            print(x)
         return x  # so if x is None then username or password is wrong
 
 
@@ -124,7 +129,7 @@ if __name__ == "__main__":
     db_info = DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")
     db_info.connect()
 
-    if True:
+    if False:
         db_info.ins_file(
             file_data_entry("test_user", "test1", "abc", time.time(), "test_user/P1540913.JPG", False, "", 40.015869,
                             -105.279517, 10, 100000.0, 69, 1))
@@ -146,6 +151,9 @@ if __name__ == "__main__":
     data = db_info.get_all_files_in_range(40.015869,-105.279517,2,6)
 
     print(data)
+
+    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(data[0]['file_create_time'])))
+    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime((data[0]['file_create_time'] + data[0]['vis_time']))))
 
     # user stuff
     x = db_info.try_create_user("test1", "password", "te", "st", "a@b.c")
