@@ -37,7 +37,7 @@ class file_data_html(NamedTuple):
     format: str
     path: str  # a path starting in static/UPLOAD_DIRECTORY
     dist: float
-    id: int
+    id: str
     description: str
     date: str
     death_date: str
@@ -67,6 +67,7 @@ def get_downloadable_files(lat, long):
 
     # The files can be found at https://drive.google.com/file/d/1obNPWyEka1e1D4-jvuvVS3x3gegCDf_x/view?usp=sharing
     # just put the unzipped file into the static file
+    """
     return [file_data_html("test1", 40.015869, -105.279517, "jpg",
                            os.path.join(UPLOAD_DIRECTORY, "test_user/P1540913.JPG").replace('\\', '/'), 100, 12, "abc",
                            "today", "tomorrow", False, "", 0, "test_user", 420),
@@ -87,6 +88,17 @@ def get_downloadable_files(lat, long):
                            "tomorrow", "Mar 3", True, hashlib.sha256("password".encode('utf-8')).hexdigest(), 1,
                            "test_user", 3)]
     # Note, we want to store the path starting in `static/` but it is not including the path
+    """
+
+    mongo_data = db_info.get_all_files_in_range(float(lat), float(long), 2, 20)  # TODO:change range
+
+    data = [file_data_html(mfd['file_name'], mfd['gps_lat'], mfd['gps_long'], os.path.splitext(mfd['file_path'])[1].lstrip('.'),
+                           os.path.join(UPLOAD_DIRECTORY, mfd['file_path']).replace('\\', '/'), mfd['vis_dist'],
+                           str(mfd['_id']), mfd['file_description'], 'date', 'death_data', mfd['file_req_password'],
+                           mfd['file_password_hash'], mfd['num_likes'], mfd['creator_name'], mfd['num_downloads'])
+            for mfd in mongo_data]
+    print(data)
+    return data
 
 
 def handle_login_post():

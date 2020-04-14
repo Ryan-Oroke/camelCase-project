@@ -10,20 +10,22 @@ import os
 
 
 class file_data_entry(NamedTuple):
-    #user_created_name: int  # change to ObjectID or username
+    creator_name: str  # change to ObjectID or username
 
     file_name: str
-    #file_description: str
+    file_description: str
     file_create_time: float  # secs from
     file_path: str
-    #file_password: str
+    file_req_password: bool
+    file_password_hash: str
 
     gps_lat: float
     gps_long: float
     vis_dist: int
     vis_time: float  # secs
 
-    #num_likes: int
+    num_likes: int
+    num_downloads: int
 
 
 class user_data_entry(NamedTuple):
@@ -122,22 +124,32 @@ if __name__ == "__main__":
     db_info = DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")
     db_info.connect()
 
-    db_info.ins_file(file_data_entry("test0", time.time(), "", 0, 0, 10, 2.0))
-    db_info.ins_file(file_data_entry("test1", time.time(), "", 1, 1.5, 10, 2.0))
-    db_info.ins_file(file_data_entry("test2", time.time(), "", 1.9, 0.8, 10, 0))
-    db_info.ins_file(file_data_entry("test3", time.time(), "", 2.1, 0.1, 10, 0))
-    db_info.ins_file(file_data_entry("test4", time.time(), "", 3.2, 3, 10, 2.0))
-    db_info.ins_file(file_data_entry("test5", time.time(), "", 1.3, 2.1, 10, 0))
+    if False:
+        db_info.ins_file(
+            file_data_entry("test_user", "test1", "abc", time.time(), "test_user/P1540913.JPG", False, "", 40.015869,
+                            -105.279517, 10, 100000.0, 69, 1))
+        db_info.ins_file(
+            file_data_entry("test_user", "test2", "def", time.time(), "test_user/P1540506.JPG", False, "", 40.016869,
+                            -105.278617, 10, 100000.0, 420, 2))
+        db_info.ins_file(
+            file_data_entry("test_user", "test3", "111", time.time(), "test_user/P1540915.JPG", False, "", 40.017869,
+                            -105.275517, 10, 200000.0, 10, 3))
+        db_info.ins_file(
+            file_data_entry("test_user", "test4", "222", time.time(), "test_user/test_pdf.pdf", False, "", 40.014869,
+                            -105.276617, 10, 300000.0, 20, 4))
+        db_info.ins_file(
+            file_data_entry("test_user", "test5", "333", time.time(), "test_user/LkgdAgN.jpg", False, "", 40.013869,
+                            -105.277617, 10, 100000.0, 30, 5))
 
     time.sleep(1)
 
-    data = db_info.get_all_files_in_range(0,0,2,6)
+    data = db_info.get_all_files_in_range(40.015869,-105.279517,2,6)
 
     print(data)
 
     # user stuff
     x = db_info.try_create_user("test1", "password", "te", "st", "a@b.c")
     print(x)
-    x = db_info.try_get_user("test2", "password")
+    x = db_info.try_get_user("test1", "password")
     print(x)
 
