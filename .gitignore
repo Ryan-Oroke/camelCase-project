@@ -3,3 +3,4 @@ venv/
 .vscode
 .DS_store
 upload_files/
+__pycache__/

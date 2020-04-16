@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>auto submit</title>
+    {% include "header.html" %}
+</head>
+<script>
+var latVar = 40.0, lonVar = -105.3;
+
+function getLocationAndPost(post)
+{
+    if (navigator.geolocation)
+    {
+        navigator.geolocation.getCurrentPosition(function (position)
+        {
+            document.getElementById("gps_lat_form").value = position.coords.latitude;
+            document.getElementById("gps_long_form").value = position.coords.longitude;
+            document.forms[post].submit()
+        }, function ()
+        {
+            document.getElementById("gps_lat_form").value = latVar;
+            document.getElementById("gps_long_form").value = lonVar;
+            document.forms[post].submit()
+        });
+    }
+    else
+    {
+        document.getElementById("gps_lat_form").value = latVar;
+        document.getElementById("gps_long_form").value = lonVar;
+        document.forms[post].submit()
+    }
+}
+</script>
+<body onload="getLocationAndPost('audo_submit')">
+    {% include "./navbar.html" %}
+<form class="form-inline" method="POST" name="audo_submit">
+    <input type="hidden" name="gps_lat" id="gps_lat_form">
+    <input type="hidden" name="gps_long" id="gps_long_form">
+    <input type="hidden" name="auto_sub_hidden" value="Click Me">
+    <!--<input class="btn btn-dark" type="submit" name="auto_sub_button" value="Click Me">-->
+</form>
+</body>
+</html>
