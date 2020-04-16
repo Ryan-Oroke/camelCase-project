@@ -15,9 +15,9 @@
             <div class="col-7">
                 <div class="card">
                     <div class="card-header">
-                        <div class="row">
-                            <h3 style=";font-weight: bold; padding-left:1%;">{{ cur_user }}</h3>
-                            <button type="button" href="#editProfileModal" toggle="modal" data-target=".bd-editProfile-modal-lg" onclick="openEditProfileModal" class="btn">
+                        <div class="row justify-content-between">
+                            <h3 class="ml-2" style="font-weight: bold;">{{ cur_user }}</h3>
+                            <button class="btn" type="button float-right" href="#editProfileModal" toggle="modal" data-target=".bd-editProfile-modal-lg" onclick="openEditProfileModal" >
                                 <svg class="bi bi-pencil" width="1em" height="1em" viewBox="0 0 16 16"
                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
@@ -43,8 +43,6 @@
                             <div class="col">
                                 <h6 style="font-weight:bold;">Files Uploaded:</h6>
                                 <p id="userNumFilesUploaded"> Test</p>
-                                <h6 style="font-weight:bold;">Lifetime Likes:</h6>
-                                <p id="userNumLifetimeLikes">17</p>
                                 <h6 style="font-weight:bold;">Bio:</h6>
                                 <p id="userBio">This is a really cool idea for an app! How fun is it to have the ability
                                     to drop files places. This is also a fun test bio too.</p>
@@ -56,10 +54,10 @@
 
             <div class="col-5">
                 <!--Map-->
-                <!-- <div id="map" style="height:350px"></div>
+                <div id="map" style="height:350px"></div>
                 <script async defer
                     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
-                    </script> -->
+                    </script>
                 <hr>
             </div>
 

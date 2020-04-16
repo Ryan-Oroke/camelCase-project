@@ -31,13 +31,25 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/" style="t01">Home<span class="sr-only">(current></span></a>
                 </li>
+                {% if signed_in %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/user" style="t01">Profile<span class="sr-only">(current></span></a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/register" style="t01">Register<span class="sr-only">(current></span></a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/about" style="t01">About<span class="sr-only">(current></span></a>
+                </li>
 <!--                Relinked to logo-->
 <!--                <li class="nav-item">-->
 <!--                    <a class="nav-link" href="./about">About Us<span class="sr-only">(current></span></a>-->
 <!--                </li>-->
             </ul>
             {% if signed_in %}
-            <h2>Hello, {{ cur_user }}.</h2>
+            <h3 class="mr-3">{{ cur_user }}</h3>
             <form class="form-inline" method="POST">
                 <input class="btn btn-dark" type="submit" name="sign_out" value="Sign Out">
             </form>
