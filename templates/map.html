@@ -22,17 +22,27 @@
             </div>
             <div class="col-7">
                 <div class="row">
-                    <form class="form-inline">
-                        <div class="col" align="right">
-                            <input type="text" class="form-control" id="inputFileSearch" style="width:500px;"
-                                aria-describedby="fileSearchHelp" placeholder="Search by keyword, date, or location.">
-                        </div>
-                        <div class="col justify-content-center">
-                            <button type="button" class="btn btn-danger float-right" href="#uploadModal"
-                                data-toggle="modal" data-target=".bd-upload-modal-lg" onclick="openUploadModal()">Upload
-                                a File</button>
+                    <form class="form-inline" method="POST" enctype="multipart/form-data">
+                        <div>
+                            <input type="text" class="form-control" id="inputFileSearch" name="searchTextBox" style="width:450px;"
+                                aria-describedby="fileSearchHelp" placeholder="Search by keyword, date, or location." value="">
+                            <input type="submit" class="btn btn-primary ml-1" style="background-color:#0275d8;"
+                                value="Search" name="search_post" id="searchFilesBtn">
+
+                            <!--Just a reference for file POST requests-->
+                            <!-- <input class="btn btn-danger float-left" type="submit" name="upload_post" value="Upload" id="submitFileBtn"> -->
                         </div>
                     </form>
+                    {% if signed_in %}
+                    <button type="button" class="btn btn-danger ml-2" href="#uploadModal" data-toggle="modal"
+                        data-target=".bd-upload-modal-lg" onclick="openUploadModal()">
+                    
+                        Upload a File</button>
+                    {% else %}
+                    <button type="button" class="btn btn-danger ml-2" href="#uploadModal" data-toggle="modal"
+                        data-target=".bd-upload-modal-lg" onclick="openUploadModal()" disabled>
+                        Log In to Upload a File</button>
+                    {% endif %}
                 </div>
 
                 <br>
@@ -84,7 +94,7 @@
                                 <div align="center">
                                     <img class="card-img-top" src="{{ url_for('static', filename=fils[i].path) }}">
                                 </div>
-                                {% else %}
+                                {% elif fils[i].format.lower() != "txt" %}
                                 <div align="center">
                                     <img class="card-img-top"
                                         src="{{ url_for('static', filename='no_preview_available.jfif') }}">
@@ -106,7 +116,7 @@
                                                 data-toggle="modal" data-target=".bd-inspect-modal-{{fils[i+1].id}}-lg"
                                                 onclick="openInspectModal()">Inspect File</button>
                                             {% if fils[i+1].req_password %}
-                                            <button type="button" class="btn btn-warning btn-sm mr-2"
+                                            <button type="button" class="btn btn-warning btn-sm ml-2"
                                                 href="#inspectModal" data-toggle="modal"
                                                 data-target=".bd-inspect-modal-{{fils[i+1].id}}-lg"
                                                 onclick="openInspectModal()">Encrypted</button>
@@ -149,73 +159,14 @@
                     <hr>
                     {% endif %}
                     {% endfor %}
-                    <!--                    <div class="row">-->
-                    <!--                        <div class="card justify-content-center">-->
-                    <!--                            <div class="card-header">-->
-                    <!--                                <div class="row">-->
-                    <!--                                    <div class="col">-->
-                    <!--                                        <h5 style="font-weight:bold;">Photo of Boulder</h5>-->
-                    <!--                                    </div>-->
-                    <!--                                    <div class="col" align="right">-->
-                    <!--                                        <div class="row">-->
-                    <!--                                            <button type="button" class="btn btn-dark btn-sm" href="#insFpectModal"-->
-                    <!--                                                data-toggle="modal" data-target=".bd-inspect-modal-lg"-->
-                    <!--                                                onclick="openInspectModal()">Inspect File</button>-->
-                    <!--                                            <a class="btn btn-danger btn-sm ml-3" href="#">Download</a>-->
-                    <!--                                        </div>-->
-                    <!--                                    </div>-->
-                    <!--                                </div>-->
-                    <!--                            </div>-->
-                    <!--                            <div class="card-body">-->
-                    <!--                                <p style="font-weight:bold;">Distance: 27 ft. </p>-->
-                    <!--                                <p>A picture taken from the Flagstaff ampitheatre. This was a cold morning in January of-->
-                    <!--                                    2019.</p>-->
-                    <!--                            </div>-->
-                    <!--                            <img class="card-img-top" src="../static/sample-photo.JPG">-->
-                    <!--                        </div>-->
-
-                    <!--                        <div class="card justify-content-center">-->
-                    <!--                            <div class="card-header">-->
-                    <!--                                <div class="row">-->
-                    <!--                                    <div class="col">-->
-                    <!--                                        <h5 style="font-weight:bold;">New York City Photo</h5>-->
-                    <!--                                    </div>-->
-                    <!--                                    <div class="col" align="right">-->
-                    <!--                                        <div class="row">-->
-                    <!--                                            <button type="button" class="btn btn-dark btn-sm" href="#insFpectModal"-->
-                    <!--                                                data-toggle="modal" data-target=".bd-inspect-modal-lg"-->
-                    <!--                                                onclick="openInspectModal()">Inspect File</button>-->
-                    <!--                                            <a class="btn btn-danger btn-sm ml-3" href="#">Download</a>-->
-                    <!--                                        </div>-->
-                    <!--                                    </div>-->
-                    <!--                                </div>-->
-                    <!--                            </div>-->
-                    <!--                            <div class="card-body">-->
-                    <!--                                <p style="font-weight:bold;">Distance: 290 ft. </p>-->
-                    <!--                                <p>A picture from atop a New York skyscraper!</p>-->
-                    <!--                            </div>-->
-                    <!--                            <img class="card-img-top" src="../static/sample-photo-2.JPG">-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-                    <!--                </div>-->
                 </div>
-
-                <!-- <div class="col-2">
-                <div class="card">
-                    <div class="card-header">
-                        <div align="center">
-                            <img src="../static/sample-profile.png" width="100px" alt="Profile Photo">
-                            <br>
-                            <h5> User_Name </h5>
-                            <hr>
-                            <h6>#MyTag!</h6>
-                            <button type="button" class="btn btn-dark mr-sm" href="#myModal" data-toggle="modal"
-                                data-target=".bd-example-modal-lg" onclick="openModal()">Upload a
-                                File</button>
-                        </div>
-                    </div>
+                <br>
+                <hr class="hr-custom">
+                <br>
+                <div align="center">
+                    <h3>Oh no!</h3>
+                    <h5>There are no more available files based on your search criteria and location.</h5>
                 </div>
-            </div> -->
             </div>
 
         </div>
@@ -236,138 +187,138 @@
         {% include "footer.html" %}
 
         <!--    Map Code-->
-        <!--<script>-->
-        <!--                //For more information or much of this code, see: https://developers.google.com/maps/documentation/javascript/geolocation-->
-        <!--                function initMap()-->
-        <!--                {-->
-        <!--                    map = new google.maps.Map(document.getElementById('map'), {-->
-        <!--                        center: { lat: 40.000, lng: -105 },-->
-        <!--                        zoom: 14,-->
-        <!--                        styles:-->
-        <!--                        [-->
-        <!--                            { elementType: 'geometry', stylers: [{ color: '#252525' }] },-->
-        <!--                            { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },-->
-        <!--                            { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },-->
-        <!--                            {-->
-        <!--                            featureType: 'administrative.locality',-->
-        <!--                            elementType: 'labels.text.fill',-->
-        <!--                            stylers: [{ color: '#d59563' }]-->
-        <!--                            },-->
-        <!--                            // {-->
-        <!--                            //   featureType: 'poi',-->
-        <!--                            //   elementType: 'labels.text.fill',-->
-        <!--                            //   stylers: [{color: '#d59563'}]-->
-        <!--                            // },-->
-        <!--                            {-->
-        <!--                            featureType: 'poi.park',-->
-        <!--                            elementType: 'geometry',-->
-        <!--                            stylers: [{ color: '#0d261a' }]-->
-        <!--                            },-->
-        <!--                            // {-->
-        <!--                            //   featureType: 'poi.park',-->
-        <!--                            //   elementType: 'labels.text.fill',-->
-        <!--                            //   stylers: [{color: '#6b9a76'}]-->
-        <!--                            // },-->
-        <!--                            {-->
-        <!--                            featureType: 'road',-->
-        <!--                            elementType: 'geometry',-->
-        <!--                            stylers: [{ color: '#404040' }]-->
-        <!--                            },-->
-        <!--                            {-->
-        <!--                            featureType: 'road',-->
-        <!--                            elementType: 'geometry.stroke',-->
-        <!--                            stylers: [{ color: '#212a37' }]-->
-        <!--                            },-->
-        <!--                            {-->
-        <!--                            featureType: 'road',-->
-        <!--                            elementType: 'labels.text.fill',-->
-        <!--                            stylers: [{ color: '#9ca5b3' }]-->
-        <!--                            },-->
-        <!--                            {-->
-        <!--                            featureType: 'road.highway',-->
-        <!--                            elementType: 'geometry',-->
-        <!--                            stylers: [{ color: '#505050' }]-->
-        <!--                            },-->
-        <!--                            {-->
-        <!--                            featureType: 'road.highway',-->
-        <!--                            elementType: 'geometry.stroke',-->
-        <!--                            stylers: [{ color: '#1f2835' }]-->
-        <!--                            },-->
-        <!--                            {-->
-        <!--                            featureType: 'road.highway',-->
-        <!--                            elementType: 'labels.text.fill',-->
-        <!--                            stylers: [{ color: '#f3d19c' }]-->
-        <!--                            },-->
-        <!--                            {-->
-        <!--                            featureType: 'transit',-->
-        <!--                            elementType: 'geometry',-->
-        <!--                            stylers: [{ color: '#2f3948' }]-->
-        <!--                            },-->
-        <!--                            {-->
-        <!--                            featureType: 'transit.station',-->
-        <!--                            elementType: 'labels.text.fill',-->
-        <!--                            stylers: [{ color: '#d59563' }]-->
-        <!--                            },-->
-        <!--                            {-->
-        <!--                            featureType: 'water',-->
-        <!--                            elementType: 'geometry',-->
-        <!--                            stylers: [{ color: '#17263c' }]-->
-        <!--                            },-->
-        <!--                            {-->
-        <!--                            featureType: 'water',-->
-        <!--                            elementType: 'labels.text.fill',-->
-        <!--                            stylers: [{ color: '#515c6d' }]-->
-        <!--                            },-->
-        <!--                            {-->
-        <!--                            featureType: 'water',-->
-        <!--                            elementType: 'labels.text.stroke',-->
-        <!--                            stylers: [{ color: '#17263c' }]-->
-        <!--                            }-->
-        <!--                        ]-->
-        <!--                    });-->
-        <!--                    infoWindow = new google.maps.InfoWindow;-->
+        <script>
+            //For more information or much of this code, see: https://developers.google.com/maps/documentation/javascript/geolocation
+            function initMap()
+            {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 40.000, lng: -105 },
+                    zoom: 14,
+                    styles:
+                        [
+                            { elementType: 'geometry', stylers: [{ color: '#252525' }] },
+                            { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+                            { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+                            {
+                                featureType: 'administrative.locality',
+                                elementType: 'labels.text.fill',
+                                stylers: [{ color: '#d59563' }]
+                            },
+                            // {
+                            //   featureType: 'poi',
+                            //   elementType: 'labels.text.fill',
+                            //   stylers: [{color: '#d59563'}]
+                            // },
+                            {
+                                featureType: 'poi.park',
+                                elementType: 'geometry',
+                                stylers: [{ color: '#0d261a' }]
+                            },
+                            // {
+                            //   featureType: 'poi.park',
+                            //   elementType: 'labels.text.fill',
+                            //   stylers: [{color: '#6b9a76'}]
+                            // },
+                            {
+                                featureType: 'road',
+                                elementType: 'geometry',
+                                stylers: [{ color: '#404040' }]
+                            },
+                            {
+                                featureType: 'road',
+                                elementType: 'geometry.stroke',
+                                stylers: [{ color: '#212a37' }]
+                            },
+                            {
+                                featureType: 'road',
+                                elementType: 'labels.text.fill',
+                                stylers: [{ color: '#9ca5b3' }]
+                            },
+                            {
+                                featureType: 'road.highway',
+                                elementType: 'geometry',
+                                stylers: [{ color: '#505050' }]
+                            },
+                            {
+                                featureType: 'road.highway',
+                                elementType: 'geometry.stroke',
+                                stylers: [{ color: '#1f2835' }]
+                            },
+                            {
+                                featureType: 'road.highway',
+                                elementType: 'labels.text.fill',
+                                stylers: [{ color: '#f3d19c' }]
+                            },
+                            {
+                                featureType: 'transit',
+                                elementType: 'geometry',
+                                stylers: [{ color: '#2f3948' }]
+                            },
+                            {
+                                featureType: 'transit.station',
+                                elementType: 'labels.text.fill',
+                                stylers: [{ color: '#d59563' }]
+                            },
+                            {
+                                featureType: 'water',
+                                elementType: 'geometry',
+                                stylers: [{ color: '#17263c' }]
+                            },
+                            {
+                                featureType: 'water',
+                                elementType: 'labels.text.fill',
+                                stylers: [{ color: '#515c6d' }]
+                            },
+                            {
+                                featureType: 'water',
+                                elementType: 'labels.text.stroke',
+                                stylers: [{ color: '#17263c' }]
+                            }
+                        ]
+                });
+                infoWindow = new google.maps.InfoWindow;
 
-        <!--                    {% for fil in fils %}-->
-        <!--                    var mkr_{{fil.id}} = new google.maps.Marker({-->
-        <!--                        map: map,-->
-        <!--                        position: { lat: {{fil.lat}}, lng: {{fil.long}} }-->
-        <!--                        //title: {{fil.name}}-->
-        <!--                    });-->
-        <!--                    {% endfor %}-->
+                {% for fil in fils %}
+                var mkr_{{ fil.id }} = new google.maps.Marker({
+                map: map,
+                position: { lat: {{ fil.lat }}, lng: {{ fil.long }} }
+                                //title: {{fil.name}}
+                            });
+            {% endfor %}
 
-        <!--                    if (navigator.geolocation)-->
-        <!--                    {-->
-        <!--                        navigator.geolocation.getCurrentPosition(function (position)-->
-        <!--                        {-->
-        <!--                            document.getElementById("gps_lat_form").value = position.coords.latitude;-->
-        <!--                            document.getElementById("gps_long_form").value = position.coords.longitude;-->
-        <!--                            var pos = { lat: position.coords.latitude, lng: position.coords.longitude };-->
-        <!--                            // var cirlcle = new google.maps.Circle({-->
-        <!--                            //     map: map,-->
-        <!--                            //     center: pos,-->
-        <!--                            //     radius: 1000 //In meters-->
-        <!--                            // });-->
+            if (navigator.geolocation)
+            {
+                navigator.geolocation.getCurrentPosition(function (position)
+                {
+                    document.getElementById("gps_lat_form").value = position.coords.latitude;
+                    document.getElementById("gps_long_form").value = position.coords.longitude;
+                    var pos = { lat: position.coords.latitude, lng: position.coords.longitude };
+                    // var cirlcle = new google.maps.Circle({
+                    //     map: map,
+                    //     center: pos,
+                    //     radius: 1000 //In meters
+                    // });
 
-        <!--                            infoWindow.setPosition(pos);-->
-        <!--                            infoWindow.setContent('Your Location');-->
-        <!--                            infoWindow.open(map);-->
-        <!--                            map.setCenter(pos);-->
-        <!--                        }, function ()-->
-        <!--                        {-->
-        <!--                            handleLocationError(true, infoWindow, map.getCenter());-->
-        <!--                        });-->
-        <!--                    }-->
-        <!--                    else-->
-        <!--                    {-->
-        <!--                        //Browser does not support geolocation-->
-        <!--                        handleLocationError(false, infoWindow, map.getCenter());-->
-        <!--                    }-->
-        <!--                    //map.clear();-->
-        <!--                }-->
-        <!--                </script>-->
-        <!--                <script async defer-->
-        <!--                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">-->
-        <!--                </script>-->
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent('Your Location');
+                    infoWindow.open(map);
+                    map.setCenter(pos);
+                }, function ()
+                {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            }
+            else
+            {
+                //Browser does not support geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+                            //map.clear();
+                        }
+        </script>
+        <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
+            </script>
 </body>
 
 </html>

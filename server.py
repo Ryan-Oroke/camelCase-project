@@ -104,6 +104,23 @@ def get_downloadable_files(lat, long):
     return data
 
 
+def get_search_files(lat, long, key):
+
+    mongo_data = db_info.get_all_searchable_files(float(lat), float(long), 0.1, 20, key)  # TODO: change range
+
+    data = [file_data_html(mfd['file_name'], mfd['gps_lat'], mfd['gps_long'],
+                           os.path.splitext(mfd['file_path'])[1].lstrip('.'),
+                           os.path.join(UPLOAD_DIRECTORY, mfd['file_path']).replace('\\', '/'), mfd['vis_dist'],
+                           str(mfd['_id']), mfd['file_description'],
+                           time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(mfd['file_create_time'])),
+                           time.strftime('%Y-%m-%d %H:%M:%S', time.localtime((mfd['file_create_time'] + mfd['vis_time']))),
+                           mfd['file_req_password'],
+                           mfd['file_password_hash'], mfd['num_likes'], mfd['creator_name'], mfd['num_downloads'])
+            for mfd in mongo_data ]
+    # print(data)
+    return data
+
+
 def handle_login_post():
     # here we check if we are signing in. In the form I set the submit button's name attribute to be `sign_in`
     if 'sign_in' in request.form:  # we assume that username and password have been set
@@ -185,25 +202,29 @@ def handle_upload_post(signed_in, cur_user, file_data):
             file_path = os.path.join('static', UPLOAD_DIRECTORY, filename)
 
             # We save the file to the file system
-            input_file.save(file_path)  # TODO: maybe check if file exists too as to not overwrite
+            if not os.path.exists(os.path.join('static', UPLOAD_DIRECTORY, filename)):
+                input_file.save(file_path)  # DONE: maybe check if file exists too as to not overwrite
 
-            req_pass = False
-            pass_hash = ''
-            if request.form['file_password'] != '':
-                req_pass = True
-                pass_hash = hashlib.sha256(request.form['file_password'].encode('utf-8')).hexdigest()
+                req_pass = False
+                pass_hash = ''
+                if request.form['file_password'] != '':
+                    req_pass = True
+                    pass_hash = hashlib.sha256(request.form['file_password'].encode('utf-8')).hexdigest()
 
-            ret = db_info.ins_file(mongoIO.file_data_entry(session['cur_user'], request.form['inputFileName'],
-                                                           request.form['inputFileDescription'], time.time(), filename,
-                                                           req_pass, pass_hash, float(request.form['gps_lat']),
-                                                           float(request.form['gps_long']),
-                                                           float(request.form['visibleDistance']),
-                                                           10000000.0, 0, 0))
+                print("Test" + request.form['gps_lat'])
 
-            flash("File uploaded successfully") # check rets of `.save` and `.ins_file`
+                ret = db_info.ins_file(mongoIO.file_data_entry(session['cur_user'], request.form['inputFileName'],
+                                                            request.form['inputFileDescription'], time.time(), filename,
+                                                            req_pass, pass_hash, float(request.form['gps_lat']),
+                                                            float(request.form['gps_long']),
+                                                            float(request.form['visibleDistance']),
+                                                            10000000.0, 0, 0))
+
+                flash("File uploaded successfully") # check rets of `.save` and `.ins_file`
+            else:
+                flash("File has already been uploaded!");
         else:
             flash("The password you entered is incorrect.")
-
     else:
         flash("You must be signed in to upload files.")
     return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
@@ -304,6 +325,10 @@ def map_page_post():
     elif 'upload_post' in request.form:
         # This is the form in the upload model
         return handle_upload_post(signed_in, cur_user, file_data)
+    elif 'search_post' in request.form:
+        #This is the search button on the main page
+        file_data = get_search_files(lat, long, request.form['searchTextBox'])
+        return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
     else:
         # each download button is its own form with a unique ID
         for this_file_data in file_data:

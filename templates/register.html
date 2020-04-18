@@ -68,7 +68,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col">
-                        Something goes here, about us paragraph place holder...or maybe a logo
+                        <!-- Something goes here, about us paragraph place holder...or maybe a logo -->
                          <img class="img-fluid.max-width=75%" src="{{ url_for('static', filename='freedrop-logo-white.svg') }}" alt="Free Drop">
                     </div>
                     <div class="col">
@@ -97,7 +97,11 @@
                         <label class="form-check-label" for="termCheck">By checking this box, you agree to our <a href="#" data-toggle="modal" data-target="#modal_for_terms">Terms</a> and <a href="#" data-toggle="modal" data-target="#modal_for_policy">Data Policy.</a> </label>
                         </div>
                         <br>
+                        {% if signed_in %}
+                        <button type="submit" name="sign_up" class="btn btn-primary" disabled>Account Already Created</button>
+                        {% else %}
                         <button type="submit" name="sign_up" class="btn btn-primary">Sign up</button>
+                        {% endif %}
                     </form>
                     </div>
                     </div>
@@ -141,7 +145,10 @@
                 <div class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
-                <h4 class="modal-title">Suggestions to a more secure password. </h4>
+                <h4 class="modal-title">Suggestions for a more secure password. </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
                 </div>
                 <div class="modal-body" id="modal_error">
                     <h5>The password contains following issue(s):</h5>
@@ -152,9 +159,10 @@
                     <div id="minlength"></div>
                     <div id="match"></div>
                 </div>
-                <div class="modal-footer">
+                <!-- Removed in liu of an X in the top right corner -->
+                <!-- <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
+                </div> -->
                 </div>
                 </div>
             </div>

@@ -106,6 +106,17 @@ class DB_info:
         file_list = self.__remove_end_of_life(file_list)
         return file_list
 
+    def get_all_searchable_files(self, lat, long, gps_radius, max_files, searc):
+        lat_min = lat - gps_radius
+        lat_max = lat + gps_radius
+        long_min = long - gps_radius
+        long_max = long + gps_radius
+        search_str = searc
+        cursor = self.coll_file.find({"file_name": { "$regex" : search_str}, "gps_lat": {"$gte": lat_min, "$lte": lat_max}, "gps_long": {"$gte": long_min, "$lte": long_max}}).limit(max_files)
+        file_list = list(cursor)
+        file_list = self.__remove_end_of_life(file_list)
+        return file_list;
+
     def try_create_user(self, user_name, password_plain_text, first_name, last_name, email):
         password_hash = hashlib.sha256(password_plain_text.encode('utf-8')).hexdigest()
         user_info = user_data_entry(user_name, password_hash, first_name, last_name, email)
