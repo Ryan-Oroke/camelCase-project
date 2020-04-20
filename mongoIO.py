@@ -112,10 +112,29 @@ class DB_info:
         long_min = long - gps_radius
         long_max = long + gps_radius
         search_str = searc
-        cursor = self.coll_file.find({"file_name": { "$regex" : search_str}, "gps_lat": {"$gte": lat_min, "$lte": lat_max}, "gps_long": {"$gte": long_min, "$lte": long_max}}).limit(max_files)
-        file_list = list(cursor)
-        file_list = self.__remove_end_of_life(file_list)
-        return file_list;
+        search_key = ''
+        try:
+            if search_str == '':
+                cursor = self.coll_file.find({"gps_lat": {"$gte": lat_min, "$lte": lat_max}, "gps_long": {"$gte": long_min, "$lte": long_max}}).limit(max_files)
+                file_list = list(cursor)
+                file_list = self.__remove_end_of_life(file_list)
+                return file_list
+            else:
+                if search_str[0] == '@':
+                    #Search By User
+                    search_list = list(search_str)
+                    print(search_list)
+                    search_list.remove('@')
+                    search_str = search_key.join(search_list)
+                    print(search_str)
+                    cursor = self.coll_file.find({"creator_name": { "$regex" : search_str}, "gps_lat": {"$gte": lat_min, "$lte": lat_max}, "gps_long": {"$gte": long_min, "$lte": long_max}}).limit(max_files)
+                else:
+                    cursor = self.coll_file.find({"file_name": { "$regex" : search_str}, "gps_lat": {"$gte": lat_min, "$lte": lat_max}, "gps_long": {"$gte": long_min, "$lte": long_max}}).limit(max_files)
+                file_list = list(cursor)
+                file_list = self.__remove_end_of_life(file_list)
+                return file_list;
+        except:
+                return []
 
     def try_create_user(self, user_name, password_plain_text, first_name, last_name, email):
         password_hash = hashlib.sha256(password_plain_text.encode('utf-8')).hexdigest()

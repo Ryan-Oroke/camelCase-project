@@ -63,6 +63,25 @@
             {% endif %}
         </div>
     </nav>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                {% if message == "File uploaded successfully" %}
+                <div class="alert alert-success alert-dismissable">
+                    <a href="#" class="close" style="text-decoration:none;" data-dismiss="alert" aria-label="close">&times;</a>
+                    <h5>{{message}}</h5>
+                </div>
+                {% else %}
+                <div class="alert alert-warning alert-dismissable">
+                    <a href="#" class="close" style="text-decoration:none;" data-dismiss="alert" aria-label="close">&times;</a>
+                    <h5>{{message}}</h5>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    {% block body %}{% endblock %}
 <!--</body>-->
 
 <!--</html>-->

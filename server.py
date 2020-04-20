@@ -118,6 +118,9 @@ def get_search_files(lat, long, key):
                            mfd['file_password_hash'], mfd['num_likes'], mfd['creator_name'], mfd['num_downloads'])
             for mfd in mongo_data ]
     # print(data)
+
+    if data == []:
+        flash("No files were found using the given keywords. Please change the search criteria and try again.");
     return data
 
 
@@ -181,7 +184,7 @@ def test_example_route():
 
 def handle_upload_post(signed_in, cur_user, file_data):
     # We only want to allow for upload if the user is signed in
-    # TODO: really we should also remove the upload model if we are not signed in
+    # DONE: really we should also remove the upload model if we are not signed in
     if signed_in:
         print(request.form)
         # if the form includes a file upload, the data is stored in `request.files`
@@ -189,7 +192,7 @@ def handle_upload_post(signed_in, cur_user, file_data):
 
         if 'input_file' not in request.files or request.files['input_file'].filename == '':
             # flash is how we tell the user things
-            flash("No file to upload found")
+            flash("No file found for uploading. Please select a file.")
             return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
 
         res = db_info.try_get_user(cur_user, request.form['user_password'])
@@ -221,6 +224,7 @@ def handle_upload_post(signed_in, cur_user, file_data):
                                                             10000000.0, 0, 0))
 
                 flash("File uploaded successfully") # check rets of `.save` and `.ins_file`
+
             else:
                 flash("File has already been uploaded!");
         else:
@@ -255,7 +259,6 @@ def about_page():
 
     return render_template("about.html", signed_in=signed_in, cur_user=cur_user)
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():
     if request.method == 'POST':
@@ -268,7 +271,7 @@ def register_page():
                 flash("Failed to create user, username or email might be taken.")
             else:
                 flash("User created successfully.")
-            # should we sign the user in for them or not
+                # should we sign the user in for them or not
 
     signed_in, cur_user = get_signed_in_info()
 
@@ -279,7 +282,7 @@ def register_page():
 def map_page_get():
     # We don't really care about GET here
     signed_in, cur_user = get_signed_in_info()
-
+    
     # test.html will get location data and then send a POST to `/`
     # thus we will call `map_page_post`
     return render_template("auto_submit.html", signed_in=signed_in, cur_user=cur_user)
@@ -319,6 +322,8 @@ def map_page_post():
     # will call mongo to get files
     file_data = get_downloadable_files(lat, long)
 
+    flash("Page Refreshed Successfully")
+    
     if did_login or did_lat_long_post:
         # all rendering of `map.html` is done in this post
         return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
