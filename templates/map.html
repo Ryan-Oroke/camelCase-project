@@ -24,8 +24,14 @@
                 <div class="row">
                     <form class="form-inline" method="POST" enctype="multipart/form-data">
                         <div>
-                            <input type="text" class="form-control ml-3" id="inputFileSearch" name="searchTextBox" style="width:450px;"
+                            {% if searchstr != '' %}
+                            <input type="text" class="form-control" id="inputFileSearch" name="searchTextBox" style="width:450px;"
+                                aria-describedby="fileSearchHelp" placeholder="{{ searchstr }}" value="">
+                            {% else %}
+                            <input type="text" class="form-control" id="inputFileSearch" name="searchTextBox" style="width:450px;"
                                 aria-describedby="fileSearchHelp" placeholder="Search by keyword, date, or location." value="">
+
+                            {% endif %}
                             <input type="submit" class="btn btn-primary ml-1" style="background-color:#0275d8;"
                                 value="Search" name="search_post" id="searchFilesBtn">
 

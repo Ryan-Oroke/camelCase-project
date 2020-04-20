@@ -182,7 +182,7 @@ def test_example_route():
     return render_template("index.html", signed_in=signed_in, cur_user=cur_user)
 
 
-def handle_upload_post(signed_in, cur_user, file_data):
+def handle_upload_post(signed_in, cur_user, file_data, search_str):
     # We only want to allow for upload if the user is signed in
     # DONE: really we should also remove the upload model if we are not signed in
     if signed_in:
@@ -193,7 +193,7 @@ def handle_upload_post(signed_in, cur_user, file_data):
         if 'input_file' not in request.files or request.files['input_file'].filename == '':
             # flash is how we tell the user things
             flash("No file found for uploading. Please select a file.")
-            return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+            return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, searchstr=search_str)
 
         res = db_info.try_get_user(cur_user, request.form['user_password'])
         if res is not None:
@@ -231,10 +231,10 @@ def handle_upload_post(signed_in, cur_user, file_data):
             flash("The password you entered is incorrect.")
     else:
         flash("You must be signed in to upload files.")
-    return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+    return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, searchstr=search_str)
 
 
-def handle_download_post(signed_in, cur_user, this_file_data, file_data):
+def handle_download_post(signed_in, cur_user, this_file_data, file_data, search_str):
     path = this_file_data.path
     password_hash = this_file_data.password_hash
     req_password = this_file_data.req_password
@@ -244,7 +244,7 @@ def handle_download_post(signed_in, cur_user, this_file_data, file_data):
         input_password_hash = hashlib.sha256(input_password.encode('utf-8')).hexdigest()
         if input_password_hash != password_hash:
             flash("Incorrect password to download file")
-            return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+            return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, searchstr=search_str)
     # print(os.path.join('static', path))
     # send file is how we have the user download the file.
     return send_file(os.path.join('static', path), as_attachment=True)
@@ -319,27 +319,36 @@ def map_page_post():
     # this is not POST specific, but data is still needed in the POST.
     signed_in, cur_user = get_signed_in_info()
 
+    search_str = request.args.get('searchstr')
+    print(search_str)
+
     # will call mongo to get files
-    file_data = get_downloadable_files(lat, long)
+    if search_str is None:
+        search_str = ''
+        file_data = get_downloadable_files(lat, long)
+    else:
+        file_data = get_search_files(lat, long, search_str)
+
 
     flash("Page Refreshed Successfully")
     
     if did_login or did_lat_long_post:
         # all rendering of `map.html` is done in this post
-        return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+        return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, searchstr=search_str)
     elif 'upload_post' in request.form:
         # This is the form in the upload model
-        return handle_upload_post(signed_in, cur_user, file_data)
+        return handle_upload_post(signed_in, cur_user, file_data, search_str)
     elif 'search_post' in request.form:
         #This is the search button on the main page
-        file_data = get_search_files(lat, long, request.form['searchTextBox'])
-        return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+        #file_data = get_search_files(lat, long, request.form['searchTextBox'])
+        #return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user)
+        return redirect(url_for('map_page_post', searchstr=request.form['searchTextBox']))
     else:
         # each download button is its own form with a unique ID
         for this_file_data in file_data:
             if str(this_file_data.id) in request.form:
                 print('hit')
-                return handle_download_post(signed_in, cur_user, this_file_data, file_data)
+                return handle_download_post(signed_in, cur_user, this_file_data, file_data, search_str)
 
     abort(400)  # Bad Request
 
