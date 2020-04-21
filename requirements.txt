@@ -53,5 +53,6 @@ Twisted==17.9.0
 ufw==0.36
 unattended-upgrades==0.1
 urllib3==1.22
+virtualenv==15.1.0
 Werkzeug==1.0.1
 zope.interface==4.3.2
