@@ -43,7 +43,6 @@ service-identity==16.0.0
 six==1.11.0
 systemd-python==234
 Twisted==17.9.0
-ufw==0.36
 unattended-upgrades==0.1
 urllib3==1.22
 virtualenv==15.1.0
