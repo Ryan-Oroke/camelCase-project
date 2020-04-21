@@ -22,7 +22,6 @@ jsonpointer==1.10
 jsonschema==2.6.0
 keyring==10.6.0
 keyrings.alt==3.0
-language-selector==0.1
 MarkupSafe==1.0
 oauthlib==2.0.6
 PAM==0.4.2
