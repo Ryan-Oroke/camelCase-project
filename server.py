@@ -193,8 +193,7 @@ def handle_upload_post(signed_in, cur_user, file_data, search_str):
         if 'input_file' not in request.files or request.files['input_file'].filename == '':
             # flash is how we tell the user things
             flash("No file found for uploading. Please select a file.")
-            return redirect(url_for('map_page_get'))
-            #return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, searchstr=search_str)
+            return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, searchstr=search_str)
 
         res = db_info.try_get_user(cur_user, request.form['user_password'])
         if res is not None:
@@ -232,8 +231,7 @@ def handle_upload_post(signed_in, cur_user, file_data, search_str):
             flash("The password you entered is incorrect.")
     else:
         flash("You must be signed in to upload files.")
-    return redirect(url_for('map_page_get'))
-    #return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, searchstr=search_str)
+    return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, searchstr=search_str)
 
 
 def handle_download_post(signed_in, cur_user, this_file_data, file_data, search_str):
