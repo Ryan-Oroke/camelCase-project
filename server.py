@@ -7,9 +7,11 @@ import datetime
 import mongoIO
 
 from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory, flash, send_file, redirect
+from flask_ngrok import run_with_ngrok
 
 app = Flask(__name__)
 app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption (using session)
+run_with_ngrok(app) #Start nrgok when app is running
 
 UPLOAD_DIRECTORY = 'upload_files'  # this is in static so we dont have to write any code to expose files for
                                    # preview. Note: this has a security down side as every file can be accessed.
@@ -330,7 +332,7 @@ def map_page_post():
         file_data = get_search_files(lat, long, search_str)
 
 
-    flash("Page Refreshed Successfully")
+    # flash("Page Refreshed Successfully")
     
     if did_login or did_lat_long_post:
         # all rendering of `map.html` is done in this post
@@ -380,4 +382,5 @@ if __name__ == "__main__":
     if not os.path.exists(up_path):
         os.makedirs(up_path)
     # starts the app at `http://localhost:5000/`
-    app.run(threaded=True, host='0.0.0.0', port=5000, debug=True)
+    # app.run(threaded=True, host='0.0.0.0', port=5000, debug=True)
+    app.run()
