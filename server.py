@@ -263,7 +263,13 @@ def handle_download_post(signed_in, cur_user, this_file_data, file_data, search_
             return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, searchstr=search_str)
     # print(os.path.join('static', path))
     # send file is how we have the user download the file.
+
+    #increment data counter
+    db_info.update_file_downloads(this_file_data.id)
+
     return send_file(os.path.join('static', path), as_attachment=True)
+
+
 
 
 
@@ -348,7 +354,7 @@ def map_page_post():
         file_data = get_search_files(lat, long, search_str)
 
 
-    flash("Page Refreshed Successfully")
+    #flash("Page Refreshed Successfully")
     
     if did_login or did_lat_long_post:
         # all rendering of `map.html` is done in this post
@@ -381,7 +387,7 @@ def user_page_get():
         # will call mongo to get files
     file_data = get_user_file(cur_user)
 
-    flash("Page Refreshed Successfully")
+    #flash("Page Refreshed Successfully")
 
     return render_template("user.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, ignore_download=True)
 
@@ -398,7 +404,7 @@ def user_page_post():
         # will call mongo to get files
     file_data = get_user_file(cur_user)
 
-    flash("Page Refreshed Successfully")
+    #flash("Page Refreshed Successfully")
 
     return render_template("user.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, ignore_download=True)
 

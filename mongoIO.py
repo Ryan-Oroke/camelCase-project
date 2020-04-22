@@ -8,6 +8,8 @@ import hashlib
 import time
 import os
 
+from bson import ObjectId
+
 
 class file_data_entry(NamedTuple):
     creator_name: str  # change to ObjectID or username
@@ -111,6 +113,11 @@ class DB_info:
         file_list = list(cursor)
         file_list = self.__remove_end_of_life(file_list)
         return file_list
+
+
+
+    def update_file_downloads(self, id):
+        self.coll_file.update_one({'_id': ObjectId(id)}, {'$inc': {'num_downloads': 1}})
 
     def get_all_searchable_files(self, lat, long, gps_radius, max_files, searc):
         lat_min = lat - gps_radius
