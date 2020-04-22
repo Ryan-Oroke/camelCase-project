@@ -96,6 +96,12 @@ class DB_info:
 
         return live_files
 
+    def get_all_files_for_user(self, username, max_files):
+        cursor = self.coll_file.find({"creator_name": {"$eq": username}}).limit(max_files)
+        file_list = list(cursor)
+        file_list = self.__remove_end_of_life(file_list)
+        return file_list
+
     def get_all_files_in_range(self, lat, long, gps_radius, max_files):
         lat_min = lat - gps_radius
         lat_max = lat + gps_radius
@@ -190,4 +196,6 @@ if __name__ == "__main__":
     print(x)
     x = db_info.try_get_user("test1", "password")
     print(x)
+
+    print(db_info.get_all_files_for_user('test_user', 10))
 
