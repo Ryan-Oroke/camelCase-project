@@ -422,8 +422,10 @@ if __name__ == "__main__":
         # I will not post my certificates i made to github but you can make your own
         # https://kracekumar.com/post/54437887454/ssl-for-flask-local-development
         # here is what you need to do:
+        # Note, just use wsl to run these commands if you are on windows
         """
         mkdir certificates
+        cd certificates
         openssl genrsa -des3 -out server.key 1024
         openssl req -new -key server.key -out server.csr
         cp server.key server.key.org
