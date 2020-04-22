@@ -5,3 +5,4 @@ venv/
 upload_files/
 __pycache__/
 env/
+certificates/
