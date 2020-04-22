@@ -417,5 +417,29 @@ if __name__ == "__main__":
     up_path = os.path.join('static', UPLOAD_DIRECTORY)
     if not os.path.exists(up_path):
         os.makedirs(up_path)
-    # starts the app at `http://localhost:5000/`
-    app.run(threaded=True, host='0.0.0.0', port=5000, debug=True)
+    # no certificates will run normal
+    if os.path.exists('certificates/'):
+        # I will not post my certificates i made to github but you can make your own
+        # https://kracekumar.com/post/54437887454/ssl-for-flask-local-development
+        # here is what you need to do:
+        """
+        mkdir certificates
+        openssl genrsa -des3 -out server.key 1024
+        openssl req -new -key server.key -out server.csr
+        cp server.key server.key.org
+        openssl rsa -in server.key.org -out server.key
+        openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+        """
+        # https://dashboard.ngrok.com/get-started/setup
+        # and then for ngrok do
+        """
+        ./ngrok authtoken 1aqrxLDoK83TozX6Nnj7NwTmyuR_624P6DgseK3szs86yC3HB
+        ./ngrok http https://localhost:5000
+        """
+        # note: to access the website you must now go to `https://localhost:5000/`
+        context = ('certificates/server.crt', 'certificates/server.key')
+        app.run(threaded=True, host='0.0.0.0', port=5000, debug=True, ssl_context=context)
+    else:
+        # starts the app at `http://localhost:5000/`
+        app.run(threaded=True, host='0.0.0.0', port=5000, debug=True)
+
