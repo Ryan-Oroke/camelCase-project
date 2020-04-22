@@ -4,6 +4,35 @@
     <meta charset="UTF-8">
     <title>auto submit</title>
     {% include "header.html" %}
+    <style>
+        .Loading {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-top: 40vh;
+          animation: spin 10s linear infinite;
+        }
+
+        .LoadingLogo {
+          height: 20%;
+          pointer-events: none;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+          .LoadingLogo {
+            animation: logo-spin infinite 10s linear;
+          }
+        }
+
+        @keyframes logo-spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+    </style>
 </head>
 <script>
 var latVar = 40.0, lonVar = -105.3;
@@ -34,11 +63,15 @@ function getLocationAndPost(post)
 </script>
 <body onload="getLocationAndPost('audo_submit')">
     {% include "./navbar.html" %}
-<form class="form-inline" method="POST" name="audo_submit">
-    <input type="hidden" name="gps_lat" id="gps_lat_form">
-    <input type="hidden" name="gps_long" id="gps_long_form">
-    <input type="hidden" name="auto_sub_hidden" value="Click Me">
-    <!--<input class="btn btn-dark" type="submit" name="auto_sub_button" value="Click Me">-->
-</form>
+    <div class="Loading">
+      <!-- <img src="{{ url_for('static', filename='freedrop-logo-white.svg') }}" className="LoadingLogo" alt="loading" width="50%"/> -->
+        <h3>Loading...</h3>
+    </div>
+    <form class="form-inline" method="POST" name="audo_submit">
+        <input type="hidden" name="gps_lat" id="gps_lat_form">
+        <input type="hidden" name="gps_long" id="gps_long_form">
+        <input type="hidden" name="auto_sub_hidden" value="Click Me">
+        <!--<input class="btn btn-dark" type="submit" name="auto_sub_button" value="Click Me">-->
+    </form>
 </body>
 </html>
