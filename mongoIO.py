@@ -136,10 +136,10 @@ class DB_info:
                 if search_str[0] == '@':
                     #Search By User
                     search_list = list(search_str)
-                    print(search_list)
+                    #print(search_list)
                     search_list.remove('@')
                     search_str = search_key.join(search_list)
-                    print(search_str)
+                    #print(search_str)
                     cursor = self.coll_file.find({"creator_name": { "$regex" : search_str}, "gps_lat": {"$gte": lat_min, "$lte": lat_max}, "gps_long": {"$gte": long_min, "$lte": long_max}}).limit(max_files)
                 else:
                     cursor = self.coll_file.find({"file_name": { "$regex" : search_str}, "gps_lat": {"$gte": lat_min, "$lte": lat_max}, "gps_long": {"$gte": long_min, "$lte": long_max}}).limit(max_files)
@@ -164,7 +164,7 @@ class DB_info:
         x = self.coll_user.find_one({"user_name": user_name_or_email, "password_hash": password_hash})
         if x is None:
             x = self.coll_user.find_one({"email": user_name_or_email, "password_hash": password_hash})
-            print(x)
+            #print(x)
         return x  # so if x is None then username or password is wrong
 
 
