@@ -103,6 +103,22 @@ def get_downloadable_files(lat, long):
     # print(data)
     return data
 
+def get_user_file(userName):
+    mongo_data = db_info.get_all_files_for_user(userName, 100)  # TODO: change range
+
+    data = [file_data_html(mfd['file_name'], mfd['gps_lat'], mfd['gps_long'],
+                           os.path.splitext(mfd['file_path'])[1].lstrip('.'),
+                           os.path.join(UPLOAD_DIRECTORY, mfd['file_path']).replace('\\', '/'), mfd['vis_dist'],
+                           str(mfd['_id']), mfd['file_description'],
+                           time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(mfd['file_create_time'])),
+                           time.strftime('%Y-%m-%d %H:%M:%S',
+                                         time.localtime((mfd['file_create_time'] + mfd['vis_time']))),
+                           mfd['file_req_password'],
+                           mfd['file_password_hash'], mfd['num_likes'], mfd['creator_name'], mfd['num_downloads'])
+            for mfd in mongo_data]
+    # print(data)
+    return data
+
 
 def get_search_files(lat, long, key):
 
@@ -250,6 +266,8 @@ def handle_download_post(signed_in, cur_user, this_file_data, file_data, search_
     return send_file(os.path.join('static', path), as_attachment=True)
 
 
+
+
 @app.route('/about', methods=['GET', 'POST'])
 def about_page():
     if request.method == 'POST':
@@ -360,7 +378,12 @@ def user_page_get():
     if not signed_in:
         return redirect(url_for('register_page'))
 
-    return render_template("user.html", signed_in=signed_in, cur_user=cur_user)
+        # will call mongo to get files
+    file_data = get_user_file(cur_user)
+
+    flash("Page Refreshed Successfully")
+
+    return render_template("user.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, ignore_download=True)
 
 
 @app.route('/user', methods=['POST'])
@@ -372,7 +395,12 @@ def user_page_post():
     if not signed_in:
         return redirect(url_for('register_page'))
 
-    return render_template("user.html", signed_in=signed_in, cur_user=cur_user)
+        # will call mongo to get files
+    file_data = get_user_file(cur_user)
+
+    flash("Page Refreshed Successfully")
+
+    return render_template("user.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, ignore_download=True)
 
 
 if __name__ == "__main__":

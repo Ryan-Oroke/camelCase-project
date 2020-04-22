@@ -12,6 +12,7 @@
                 <div class="modal-body">
                         <div class="row justify-content-between">
                             <h5 class = "pl-3"> Uploaded by: {{fil.creator}}</h5>
+                            {% if not ignore_download %}
                             <form class="form-inline pr-3" method="POST">
                                 {% if fil.req_password %}
                                 <input type="password" class="form-control" id="inputFileSearch" name='file_password'
@@ -21,6 +22,7 @@
                                 <input class="btn btn-danger ml-3" type="submit" name="{{fil.id}}" value="Download">
                                 {% endif %}
                             </form>
+                            {% endif %}
                         </div>
 
 <!--                        <div class="col">-->

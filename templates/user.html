@@ -35,17 +35,8 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-4">
-                                <div class="circle">
-                                    <img class="img-circle" src="{{ url_for('static', filename='sample-photo.jpg') }}" alt="ID Photo"
-                                        onload='fixAspect(this);'>
-                                </div>
                             </div>
                             <div class="col">
-                                <h6 style="font-weight:bold;">Files Uploaded:</h6>
-                                <p id="userNumFilesUploaded"> Test</p>
-                                <h6 style="font-weight:bold;">Bio:</h6>
-                                <p id="userBio">This is a really cool idea for an app! How fun is it to have the ability
-                                    to drop files places. This is also a fun test bio too.</p>
                             </div>
                         </div>
                     </div>
@@ -71,109 +62,85 @@
                 <h3 align="center">Uploaded Files</h3>
                 <hr class="hr-custom">
                 <div class="card-deck d-flex flex-column" style="margin-left:2px; margin-right:10px;">
-
+                    {% for i in range(0, fils |length , 2) %}
                     <div class="row">
                         <div class="card justify-content-center">
-                            <div class="card-header">
+                           <div class="card-header">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 style="font-weight:bold;">Sample_File</h5>
+                                        <h5 style="font-weight:bold;">{{fils[i].name}}</h5>
+                                        <small>Posted by <b>{{fils[i].creator}}</b></small>
                                     </div>
                                     <div class="col" align="right">
                                         <div class="row">
                                             <button type="button" class="btn btn-dark btn-sm" href="#inspectModal"
-                                                data-toggle="modal" data-target=".bd-inspect-modal-lg"
+                                                data-toggle="modal" data-target=".bd-inspect-modal-{{fils[i].id}}-lg"
                                                 onclick="openInspectModal()">Inspect File</button>
-                                            <a class="btn btn-danger btn-sm ml-3" href="#">Download</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <p style="font-weight:bold;">Distance: X Feet </p>
-                                <p>First 50 chars of description than a ...</p>
+                                <p style="font-weight:bold;">Distance: {{fils[i].dist}} Feet </p>
+                                <p style="font-weight:bold;">Format: {{fils[i].format}}</p>
+                                {% if fils[i].description|length > 50 %}
+                                <p> {{ fils[i].description[0:50] }}...</p>
+                                {% else %}
+                                <p>{{ fils[i].description }}</p>
+                                {% endif %}
+                                {% if fils[i].format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico jfif"%}
+                                <div align="center">
+                                    <img class="card-img-top" src="{{ url_for('static', filename=fils[i].path) }}">
+                                </div>
+                                {% else %}
+                                <div align="center">
+                                    <img class="card-img-top"
+                                        src="{{ url_for('static', filename='no_preview_available.jfif') }}">
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
-
+                        <!-- Check to hide if is not not an even number of cards -->
+                        {% if i+1 < fils|length %}
                         <div class="card justify-content-center">
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 style="font-weight:bold;">Fun Text</h5>
+                                        <h5 style="font-weight:bold;">{{fils[i+1].name}}</h5>
                                     </div>
                                     <div class="col" align="right">
                                         <div class="row">
                                             <button type="button" class="btn btn-dark btn-sm" href="#inspectModal"
-                                                data-toggle="modal" data-target=".bd-inspect-modal-lg"
+                                                data-toggle="modal" data-target=".bd-inspect-modal-{{fils[i+1].id}}-lg"
                                                 onclick="openInspectModal()">Inspect File</button>
-                                            <a class="btn btn-danger btn-sm ml-3" href="#">Download</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <p style="font-weight:bold;">Distance: 187 ft. </p>
-                                <p>To be, or not to be, that is the question:
-                                    Whether 'tis nobler in the mind to suffer
-                                    The slings and arrows of outrageous fortune,
-                                    Or to take arms against a sea of troubles
-                                    And by opposing end them. To die—to sleep,
-                                    No more; and by a sleep to say we end
-                                    The heart-ache and the thousand natural shocks
-                                    That flesh is heir to: 'tis a consummation
-                                    Devoutly to be wish'd. </p>
+                                <p style="font-weight:bold;">Distance: {{fils[i+1].dist}} Feet </p>
+                                <p style="font-weight:bold;">Format: {{fils[i+1].format}}</p>
+                                {% if fils[i+1].description|length > 50 %}
+                                <p> {{ fils[i+1].description[0:50] }}...</p>
+                                {% else %}
+                                <p>{{ fils[i+1].description }}</p>
+                                {% endif %}
+                                {% if fils[i+1].format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico jfif" %}
+                                <div align="center">
+                                    <img class="card-img-top" src="{{ url_for('static', filename=fils[i+1].path) }}">
+                                </div>
+                                {% else %}
+                                <div align="center">
+                                    <img class="card-img-top"
+                                        src="{{ url_for('static', filename='no_preview_available.jfif') }}">
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                     <hr>
-                    <div class="row">
-                        <div class="card justify-content-center">
-                            <div class="card-header">
-                                <div class="row">
-                                    <div class="col">
-                                        <h5 style="font-weight:bold;">Photo of Boulder</h5>
-                                    </div>
-                                    <div class="col" align="right">
-                                        <div class="row">
-                                            <button type="button" class="btn btn-dark btn-sm" href="#inspectModal"
-                                                data-toggle="modal" data-target=".bd-inspect-modal-lg"
-                                                onclick="openInspectModal()">Inspect File</button>
-                                            <a class="btn btn-danger btn-sm ml-3" href="#">Download</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <p style="font-weight:bold;">Distance: 27 ft. </p>
-                                <p>A picture taken from the Flagstaff ampitheatre. This was a cold morning in January of
-                                    2019.</p>
-                            </div>
-                            <img class="card-img-top" src="../static/sample-photo.JPG">
-                        </div>
-
-                        <div class="card justify-content-center">
-                            <div class="card-header">
-                                <div class="row">
-                                    <div class="col">
-                                        <h5 style="font-weight:bold;">New York City Photo</h5>
-                                    </div>
-                                    <div class="col" align="right">
-                                        <div class="row">
-                                            <button type="button" class="btn btn-dark btn-sm" href="#inspectModal"
-                                                data-toggle="modal" data-target=".bd-inspect-modal-lg"
-                                                onclick="openInspectModal()">Inspect File</button>
-                                            <a class="btn btn-danger btn-sm ml-3" href="#">Download</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <p style="font-weight:bold;">Distance: 290 ft. </p>
-                                <p>A picture from atop a New York skyscraper!</p>
-                            </div>
-                            <img class="card-img-top" src="../static/sample-photo-2.JPG">
-                        </div>
-                    </div>
+                    {% endif %}
+                    {% endfor %}
                 </div>
             </div>
 
@@ -189,4 +156,7 @@
                 </div>
             </div>
         </div>
+            <!--Inspection Modal-->
+        <!-- See inspectionModal.html -->
+        {% include "inspectionModal.html" %}
 </body>
