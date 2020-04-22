@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>auto submit</title>
+    <title>Connecting...</title>
     {% include "header.html" %}
     <style>
         .Loading {
           display: flex;
           justify-content: center;
           align-items: center;
-          margin-top: 40vh;
-          animation: spin 10s linear infinite;
-        }
+          margin-top: 25vh;
+          animation: spin 2s linear infinite;
+          }
 
         .LoadingLogo {
           height: 20%;
@@ -31,6 +31,20 @@
           to {
             transform: rotate(360deg);
           }
+        }
+
+        .loader {
+          border: 16px solid #f3f3f3; /* Light grey */
+          border-top: 16px solid #3498db; /* Blue */
+          border-radius: 50%;
+          width: 120px;
+          height: 120px;
+          animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -63,10 +77,12 @@ function getLocationAndPost(post)
 </script>
 <body onload="getLocationAndPost('audo_submit')">
     {% include "./navbar.html" %}
-    <div class="Loading">
-      <!-- <img src="{{ url_for('static', filename='freedrop-logo-white.svg') }}" className="LoadingLogo" alt="loading" width="50%"/> -->
-        <h3>Loading...</h3>
-    </div>
+      <div class="Loading">
+        <img src="{{ url_for('static', filename='spinning-logo-white.svg') }}" className="LoadingLogo" alt="loading" width="10%"/>
+          <!-- <h3>Loading...</h3> -->
+      </div>
+    
+    
     <form class="form-inline" method="POST" name="audo_submit">
         <input type="hidden" name="gps_lat" id="gps_lat_form">
         <input type="hidden" name="gps_long" id="gps_long_form">

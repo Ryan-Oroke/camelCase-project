@@ -28,9 +28,8 @@
                             <input type="text" class="form-control" id="inputFileSearch" name="searchTextBox" style="width:450px;"
                                 aria-describedby="fileSearchHelp" placeholder="{{ searchstr }}" value="">
                             {% else %}
-                            <input type="text" class="form-control" id="inputFileSearch" name="searchTextBox" style="width:450px;"
-                                aria-describedby="fileSearchHelp" placeholder="Search by keyword, date, or location." value="">
-
+                            <input type="text" class="form-control ml-3" id="inputFileSearch" name="searchTextBox" style="width:450px;"
+                                aria-describedby="fileSearchHelp" placeholder="Search by keyword or @user" value="">
                             {% endif %}
                             <input type="submit" class="btn btn-primary ml-1" style="background-color:#0275d8;"
                                 value="Search" name="search_post" id="searchFilesBtn">
@@ -149,7 +148,7 @@
                                 {% if fils[i+1].req_password %}
                                 <div align="center">
                                     <img class="card-img-top"
-                                        src="{{ url_for('static', filename='no_preview_available.jfif') }}">
+                                        src="{{ url_for('static', filename='no_preview_available.jfif') }}" alt="Could not load file...">
                                 </div>
                                 {% elif fils[i+1].format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico jfif" %}
                                 <div align="center">
@@ -308,7 +307,7 @@
                     // });
 
                     infoWindow.setPosition(pos);
-                    infoWindow.setContent('Your Location');
+                    infoWindow.setContent('<p style="color:#000;">Your Location</p>');
                     infoWindow.open(map);
                     map.setCenter(pos);
                 }, function ()

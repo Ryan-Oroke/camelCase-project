@@ -1,101 +1,143 @@
 <div class="modal fade bd-upload-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        id="uploadModal" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+    id="uploadModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
 
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 id="modalHead" style="font-weight: bold;">Upload Your File</h1>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <h6>File Name:</h6>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="text" class="form-control" id="inputFileName" name="inputFileName"
-                                        aria-describedby="fileNameHelp" placeholder="File Name">
-                                    <small id="fileUploadHelp" class="form-text text-muted">This name will help
-                                        others find your
-                                        file.</small>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <input type="file" clas="form-control-file" id="local_image" name="input_file">
-                                    </div>
-                                </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 id="modalHead" style="font-weight: bold;">Upload Your File</h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <h6>File Name:</h6>
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" class="form-control" id="inputFileName" name="inputFileName"
+                                    aria-describedby="fileNameHelp" placeholder="File Name">
+                                <small id="fileUploadHelp" class="form-text text-muted">This name will help
+                                    others find your
+                                    file.</small>
                             </div>
-
-                        </div>
-
-
-                        <div class="form-group">
-                            <h6>Description:</h6>
-                            <textarea class="form-control" id="inputFileDescription" rows="3" name="inputFileDescription"
-                                placeholder="A little bit about the file you are uploading. This will help others ensure they have the correct file."></textarea>
-                        </div>
-
-                        <br>
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col">
-                                    <h6>Visible Distance</h6>
-                                </div>
-                                <div class="col text-right" id="uploadDistLabel">
-                                    <h6>1 Mile</h6>
-                                </div>
-                            </div>
-
-                            <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100" name="visibleDistance"
-                                step="0.5" onclick="distanceSlid('uploadDistLabel')">
-                        </div>
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col">
-                                    <h6>Time Online</h6>
-                                </div>
-                                <div class="col text-right">
-                                    <h6 id="uploadTimeLabel">7 Days</h6>
-                                </div>
-                            </div>
-
-                            <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="100"  name="visibleTime"
-                                step="0.5">
-                        </div>
-
-                        <br>
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col">
-                                    <h6> File Password (Optional):</h6>
-                                    <input type="text" class="form-control" id="inputFilePassword" name="file_password"
-                                        aria-describedby="filePasswordHelp" placeholder="File Password">
-                                    <small id="filePasswordHelp" class="form-text text-muted"> Make your file
-                                        private by adding a password.</small>
-                                </div>
-                                <div class="col">
-                                    <h6> Your Password:</h6>
-                                    <input type="password" class="form-control" id="inputAcctPassword" name="user_password"
-                                        aria-describedby="fileAcctHelp" placeholder="Account Password">
-                                    <small id="AcctPasswordHelp" class="form-text text-muted">
-                                        Enter your account password.</small>
+                            <div class="col">
+                                <div class="form-group">
+                                    <input type="file" clas="form-control-file" id="local_image" name="input_file">
                                 </div>
                             </div>
                         </div>
 
-                        <br>
+                    </div>
 
-                        <input type="hidden" name="gps_lat" id="gps_lat_form" value="40.007206">
-                        <input type="hidden" name="gps_long" id="gps_long_form" value="-105.262271">
 
-                        <input class="btn btn-danger float-left" type="submit" name="upload_post" value="Upload" id="submitFileBtn">
-                    </form>
-                </div>
+                    <div class="form-group">
+                        <h6>Description:</h6>
+                        <textarea class="form-control" id="inputFileDescription" rows="3" name="inputFileDescription"
+                            placeholder="A little bit about the file you are uploading. This will help others ensure they have the correct file."></textarea>
+                    </div>
+
+                    <br>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <h6>Visible Distance</h6>
+                            </div>
+                            <div class="col text-right" id="uploadDistLabel">
+                                <h6>1000 ft.</h6>
+                            </div>
+                        </div>
+
+                        <input type="range" id="visibleDistanceSlider" class="custom-range" min="0" max="100"
+                            name="visibleDistance" step="1" onclick="updateDistPos()">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <h6>Time Online</h6>
+                            </div>
+                            <div class="col text-right" id="uploadTimeLabel">
+                                <h6>7 Days</h6>
+                            </div>
+                        </div>
+
+                        <input type="range" id="visibleTimeSlider" class="custom-range" min="0" max="13"
+                            name="visibleTime" step="1" onclick="updateTimePos()">
+                    </div>
+
+                    <br>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <h6> File Password (Optional):</h6>
+                                <input type="text" class="form-control" id="inputFilePassword" name="file_password"
+                                    aria-describedby="filePasswordHelp" placeholder="File Password">
+                                <small id="filePasswordHelp" class="form-text text-muted"> Make your file
+                                    private by adding a password.</small>
+                            </div>
+                            <div class="col">
+                                <h6> Your Password:</h6>
+                                <input type="password" class="form-control" id="inputAcctPassword" name="user_password"
+                                    aria-describedby="fileAcctHelp" placeholder="Account Password">
+                                <small id="AcctPasswordHelp" class="form-text text-muted">
+                                    Enter your account password.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <input type="hidden" name="gps_lat" id="gps_lat_form" value="40.007206">
+                    <input type="hidden" name="gps_long" id="gps_long_form" value="-105.262271">
+
+                    <input class="btn btn-danger float-left" type="submit" name="upload_post" value="Upload"
+                        id="submitFileBtn">
+                </form>
             </div>
         </div>
     </div>
+</div>
+
+<script>
+    function updateDistPos()
+    {
+        var sliderPos = document.getElementById("visibleDistanceSlider").value;
+        var physDist = (0.495 * sliderPos * sliderPos + 50) / 10;
+        physDist = 10 * Math.round(physDist);
+        document.getElementById("uploadDistLabel").innerHTML = "<h6>" + String(physDist) + " ft. </h6>";
+    }
+
+    function updateTimePos()
+    {
+        var sliderPos = document.getElementById("visibleTimeSlider").value;
+
+        /*
+        var physTime = Math.pow(3, (sliderPos/7.59));//(4.3185*sliderPos*sliderPos + 15)/10;
+    
+        var outputStr = "";
+        if(physTime < 60){
+            outputStr = "<h6>" + String(physTime) + " min. </h6>";
+        } else if (physTime >= 60 && physTime < 1440){
+            physTime = physTime/60;
+            outputStr = "<h6>" + String(physTime) + " hr. </h6>";
+        } else if (physTime >= 1440 && physTime < 43200){
+            physTime = physTime/1440;
+            outputStr = "<h6>" + String(physTime) + " days </h6>";
+        } else if (physTime >= 43200 && physTime < 518400){
+            physTime = physTime/43200;
+            outputStr = "<h6>" + String(physTime) + " months </h6>";
+        } else {
+            outputStr = "<h6> Forever </h6>";
+        }
+        */
+
+        var lengths = ["1 min.", "15 min.", "30 min.", "1 hr.", "3 hr.", "6 hr.", "1 day", "5 days", "1 week", "2 weeks", "1 month", "3 months", "1 year", "Forever"]
+
+        //<!-- physTime = physTime/10;
+        //physTime = 10*Math.round(physTime); -->
+        document.getElementById("uploadTimeLabel").innerHTML = "<h6>" + lengths[sliderPos] + "</h6>";
+    }
+</script>
