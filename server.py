@@ -16,8 +16,13 @@ UPLOAD_DIRECTORY = 'upload_files'  # this is in static so we dont have to write 
 # The static is implied. You must use url_for('static', filename='...') or an os.path.join('static', ...)
 # or would it make sense to have a folder for preview images in static and the full files in UPLOAD_DIRECTORY.
 
-db_info = mongoIO.DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")  # should we make a new connection for each user
-db_info.connect()
+# db_info = mongoIO.DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")  # should we make a new connection for each user
+# db_info.connect()
+
+
+client = pymongo.MongoClient("mongodb+srv://admin:ryanisadmin@freedropcluster-quzgv.mongodb.net/test?retryWrites=true&w=majority")
+db = client.test
+
 
 
 @app.errorhandler(400)
