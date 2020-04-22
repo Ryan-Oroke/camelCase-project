@@ -101,7 +101,7 @@
                                 <div align="center">
                                     <img class="card-img-top" src="{{ url_for('static', filename=fils[i].path) }}">
                                 </div>
-                                {% elif fils[i].format.lower() != "txt" %}
+                                {% else %}
                                 <div align="center">
                                     <img class="card-img-top"
                                         src="{{ url_for('static', filename='no_preview_available.jfif') }}">
@@ -116,7 +116,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <h5 style="font-weight:bold;">{{fils[i+1].name}}</h5>
-                                        <small>Posted by <b>{{fils[i].creator}}</b></small>
+                                        <small>Posted by <b>{{fils[i+1].creator}}</b></small>
                                     </div>
                                     <div class="col" align="right">
                                         <div class="row">
