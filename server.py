@@ -241,6 +241,8 @@ def handle_upload_post(signed_in, cur_user, file_data, search_str):
 
                 flash("File uploaded successfully") # check rets of `.save` and `.ins_file`
 
+                return redirect(url_for('map_page_get'))
+
             else:
                 flash("File has already been uploaded!");
         else:
@@ -294,8 +296,10 @@ def register_page():
             if res is None:
                 flash("Failed to create user, username or email might be taken.")
             else:
+                session['cur_user'] = request.form['username']
                 flash("User created successfully.")
-                # should we sign the user in for them or not
+
+                return redirect(url_for('map_page_get'))
 
     signed_in, cur_user = get_signed_in_info()
 
