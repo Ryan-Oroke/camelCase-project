@@ -146,7 +146,7 @@ def handle_login_post():
         # In the form there is an input box with the name `username`. The value is then passed in with the POST request.
         username_or_email = request.form['username']  # Note this could also be an email
         password_plain_text = request.form['password']
-        print("username:", username_or_email, "password:", password_plain_text)
+        #print("username:", username_or_email, "password:", password_plain_text)
 
         res = db_info.try_get_user(username_or_email, password_plain_text)
         if res is not None:
@@ -202,9 +202,9 @@ def handle_upload_post(signed_in, cur_user, file_data, search_str):
     # We only want to allow for upload if the user is signed in
     # DONE: really we should also remove the upload model if we are not signed in
     if signed_in:
-        print(request.form)
+        #print(request.form)
         # if the form includes a file upload, the data is stored in `request.files`
-        print(request.files)
+        #print(request.files)
 
         if 'input_file' not in request.files or request.files['input_file'].filename == '':
             # flash is how we tell the user things
@@ -230,7 +230,7 @@ def handle_upload_post(signed_in, cur_user, file_data, search_str):
                     req_pass = True
                     pass_hash = hashlib.sha256(request.form['file_password'].encode('utf-8')).hexdigest()
 
-                print("Test" + request.form['gps_lat'])
+                #print("Test" + request.form['gps_lat'])
 
                 ret = db_info.ins_file(mongoIO.file_data_entry(session['cur_user'], request.form['inputFileName'],
                                                             request.form['inputFileDescription'], time.time(), filename,
@@ -291,7 +291,7 @@ def register_page():
         if handle_login_post():
             pass
         elif 'sign_up' in request.form:
-            print(request.form)
+            #print(request.form)
             res = db_info.try_create_user(request.form['username'], request.form['password'], 'first name', 'last name', request.form['email'])
             if res is None:
                 flash("Failed to create user, username or email might be taken.")
@@ -339,7 +339,7 @@ def get_lat_long():
 @app.route('/', methods=['POST'])
 def map_page_post():
     # The request.form is different depending of which form you submit. You can only submit one at a time.
-    print(request.form)
+    #print(request.form)
     did_login = handle_login_post()
 
     lat, long, did_lat_long_post = get_lat_long()
@@ -348,7 +348,7 @@ def map_page_post():
     signed_in, cur_user = get_signed_in_info()
 
     search_str = request.args.get('searchstr')
-    print(search_str)
+    #print(search_str)
 
     # will call mongo to get files
     if search_str is None:
@@ -375,7 +375,7 @@ def map_page_post():
         # each download button is its own form with a unique ID
         for this_file_data in file_data:
             if str(this_file_data.id) in request.form:
-                print('hit')
+                #print('hit')
                 return handle_download_post(signed_in, cur_user, this_file_data, file_data, search_str)
 
     abort(400)  # Bad Request
@@ -438,7 +438,7 @@ if __name__ == "__main__":
         """
         # note: to access the website you must now go to `https://localhost:5000/`
         context = ('certificates/server.crt', 'certificates/server.key')
-        app.run(threaded=True, host='0.0.0.0', port=5000, debug=True, ssl_context=context)
+        app.run(threaded=True, host='0.0.0.0', port=5000, debug=False, ssl_context=context)
     else:
         # starts the app at `http://localhost:5000/`
         app.run(threaded=True, host='0.0.0.0', port=5000, debug=True)
