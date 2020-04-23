@@ -7,6 +7,7 @@ import datetime
 import mongoIO
 
 from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory, flash, send_file, redirect
+from haversine import haversine, Unit
 
 app = Flask(__name__)
 app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption (using session)
@@ -50,6 +51,7 @@ class file_data_html(NamedTuple):
     downloads: float
 
 
+
 def get_signed_in_info():
     # Note: session is different for each person who views the website.
     if 'cur_user' in session and session['cur_user'] is not None:
@@ -89,7 +91,7 @@ def get_downloadable_files(lat, long):
     # Note, we want to store the path starting in `static/` but it is not including the path
     """
 
-    mongo_data = db_info.get_all_files_in_range(float(lat), float(long), 0.1, 20)  # TODO: change range
+    mongo_data = db_info.get_all_files_in_range(float(lat), float(long), 0.1, 0.1, 20)  # TODO: change range
 
     data = [file_data_html(mfd['file_name'], mfd['gps_lat'], mfd['gps_long'],
                            os.path.splitext(mfd['file_path'])[1].lstrip('.'),

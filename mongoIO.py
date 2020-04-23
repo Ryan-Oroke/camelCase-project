@@ -13,6 +13,7 @@ from bson import ObjectId
 import unittest
 import random
 
+from haversine import haversine, Unit
 
 class file_data_entry(NamedTuple):
     creator_name: str  # change to ObjectID or username
@@ -50,6 +51,55 @@ class file_data_entry(MutableMapping):
         self.test = test
 """
 
+def getLatRange(desired_dist, curr_lat, curr_lon):
+    #Pseudo Code
+
+    #1. Convert the lat and lon to their int value
+    #2. Using these two, get the distance between lat and lat+1
+    #3. Interpolate the dist with lat/lon dist to coords change
+    #4. Return max displacement range
+    
+    curr_lat = int(abs(curr_lat))
+    curr_lon = int(abs(curr_lon))
+
+    step = 0.01 #I have used 0.01 as the interpolation element, which is ~1km at 40N
+
+    shifted_lat = curr_lat + step 
+
+    curr_loc = (curr_lat, curr_lon)
+    shifted_loc = (shifted_lat, curr_lon)
+
+    #Get distance bewteen curr and shited location
+    coords_dist = haversine(curr_loc, shifted_loc, unit=Unit.MILES)*5280
+
+    range_lat = desired_dist/coords_dist * step
+
+    return range_lat
+
+def getLonRange(desired_dist, curr_lat, curr_lon):
+    #Pseudo Code
+
+    #1. Convert the lat and lon to their int value
+    #2. Using these two, get the distance between lat and lat+1
+    #3. Interpolate the dist with lat/lon dist to coords change
+    #4. Return max displacement range
+    
+    curr_lat = int(abs(curr_lat))
+    curr_lon = int(abs(curr_lon))
+
+    step = 0.01 #I have used 0.01 as the interpolation element, which is ~1km at 40N
+
+    shifted_lon = curr_lon + step 
+
+    curr_loc = (curr_lat, curr_lon)
+    shifted_loc = (curr_lat, shifted_lon)
+
+    #Get distance bewteen curr and shited location
+    coords_dist = haversine(curr_loc, shifted_loc, unit=Unit.MILES)*5280
+
+    range_lon = desired_dist/coords_dist * step
+
+    return range_lon
 
 class DB_info:
     def __init__(self, host_server, host_port, db_name, file_coll_name, user_coll_name):
@@ -104,20 +154,45 @@ class DB_info:
 
         return live_files
 
+    def __remove_out_of_range(self, file_list, lat, lon):
+        file_lat_range = 0
+        file_lon_range = 0
+        new_list = []
+        for f in file_list:
+            #Radius on the file
+            gps_lat_radius = getLatRange(f['vis_dist'], lat, lon)
+            gps_lon_radius = getLonRange(f['vis_dist'], lat, lon)
+
+            lat_min = lat - gps_lat_radius
+            lat_max = lat + gps_lat_radius
+            lon_min = lon - gps_lon_radius
+            lon_max = lon + gps_lon_radius
+
+            if( lat > lat_min and lat < lat_max and lon > lon_min and lon < lon_max):
+                new_list.append(f)
+                print("IN RANGE: " + f['file_name'] + "(Visible: " + str(f['vis_dist'])+ "ft.) Location: (" + str(f['gps_lat']) + ", " + str(f['gps_long']) + ") Range: (" + str(gps_lat_radius) + ", " + str(gps_lon_radius) + ") User Location: (" + str(lat) + ", " + str(lon) + ")")
+            else:
+                print("REMOVED: " + f['file_name'] + "(Visible: " + str(f['vis_dist'])+ "ft.) Location: (" + str(f['gps_lat']) + ", " + str(f['gps_long']) + ") Range: (" + str(gps_lat_radius) + ", " + str(gps_lon_radius) + ") User Location: (" + str(lat) + ", " + str(lon) + ")")
+
+
+
+        return new_list;
+
     def get_all_files_for_user(self, username, max_files):
         cursor = self.coll_file.find({"creator_name": {"$eq": username}}).limit(max_files)
         file_list = list(cursor)
         file_list = self.__remove_end_of_life(file_list)
         return file_list
 
-    def get_all_files_in_range(self, lat, long, gps_radius, max_files):
-        lat_min = lat - gps_radius
-        lat_max = lat + gps_radius
-        long_min = long - gps_radius
-        long_max = long + gps_radius
+    def get_all_files_in_range(self, lat, long, gps_lat_radius, gps_lon_radius, max_files):
+        lat_min = lat - gps_lat_radius
+        lat_max = lat + gps_lat_radius
+        long_min = long - gps_lon_radius
+        long_max = long + gps_lon_radius
         cursor = self.coll_file.find({"gps_lat": {"$gte": lat_min, "$lte": lat_max}, "gps_long": {"$gte": long_min, "$lte": long_max}}).limit(max_files)
         file_list = list(cursor)
         file_list = self.__remove_end_of_life(file_list)
+        file_list = self.__remove_out_of_range(file_list, lat, long)
         return file_list
 
     def update_user_bio(self, user, bio):
