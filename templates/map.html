@@ -21,7 +21,11 @@
                 <!-- For the scripts associated with this, see the bottom of the file -->
             </div>
             <div class="col-7">
+                {% if searchstr == '' %}
                 <div class="row">
+                {% else %}
+                <div class="row" style="margin-left:2px; margin-right:10px;">
+                {% endif %}
                     <form class="form-inline" method="POST" enctype="multipart/form-data">
                         <div>
                             {% if searchstr != '' %}
@@ -84,8 +88,12 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <p style="font-weight:bold;">Distance: {{fils[i].dist}} Feet </p>
-                                <p style="font-weight:bold;">Format: {{fils[i].format}}</p>
+                                <div class="row">
+                                    &nbsp &nbsp &nbsp
+                                    <p style="font-weight:bold;">Distance: {{fils[i].dist}} Feet </p>
+                                    &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                                    <p style="font-weight:bold;">Format: {{fils[i].format}}</p>
+                                </div>
                                 {% if fils[i].description|length > 50 %}
                                 <p> {{ fils[i].description[0:50] }}...</p>
                                 {% else %}
@@ -138,8 +146,12 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <p style="font-weight:bold;">Distance: {{fils[i+1].dist}} Feet </p>
-                                <p style="font-weight:bold;">Format: {{fils[i+1].format}}</p>
+                                <div class="row">
+                                    &nbsp &nbsp &nbsp
+                                    <p style="font-weight:bold;">Distance: {{fils[i+1].dist}} Feet </p>
+                                    &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                                    <p style="font-weight:bold;">Format: {{fils[i+1].format}}</p>
+                                </div>
                                 {% if fils[i+1].description|length > 50 %}
                                 <p> {{ fils[i+1].description[0:50] }}...</p>
                                 {% else %}
@@ -168,11 +180,12 @@
                     {% endfor %}
                 </div>
                 <br>
-                <hr class="hr-custom">
-                <br>
+
                 <div align="center">
+                    <hr class="hr-custom">
                     <h3>Oh no!</h3>
                     <h5>There are no more available files based on your search criteria and location.</h5>
+
                 </div>
             </div>
 
