@@ -10,6 +10,9 @@ import os
 
 from bson import ObjectId
 
+import unittest
+import random
+
 
 class file_data_entry(NamedTuple):
     creator_name: str  # change to ObjectID or username
@@ -78,10 +81,12 @@ class DB_info:
         self.coll_user.create_index("email", unique=True, dropDups=1)
 
         self.connected = True
+        return self.connected
 
     def ins_file(self, entry):
         bson_data = entry._asdict()
         x = self.coll_file.insert_one(bson_data)
+        return x
 
     def __remove_end_of_life(self, file_list):
         now = time.time()
@@ -126,7 +131,6 @@ class DB_info:
 
     def update_file_downloads(self, id):
         self.coll_file.update_one({'_id': ObjectId(id)}, {'$inc': {'num_downloads': 1}})
-        
 
     def get_all_searchable_files(self, lat, long, gps_radius, max_files, searc):
         lat_min = lat - gps_radius
@@ -177,41 +181,93 @@ class DB_info:
         return x  # so if x is None then username or password is wrong
 
 
-if __name__ == "__main__":
-    db_info = DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")
-    db_info.connect()
+class MyTest(unittest.TestCase):
+    def test_can_connect_to_localhost(self):
+        db_info_test = DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")
+        self.assertEqual(db_info_test.connect(), True)
 
-    if False:
-        db_info.ins_file(
-            file_data_entry("test_user", "test1", "abc", time.time(), "test_user/P1540913.JPG", False, "", 40.015869,
+    def test_can_ins_file(self):
+        db_info_test = DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")
+        db_info_test.connect()
+
+        res = db_info_test.ins_file(
+            file_data_entry("test_user0", "test1", "abc", time.time(), "test_user0/P1540913.JPG", False, "", 40.015869,
                             -105.279517, 10, 100000.0, 69, 1))
-        db_info.ins_file(
-            file_data_entry("test_user", "test2", "def", time.time(), "test_user/P1540506.JPG", False, "", 40.016869,
+
+        self.assertIsNotNone(res)  # should return _id
+
+    def test_can_find_file(self):
+        db_info_test = DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")
+        db_info_test.connect()
+
+        db_info_test.ins_file(
+            file_data_entry("test_user1", "test1", "abc", time.time(), "test_user1/P1540913.JPG", False, "", 40.015869,
+                            -105.279517, 10, 100000.0, 69, 1))
+        db_info_test.ins_file(
+            file_data_entry("test_user1", "test2", "def", time.time(), "test_user1/P1540506.JPG", False, "", 40.016869,
                             -105.278617, 10, 100000.0, 420, 2))
-        db_info.ins_file(
-            file_data_entry("test_user", "test3", "111", time.time(), "test_user/P1540915.JPG", False, "", 40.017869,
+        db_info_test.ins_file(
+            file_data_entry("test_user2", "test3", "111", time.time(), "test_user2/P1540915.JPG", False, "", 40.017869,
                             -105.275517, 10, 200000.0, 10, 3))
-        db_info.ins_file(
-            file_data_entry("test_user", "test4", "222", time.time(), "test_user/test_pdf.pdf", False, "", 40.014869,
+        db_info_test.ins_file(
+            file_data_entry("test_user2", "test4", "222", time.time(), "test_user2/test_pdf.pdf", False, "", 40.014869,
                             -105.276617, 10, 300000.0, 20, 4))
-        db_info.ins_file(
-            file_data_entry("test_user", "test5", "333", time.time(), "test_user/LkgdAgN.jpg", False, "", 40.013869,
+        db_info_test.ins_file(
+            file_data_entry("test_user3", "test5", "333", time.time(), "test_user3/LkgdAgN.jpg", False, "", 40.013869,
                             -105.277617, 10, 100000.0, 30, 5))
 
-    time.sleep(1)
+        data = db_info_test.get_all_files_in_range(40.015869, -105.279517, 2, 6)
 
-    data = db_info.get_all_files_in_range(40.015869,-105.279517,2,6)
+        self.assertNotEqual(len(data), 0)
 
-    print(data)
+        data = db_info_test.get_all_searchable_files(40.015869, -105.279517, 2, 6, "test[0-9]")
 
-    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(data[0]['file_create_time'])))
-    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime((data[0]['file_create_time'] + data[0]['vis_time']))))
+        self.assertNotEqual(len(data), 0)
 
-    # user stuff
-    x = db_info.try_create_user("test1", "password", "te", "st", "a@b.c")
-    print(x)
-    x = db_info.try_get_user("test1", "password")
-    print(x)
+        data = db_info_test.get_all_files_for_user("test_user3", 6)
 
-    print(db_info.get_all_files_for_user('test_user', 10))
+        self.assertNotEqual(len(data), 0)
+
+    def test_can_create_user(self):
+        db_info_test = DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")
+        db_info_test.connect()
+
+        name = "test_" + str(random.randint(0, 1000000))
+        x = db_info_test.try_create_user(name, "password", "te", "st", name+"@b.c", "bio")
+
+        self.assertIsNotNone(x)
+
+        x = db_info_test.try_create_user(name, "password", "te", "st", name+"hreerasdasd@b.c", "bio")
+        self.assertIsNone(x)
+
+        x = db_info_test.try_create_user(name+"sdfasdfasdfsd", "password", "te", "st", name+"@b.c", "bio")
+        self.assertIsNone(x)
+
+    def test_login_user(self):
+        db_info_test = DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")
+        db_info_test.connect()
+
+        name = "test_" + str(random.randint(0, 1000000))
+        x = db_info_test.try_create_user(name, "password", "te", "st", name+"@b.c", "bio")
+
+        self.assertIsNotNone(x)
+        x = db_info_test.try_get_user(name, "password")
+        self.assertIsNotNone(x)
+        x = db_info_test.try_get_user(name+"@b.c", "password")
+        self.assertIsNotNone(x)
+
+    def test_login_user_fail(self):
+        db_info_test = DB_info("localhost", 27017, "FreeDrop", "file_data", "user_data")
+        db_info_test.connect()
+
+        name = "test_" + str(random.randint(0, 1000000))
+        x = db_info_test.try_create_user(name, "password", "te", "st", name+"@b.c", "bio")
+
+        self.assertIsNotNone(x)
+        x = db_info_test.try_get_user(name, "wrong_password")
+        self.assertIsNone(x)
+
+
+if __name__ == "__main__":
+    unittest.main()
 
