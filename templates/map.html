@@ -21,7 +21,11 @@
                 <!-- For the scripts associated with this, see the bottom of the file -->
             </div>
             <div class="col-7">
+                {% if searchstr == '' %}
+                <div class="row">
+                {% else %}
                 <div class="row" style="margin-left:2px; margin-right:10px;">
+                {% endif %}
                     <form class="form-inline" method="POST" enctype="multipart/form-data">
                         <div>
                             {% if searchstr != '' %}
