@@ -88,8 +88,12 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <p style="font-weight:bold;">Distance: {{fils[i].dist}} Feet </p>
-                                <p style="font-weight:bold;">Format: {{fils[i].format}}</p>
+                                <div class="row">
+                                    &nbsp &nbsp &nbsp
+                                    <p style="font-weight:bold;">Distance: {{fils[i].dist}} Feet </p>
+                                    &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                                    <p style="font-weight:bold;">Format: {{fils[i].format}}</p>
+                                </div>
                                 {% if fils[i].description|length > 50 %}
                                 <p> {{ fils[i].description[0:50] }}...</p>
                                 {% else %}
@@ -142,8 +146,12 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <p style="font-weight:bold;">Distance: {{fils[i+1].dist}} Feet </p>
-                                <p style="font-weight:bold;">Format: {{fils[i+1].format}}</p>
+                                <div class="row">
+                                    &nbsp &nbsp &nbsp
+                                    <p style="font-weight:bold;">Distance: {{fils[i+1].dist}} Feet </p>
+                                    &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                                    <p style="font-weight:bold;">Format: {{fils[i+1].format}}</p>
+                                </div>
                                 {% if fils[i+1].description|length > 50 %}
                                 <p> {{ fils[i+1].description[0:50] }}...</p>
                                 {% else %}

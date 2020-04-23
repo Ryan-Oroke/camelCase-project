@@ -242,8 +242,9 @@ def handle_upload_post(signed_in, cur_user, file_data, search_str):
                                                             request.form['inputFileDescription'], time.time(), filename,
                                                             req_pass, pass_hash, float(request.form['gps_lat']),
                                                             float(request.form['gps_long']),
-                                                            1000,
-                                                            10000000.0, 0, 0))
+                                                            1000, #distance
+                                                            float(request.form['time_r']), #time
+                                                            0, 0))
 
                 flash("File uploaded successfully") # check rets of `.save` and `.ins_file`
 
