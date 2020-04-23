@@ -205,7 +205,7 @@ def handle_upload_post(signed_in, cur_user, file_data, search_str):
         #print(request.form)
         # if the form includes a file upload, the data is stored in `request.files`
         #print(request.files)
-        if request.form['file_name'] == '':
+        if request.form['inputFileName'] == '':
             flash("Error uploading file: File must have a name.")
 
         if 'input_file' not in request.files or request.files['input_file'].filename == '':
@@ -399,11 +399,11 @@ def user_page_get():
     user_bio = db_info.get_user_bio(cur_user);
     try:
         user_b = user_bio[0].get("bio")
-        print("This is the user's bio:")
-        print(user_b)
+        #print("This is the user's bio:")
+        #print(user_b)
     except:
         user_b = ''
-        print("Failed")
+        #print("Failed")
 
     #flash("Page Refreshed Successfully")
 
