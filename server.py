@@ -205,6 +205,8 @@ def handle_upload_post(signed_in, cur_user, file_data, search_str):
         #print(request.form)
         # if the form includes a file upload, the data is stored in `request.files`
         #print(request.files)
+        if request.form['inputFileName'] == '':
+            flash("Error uploading file: File must have a name.")
 
         if 'input_file' not in request.files or request.files['input_file'].filename == '':
             # flash is how we tell the user things
@@ -232,11 +234,13 @@ def handle_upload_post(signed_in, cur_user, file_data, search_str):
 
                 #print("Test" + request.form['gps_lat'])
 
+                #Handle the distance equation and potential upload
+
                 ret = db_info.ins_file(mongoIO.file_data_entry(session['cur_user'], request.form['inputFileName'],
                                                             request.form['inputFileDescription'], time.time(), filename,
                                                             req_pass, pass_hash, float(request.form['gps_lat']),
                                                             float(request.form['gps_long']),
-                                                            float(request.form['visibleDistance']),
+                                                            1000,
                                                             10000000.0, 0, 0))
 
                 flash("File uploaded successfully") # check rets of `.save` and `.ins_file`
@@ -292,7 +296,7 @@ def register_page():
             pass
         elif 'sign_up' in request.form:
             #print(request.form)
-            res = db_info.try_create_user(request.form['username'], request.form['password'], 'first name', 'last name', request.form['email'])
+            res = db_info.try_create_user(request.form['username'], request.form['password'], 'first name', 'last name', request.form['email'], "")
             if res is None:
                 flash("Failed to create user, username or email might be taken.")
             else:
@@ -391,9 +395,19 @@ def user_page_get():
         # will call mongo to get files
     file_data = get_user_file(cur_user)
 
+    #Get bio
+    user_bio = db_info.get_user_bio(cur_user);
+    try:
+        user_b = user_bio[0].get("bio")
+        #print("This is the user's bio:")
+        #print(user_b)
+    except:
+        user_b = ''
+        #print("Failed")
+
     #flash("Page Refreshed Successfully")
 
-    return render_template("user.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, ignore_download=True)
+    return render_template("user.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, user_bio=user_b, ignore_download=True)
 
 
 @app.route('/user', methods=['POST'])
@@ -405,12 +419,28 @@ def user_page_post():
     if not signed_in:
         return redirect(url_for('register_page'))
 
-        # will call mongo to get files
+    #See if the user wishes to update their bio
+    if 'bio_post' in request.form:
+        newBio = request.form['inputBio']
+        print(newBio);
+        db_info.update_user_bio(cur_user, newBio);
+
+    #Fetch the bio
+    user_bio = db_info.get_user_bio(cur_user);
+    try:
+        user_b = user_bio[0].get("bio")
+        print("This is the user's bio:")
+        print(user_b)
+    except:
+        user_b = ''
+        print("Failed")
+
+    # will call mongo to get files
     file_data = get_user_file(cur_user)
 
     #flash("Page Refreshed Successfully")
 
-    return render_template("user.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, ignore_download=True)
+    return render_template("user.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, user_bio=user_b, ignore_download=True)
 
 
 if __name__ == "__main__":

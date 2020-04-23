@@ -37,6 +37,7 @@ class user_data_entry(NamedTuple):
     first_name: str
     last_name: str
     email: str
+    bio: str
 
 
 """
@@ -114,10 +115,18 @@ class DB_info:
         file_list = self.__remove_end_of_life(file_list)
         return file_list
 
+    def update_user_bio(self, user, bio):
+        self.coll_user.update({'user_name': user}, {'$set': {'bio': bio}})
+        print(self.coll_user.find({"user_name": user}))
 
+    def get_user_bio(self, user):
+        #print(list(self.coll_user.find({"user_name": user}, {"bio": 1})))
+        return list(self.coll_user.find({"user_name": user}, {"bio": 1}))
+        #return self.coll_user.find({"user_name": user}, {"bio": 1})
 
     def update_file_downloads(self, id):
         self.coll_file.update_one({'_id': ObjectId(id)}, {'$inc': {'num_downloads': 1}})
+        
 
     def get_all_searchable_files(self, lat, long, gps_radius, max_files, searc):
         lat_min = lat - gps_radius
@@ -149,9 +158,9 @@ class DB_info:
         except:
                 return []
 
-    def try_create_user(self, user_name, password_plain_text, first_name, last_name, email):
+    def try_create_user(self, user_name, password_plain_text, first_name, last_name, email, bio):
         password_hash = hashlib.sha256(password_plain_text.encode('utf-8')).hexdigest()
-        user_info = user_data_entry(user_name, password_hash, first_name, last_name, email)
+        user_info = user_data_entry(user_name, password_hash, first_name, last_name, email, bio)
         bson_data = user_info._asdict()
         try:
             res = self.coll_user.insert_one(bson_data)

@@ -17,7 +17,8 @@
                     <div class="card-header">
                         <div class="row justify-content-between">
                             <h3 class="ml-2" style="font-weight: bold;">{{ cur_user }}</h3>
-                            <!-- <button class="btn" type="button float-right" href="#editProfileModal" toggle="modal" data-target=".bd-editProfile-modal-lg" onclick="openEditProfileModal" >
+                            <!-- <button class="btn" type="button float-right" href="#editProfileModal" toggle="modal" data-target=".bd-editProfile-modal-lg" onclick="openEditProfileModal" > -->
+                            <button class="btn" type="button float-right" onclick="editBio()">
                                 <svg class="bi bi-pencil" width="1em" height="1em" viewBox="0 0 16 16"
                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
@@ -27,17 +28,35 @@
                                         d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 00.5.5H4v.5a.5.5 0 00.5.5H5v.5a.5.5 0 00.5.5H6v-1.5a.5.5 0 00-.5-.5H5v-.5a.5.5 0 00-.5-.5H3z"
                                         clip-rule="evenodd" />
                                 </svg>
-                            </button> -->
+                            </button>
                         </div>
 
                     </div>
 
+                    <script>
+                        function editBio()
+                        {
+                            
+                            var editHTML = `
+                                <form method="POST">
+                                    <textarea class="form-control" id="inputBio" rows="3" name="inputBio" 
+                                        placeholder="A little but about yourself. Remember never share anything too personal (Address, SSN, etc.)!"></textarea>
+                                    <br>
+                                    <input type="submit" name="bio_post" class="btn btn-primary" value="Update Bio">
+                                </form>`;
+                            //alert("1")
+                            document.getElementById("bioSect").innerHTML = editHTML;
+                            //alert("2")
+                        }
+                    </script>
+
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-4">
-                            </div>
-                            <div class="col">
-                            </div>
+                        <div id="bioSect">
+                            {% if user_bio != '' %}
+                                <h6 id="bioText">{{user_bio}}</h6>
+                            {% else %}
+                                <h6 id="bioText">Free Drop user to the stars!</h6>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -65,7 +84,7 @@
                     {% for i in range(0, fils |length , 2) %}
                     <div class="row">
                         <div class="card justify-content-center">
-                           <div class="card-header">
+                            <div class="card-header">
                                 <div class="row">
                                     <div class="col">
                                         <h5 style="font-weight:bold;">{{fils[i].name}}</h5>
@@ -149,19 +168,154 @@
                 </div>
             </div>
 
-        <div class="modal fade bd-editProfile-modal-lg" tabindex="-1" role="dialouge" aria-labledby="myLargeModalLabel" id="editProfileModal" aria-hidden="true">
-            <div class="modal-dialoug modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 id="modalHead" style="font-weight: bold;">Edit Profile</h1>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
+            <div class="modal fade bd-editProfile-modal-lg" tabindex="-1" role="dialouge"
+                aria-labledby="myLargeModalLabel" id="editProfileModal" aria-hidden="true">
+                <div class="modal-dialoug modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 id="modalHead" style="font-weight: bold;">Edit Profile</h1>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
             <!--Inspection Modal-->
-        <!-- See inspectionModal.html -->
-        {% include "inspectionModal.html" %}
+            <!-- See inspectionModal.html -->
+            {% include "inspectionModal.html" %}
+
+            <!-- Map Scripts -->
+            <script>
+                //For more information or much of this code, see: https://developers.google.com/maps/documentation/javascript/geolocation
+                function initMap()
+                {
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        center: { lat: 40.000, lng: -105 },
+                        zoom: 14,
+                        styles:
+                            [
+                                { elementType: 'geometry', stylers: [{ color: '#252525' }] },
+                                { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+                                { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+                                {
+                                    featureType: 'administrative.locality',
+                                    elementType: 'labels.text.fill',
+                                    stylers: [{ color: '#d59563' }]
+                                },
+                                // {
+                                //   featureType: 'poi',
+                                //   elementType: 'labels.text.fill',
+                                //   stylers: [{color: '#d59563'}]
+                                // },
+                                {
+                                    featureType: 'poi.park',
+                                    elementType: 'geometry',
+                                    stylers: [{ color: '#0d261a' }]
+                                },
+                                // {
+                                //   featureType: 'poi.park',
+                                //   elementType: 'labels.text.fill',
+                                //   stylers: [{color: '#6b9a76'}]
+                                // },
+                                {
+                                    featureType: 'road',
+                                    elementType: 'geometry',
+                                    stylers: [{ color: '#404040' }]
+                                },
+                                {
+                                    featureType: 'road',
+                                    elementType: 'geometry.stroke',
+                                    stylers: [{ color: '#212a37' }]
+                                },
+                                {
+                                    featureType: 'road',
+                                    elementType: 'labels.text.fill',
+                                    stylers: [{ color: '#9ca5b3' }]
+                                },
+                                {
+                                    featureType: 'road.highway',
+                                    elementType: 'geometry',
+                                    stylers: [{ color: '#505050' }]
+                                },
+                                {
+                                    featureType: 'road.highway',
+                                    elementType: 'geometry.stroke',
+                                    stylers: [{ color: '#1f2835' }]
+                                },
+                                {
+                                    featureType: 'road.highway',
+                                    elementType: 'labels.text.fill',
+                                    stylers: [{ color: '#f3d19c' }]
+                                },
+                                {
+                                    featureType: 'transit',
+                                    elementType: 'geometry',
+                                    stylers: [{ color: '#2f3948' }]
+                                },
+                                {
+                                    featureType: 'transit.station',
+                                    elementType: 'labels.text.fill',
+                                    stylers: [{ color: '#d59563' }]
+                                },
+                                {
+                                    featureType: 'water',
+                                    elementType: 'geometry',
+                                    stylers: [{ color: '#17263c' }]
+                                },
+                                {
+                                    featureType: 'water',
+                                    elementType: 'labels.text.fill',
+                                    stylers: [{ color: '#515c6d' }]
+                                },
+                                {
+                                    featureType: 'water',
+                                    elementType: 'labels.text.stroke',
+                                    stylers: [{ color: '#17263c' }]
+                                }
+                            ]
+                    });
+                    infoWindow = new google.maps.InfoWindow;
+
+                    {% for fil in fils %}
+                    var mkr_{{ fil.id }} = new google.maps.Marker({
+                    map: map,
+                    position: { lat: {{ fil.lat }}, lng: {{ fil.long }} }
+                                //title: {{fil.name}}
+                            });
+                {% endfor %}
+
+                if (navigator.geolocation)
+                {
+                    navigator.geolocation.getCurrentPosition(function (position)
+                    {
+                        document.getElementById("gps_lat_form").value = position.coords.latitude;
+                        document.getElementById("gps_long_form").value = position.coords.longitude;
+                        var pos = { lat: position.coords.latitude, lng: position.coords.longitude };
+                        // var cirlcle = new google.maps.Circle({
+                        //     map: map,
+                        //     center: pos,
+                        //     radius: 1000 //In meters
+                        // });
+
+                        infoWindow.setPosition(pos);
+                        infoWindow.setContent('<p style="color:#000;">Your Location</p>');
+                        infoWindow.open(map);
+                        map.setCenter(pos);
+                    }, function ()
+                    {
+                        handleLocationError(true, infoWindow, map.getCenter());
+                    });
+                }
+                else
+                {
+                    //Browser does not support geolocation
+                    handleLocationError(false, infoWindow, map.getCenter());
+                }
+                            //map.clear();
+                        }
+            </script>
+            <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvmNYLkuljgCv9esBcRGSafTWXcVLB7zE&callback=initMap">
+                </script>
 </body>
