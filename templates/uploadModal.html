@@ -93,6 +93,8 @@
                     <input type="hidden" name="gps_lat" id="gps_lat_form" value="40.007206">
                     <input type="hidden" name="gps_long" id="gps_long_form" value="-105.262271">
 
+                    <input type="hidden" name="time_r" id="time_r_form" value="10000">
+
                     <input class="btn btn-danger float-left" type="submit" name="upload_post" value="Upload"
                         id="submitFileBtn">
                 </form>
@@ -135,9 +137,11 @@
         */
 
         var lengths = ["1 min.", "15 min.", "30 min.", "1 hr.", "3 hr.", "6 hr.", "1 day", "5 days", "1 week", "2 weeks", "1 month", "3 months", "1 year", "Forever"]
+        var hidden_lengths = [60, 900, 1800, 10800, 21600, 86400, 432000, 604800, 1210000, 2628000, 7884000, 31540000, -1]
 
         //<!-- physTime = physTime/10;
         //physTime = 10*Math.round(physTime); -->
         document.getElementById("uploadTimeLabel").innerHTML = "<h6>" + lengths[sliderPos] + "</h6>";
+        document.getElementById("time_r_form").value = hidden_lengths[sliderPos];
     }
 </script>
