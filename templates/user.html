@@ -69,7 +69,9 @@
                                 <div class="row">
                                     <div class="col">
                                         <h5 style="font-weight:bold;">{{fils[i].name}}</h5>
-                                        <small>Posted by <b>{{fils[i].creator}}</b></small>
+                                         {% if fils[i].req_password %}
+                                        <small>Password Protected</b></small>
+                                        {% endif %}
                                     </div>
                                     <div class="col" align="right">
                                         <div class="row">
@@ -107,6 +109,9 @@
                                 <div class="row">
                                     <div class="col">
                                         <h5 style="font-weight:bold;">{{fils[i+1].name}}</h5>
+                                        {% if fils[i+1].req_password %}
+                                        <small>Password Protected</b></small>
+                                        {% endif %}
                                     </div>
                                     <div class="col" align="right">
                                         <div class="row">
