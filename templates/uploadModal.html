@@ -59,7 +59,7 @@
                                 <h6>Time Online</h6>
                             </div>
                             <div class="col text-right" id="uploadTimeLabel">
-                                <h6>7 Days</h6>
+                                <h6>1 week</h6>
                             </div>
                         </div>
 
@@ -93,7 +93,7 @@
                     <input type="hidden" name="gps_lat" id="gps_lat_form" value="40.007206">
                     <input type="hidden" name="gps_long" id="gps_long_form" value="-105.262271">
 
-                    <input type="hidden" name="time_r" id="time_r_form" value="10000">
+                    <input type="hidden" name="time_r" id="time_r_form" value="10000.0">
 
                     <input class="btn btn-danger float-left" type="submit" name="upload_post" value="Upload"
                         id="submitFileBtn">
@@ -137,7 +137,7 @@
         */
 
         var lengths = ["1 min.", "15 min.", "30 min.", "1 hr.", "3 hr.", "6 hr.", "1 day", "5 days", "1 week", "2 weeks", "1 month", "3 months", "1 year", "Forever"]
-        var hidden_lengths = [60, 900, 1800, 10800, 21600, 86400, 432000, 604800, 1210000, 2628000, 7884000, 31540000, -1]
+        var hidden_lengths = [60.0, 900.0, 1800.0, 3600.0, 10800.0, 21600.0, 86400.0, 432000.0, 604800.0, 1210000.0, 2628000.0, 7884000.0, 31540000.0, -1.0]
 
         //<!-- physTime = physTime/10;
         //physTime = 10*Math.round(physTime); -->
