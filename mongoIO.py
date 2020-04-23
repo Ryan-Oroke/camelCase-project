@@ -13,6 +13,7 @@ from bson import ObjectId
 import unittest
 import random
 
+UPLOAD_DIRECTORY = 'upload_files'  # I really don't like this, this is a flask thing not a mongo thing
 
 class file_data_entry(NamedTuple):
     creator_name: str  # change to ObjectID or username
@@ -97,10 +98,12 @@ class DB_info:
         for file in end_of_life_files:
             self.coll_file.delete_one({"_id": file['_id']})
             try:
-                pass  # os.remove(file['file_path'])
-                # I think we would use a call back to do this
+                file_path = os.path.join('static', UPLOAD_DIRECTORY, file['file_path'])
+                print(file_path)
+                os.remove(file_path)
+                # I think we would use a call back to do this: thats to much work
             except:
-                pass
+                pass  # if we fail don't worry about it
 
         return live_files
 
