@@ -94,7 +94,7 @@
                                 {% if fils[i].req_password %}
                                 <div align="center">
                                     <img class="card-img-top"
-                                        src="{{ url_for('static', filename='no_preview_available.jfif') }}">
+                                        src="{{ url_for('static', filename='freedrop-lock.png') }}">
                                 </div>
                                 {% elif fils[i].format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico jfif"%}
                                 <div align="center">
@@ -103,7 +103,7 @@
                                 {% else %}
                                 <div align="center">
                                     <img class="card-img-top"
-                                        src="{{ url_for('static', filename='no_preview_available.jfif') }}">
+                                        src="{{ url_for('static', filename='freedrop-lock.png') }}">
                                 </div>
                                 {% endif %}
                             </div>
@@ -148,7 +148,7 @@
                                 {% if fils[i+1].req_password %}
                                 <div align="center">
                                     <img class="card-img-top"
-                                        src="{{ url_for('static', filename='no_preview_available.jfif') }}" alt="Could not load file...">
+                                        src="{{ url_for('static', filename='freedrop-lock.png') }}" alt="Could not load file...">
                                 </div>
                                 {% elif fils[i+1].format.lower() in "jpg jpeg gif png apng svg bmp bmp ico png ico jfif" %}
                                 <div align="center">
@@ -157,7 +157,7 @@
                                 {% else %}
                                 <div align="center">
                                     <img class="card-img-top"
-                                        src="{{ url_for('static', filename='no_preview_available.jfif') }}">
+                                        src="{{ url_for('static', filename='freedrop-lock.png') }}">
                                 </div>
                                 {% endif %}
                             </div>
