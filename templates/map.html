@@ -21,7 +21,7 @@
                 <!-- For the scripts associated with this, see the bottom of the file -->
             </div>
             <div class="col-7">
-                <div class="row">
+                <div class="row" style="margin-left:2px; margin-right:10px;">
                     <form class="form-inline" method="POST" enctype="multipart/form-data">
                         <div>
                             {% if searchstr != '' %}
@@ -168,11 +168,12 @@
                     {% endfor %}
                 </div>
                 <br>
-                <hr class="hr-custom">
-                <br>
+
                 <div align="center">
+                    <hr class="hr-custom">
                     <h3>Oh no!</h3>
                     <h5>There are no more available files based on your search criteria and location.</h5>
+
                 </div>
             </div>
 
