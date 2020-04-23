@@ -90,8 +90,8 @@ class DB_info:
 
     def __remove_end_of_life(self, file_list):
         now = time.time()
-        end_of_life_files = [f for f in file_list if f['file_create_time'] + f['vis_time'] < now]
-        live_files = [f for f in file_list if f['file_create_time'] + f['vis_time'] >= now]
+        end_of_life_files = [f for f in file_list if f['file_create_time'] + f['vis_time'] < now and f['vis_time'] != -1]
+        live_files = [f for f in file_list if f['file_create_time'] + f['vis_time'] >= now or f['vis_time'] == -1]
 
         test = [{'_id': file['_id']} for file in end_of_life_files]
         for file in end_of_life_files:
@@ -192,7 +192,7 @@ class MyTest(unittest.TestCase):
 
         res = db_info_test.ins_file(
             file_data_entry("test_user0", "test1", "abc", time.time(), "test_user0/P1540913.JPG", False, "", 40.015869,
-                            -105.279517, 10, 100000.0, 69, 1))
+                            -105.279517, 10, 1.0, 69, 1))
 
         self.assertIsNotNone(res)  # should return _id
 
@@ -202,19 +202,20 @@ class MyTest(unittest.TestCase):
 
         db_info_test.ins_file(
             file_data_entry("test_user1", "test1", "abc", time.time(), "test_user1/P1540913.JPG", False, "", 40.015869,
-                            -105.279517, 10, 100000.0, 69, 1))
+                            -105.279517, 10, -1.0, 69, 1))  # -1 is inf time
         db_info_test.ins_file(
             file_data_entry("test_user1", "test2", "def", time.time(), "test_user1/P1540506.JPG", False, "", 40.016869,
-                            -105.278617, 10, 100000.0, 420, 2))
+                            -105.278617, 10, 2.0, 420, 2))
         db_info_test.ins_file(
             file_data_entry("test_user2", "test3", "111", time.time(), "test_user2/P1540915.JPG", False, "", 40.017869,
-                            -105.275517, 10, 200000.0, 10, 3))
+                            -105.275517, 10, 2.0, 10, 3))
         db_info_test.ins_file(
             file_data_entry("test_user2", "test4", "222", time.time(), "test_user2/test_pdf.pdf", False, "", 40.014869,
-                            -105.276617, 10, 300000.0, 20, 4))
+                            -105.276617, 10, 2.0, 20, 4))
         db_info_test.ins_file(
             file_data_entry("test_user3", "test5", "333", time.time(), "test_user3/LkgdAgN.jpg", False, "", 40.013869,
-                            -105.277617, 10, 100000.0, 30, 5))
+                            -105.277617, 10, 2.0, 30, 5))
+        time.sleep(.1)
 
         data = db_info_test.get_all_files_in_range(40.015869, -105.279517, 2, 6)
 
