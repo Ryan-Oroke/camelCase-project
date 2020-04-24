@@ -166,14 +166,19 @@ class DB_info:
             gps_lat_radius = getLatRange(f['vis_dist'], lat, lon)
             gps_lon_radius = getLonRange(f['vis_dist'], lat, lon)
 
-            lat_min = lat - gps_lat_radius
-            lat_max = lat + gps_lat_radius
-            lon_min = lon - gps_lon_radius
-            lon_max = lon + gps_lon_radius
+            file_lat = f['gps_lat']
+            file_lon = f['gps_long']
+
+            lat_min = file_lat - gps_lat_radius
+            lat_max = file_lat + gps_lat_radius
+            lon_min = file_lon - gps_lon_radius
+            lon_max = file_lon + gps_lon_radius
+
+            haversineDistFt = haversine((f['gps_lat'], f['gps_long']), (lat, lon), unit=Unit.MILES)
 
             if( lat > lat_min and lat < lat_max and lon > lon_min and lon < lon_max):
                 new_list.append(f)
-                print("IN RANGE: " + f['file_name'] + "(Visible: " + str(f['vis_dist'])+ "ft.) Location: (" + str(f['gps_lat']) + ", " + str(f['gps_long']) + ") Range: (" + str(gps_lat_radius) + ", " + str(gps_lon_radius) + ") User Location: (" + str(lat) + ", " + str(lon) + ")")
+                print("IN RANGE: " + f['file_name'] + "(Visible: " + str(f['vis_dist'])+ "ft.) Location: (" + str(f['gps_lat']) + ", " + str(f['gps_long']) + ")" + ", Actual Range: (" + str(haversineDistFt) + "mi.) Range: (" + str(gps_lat_radius)  + str(gps_lon_radius) + ", " + str(haversine((lat, lon), (lat + gps_lat_radius, lon + gps_lon_radius))) + "mi.) User Location: (" + str(lat) + ", " + str(lon) + ")")
             else:
                 print("REMOVED: " + f['file_name'] + "(Visible: " + str(f['vis_dist'])+ "ft.) Location: (" + str(f['gps_lat']) + ", " + str(f['gps_long']) + ") Range: (" + str(gps_lat_radius) + ", " + str(gps_lon_radius) + ") User Location: (" + str(lat) + ", " + str(lon) + ")")
 
