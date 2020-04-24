@@ -41,9 +41,10 @@
 <!--                    {% if fil.description|length > 50 %}-->
 <!--                    <p> {{ fil.description[0:50] }}...</p>-->
 <!--                    {% else %}-->
-                    <p>{{ fil.description }}</p>
+<!--                    <p>{{ fil.description }}</p>-->
 <!--                    {% endif %}-->
-                    <!-- <p style="font-weight:bold;">File Information: {{fil.description}}</p> -->
+                    <div style="font-weight:bold;">File Information: </div>
+                    <p>{{ fil.description }}</p>
                     <label for="upload data"><span class="fas fa-upload"></span> Uploaded on: {{fil.date}}</label> &nbsp
                     &nbsp &nbsp
                     <label for="upload data"><span class="fas fa-clock"></span> Available until: {{fil.death_date}}</label>
