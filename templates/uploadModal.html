@@ -94,6 +94,7 @@
                     <input type="hidden" name="gps_long" id="gps_long_form" value="-105.262271">
 
                     <input type="hidden" name="time_r" id="time_r_form" value="10000.0">
+                    <input type="hidden" name="dist_r" id="dist_r_form" value="1000.0">
 
                     <input class="btn btn-danger float-left" type="submit" name="upload_post" value="Upload"
                         id="submitFileBtn">
@@ -110,6 +111,7 @@
         var physDist = (0.495 * sliderPos * sliderPos + 50) / 10;
         physDist = 10 * Math.round(physDist);
         document.getElementById("uploadDistLabel").innerHTML = "<h6>" + String(physDist) + " ft. </h6>";
+        document.getElementById("dist_r_form").value = physDist;
     }
 
     function updateTimePos()
