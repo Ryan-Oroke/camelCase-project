@@ -242,7 +242,7 @@ def handle_upload_post(signed_in, cur_user, file_data, search_str):
                                                             request.form['inputFileDescription'], time.time(), filename,
                                                             req_pass, pass_hash, float(request.form['gps_lat']),
                                                             float(request.form['gps_long']),
-                                                            1000, #distance
+                                                            float(request.form['dist_r']), #distance
                                                             float(request.form['time_r']), #time
                                                             0, 0))
 
