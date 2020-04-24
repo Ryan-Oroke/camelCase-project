@@ -45,7 +45,7 @@
                                 <h6>Visible Distance</h6>
                             </div>
                             <div class="col text-right" id="uploadDistLabel">
-                                <h6>1000 ft.</h6>
+                                <h6></h6>
                             </div>
                         </div>
 
@@ -59,7 +59,7 @@
                                 <h6>Time Online</h6>
                             </div>
                             <div class="col text-right" id="uploadTimeLabel">
-                                <h6>1 week</h6>
+                                <h6></h6>
                             </div>
                         </div>
 
@@ -108,7 +108,7 @@
     function updateDistPos()
     {
         var sliderPos = document.getElementById("visibleDistanceSlider").value;
-        var physDist = (0.495 * sliderPos * sliderPos + 50) / 10;
+        var physDist = (5*0.495 * sliderPos * sliderPos + 50) / 10;
         physDist = 10 * Math.round(physDist);
         document.getElementById("uploadDistLabel").innerHTML = "<h6>" + String(physDist) + " ft. </h6>";
         document.getElementById("dist_r_form").value = physDist;

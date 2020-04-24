@@ -13,7 +13,10 @@ from bson import ObjectId
 import unittest
 import random
 
-from haversine import haversine, Unit
+from math import radians, cos, sin, asin, sqrt
+
+#from haversine import haversine, Unit
+
 UPLOAD_DIRECTORY = 'upload_files'  # I really don't like this, this is a flask thing not a mongo thing
 
 class file_data_entry(NamedTuple):
@@ -52,6 +55,21 @@ class file_data_entry(MutableMapping):
         self.test = test
 """
 
+
+#from https://stackoverflow.com/questions/4913349/haversine-formula-in-python-bearing-and-distance-between-two-gps-points
+def haversine(lat1, lon1, lat2, lon2):
+    R = 3959.87433  # this is in miles.  For Earth radius in kilometers use 6372.8 km
+
+    dLat = radians(lat2 - lat1)
+    dLon = radians(lon2 - lon1)
+    lat1 = radians(lat1)
+    lat2 = radians(lat2)
+
+    a = sin(dLat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dLon / 2) ** 2
+    c = 2 * asin(sqrt(a))
+
+    return R * c
+
 def getLatRange(desired_dist, curr_lat, curr_lon):
     #Pseudo Code
 
@@ -71,7 +89,8 @@ def getLatRange(desired_dist, curr_lat, curr_lon):
     shifted_loc = (shifted_lat, curr_lon)
 
     #Get distance bewteen curr and shited location
-    coords_dist = haversine(curr_loc, shifted_loc, unit=Unit.MILES)*5280
+    #coords_dist = haversine(curr_loc, shifted_loc, unit=Unit.MILES)*5280
+    coords_dist = haversine(curr_lat, curr_lon, shifted_lat, curr_lon)*5280;
 
     range_lat = desired_dist/coords_dist * step
 
@@ -96,7 +115,8 @@ def getLonRange(desired_dist, curr_lat, curr_lon):
     shifted_loc = (curr_lat, shifted_lon)
 
     #Get distance bewteen curr and shited location
-    coords_dist = haversine(curr_loc, shifted_loc, unit=Unit.MILES)*5280
+    #coords_dist = haversine(curr_loc, shifted_loc, unit=Unit.MILES)*5280
+    coords_dist = haversine(curr_lat, curr_lon, curr_lat, shifted_lon)*5280
 
     range_lon = desired_dist/coords_dist * step
 
@@ -174,11 +194,12 @@ class DB_info:
             lon_min = file_lon - gps_lon_radius
             lon_max = file_lon + gps_lon_radius
 
-            haversineDistFt = haversine((f['gps_lat'], f['gps_long']), (lat, lon), unit=Unit.MILES)
+            #haversineDistFt = haversine((f['gps_lat'], f['gps_long']), (lat, lon), unit=Unit.MILES)
+            haversineDistFt = haversine(f['gps_lat'], f['gps_long'], lat, lon)*5280
 
             if( lat > lat_min and lat < lat_max and lon > lon_min and lon < lon_max):
                 new_list.append(f)
-                print("IN RANGE: " + f['file_name'] + "(Visible: " + str(f['vis_dist'])+ "ft.) Location: (" + str(f['gps_lat']) + ", " + str(f['gps_long']) + ")" + ", Actual Range: (" + str(haversineDistFt) + "mi.) Range: (" + str(gps_lat_radius)  + str(gps_lon_radius) + ", " + str(haversine((lat, lon), (lat + gps_lat_radius, lon + gps_lon_radius))) + "mi.) User Location: (" + str(lat) + ", " + str(lon) + ")")
+                print("IN RANGE: " + f['file_name'] + "(Visible: " + str(f['vis_dist'])+ "ft.) Location: (" + str(f['gps_lat']) + ", " + str(f['gps_long']) + ")" + ", Actual Range: (" + str(haversineDistFt) + "mi.) Range: (" + str(gps_lat_radius)  + str(gps_lon_radius) + ", " + str(haversine(lat, lon, (lat + gps_lat_radius), (lon + gps_lon_radius))) + "mi.) User Location: (" + str(lat) + ", " + str(lon) + ")")
             else:
                 print("REMOVED: " + f['file_name'] + "(Visible: " + str(f['vis_dist'])+ "ft.) Location: (" + str(f['gps_lat']) + ", " + str(f['gps_long']) + ") Range: (" + str(gps_lat_radius) + ", " + str(gps_lon_radius) + ") User Location: (" + str(lat) + ", " + str(lon) + ")")
 
