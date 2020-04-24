@@ -7,7 +7,6 @@ import datetime
 import mongoIO
 
 from flask import Flask, render_template, jsonify, abort, request, make_response, url_for, session, send_from_directory, flash, send_file, redirect
-from haversine import haversine, Unit
 
 app = Flask(__name__)
 app.secret_key = "Not Random. Oh Noes!"  # This is for metadata encryption (using session)
