@@ -248,6 +248,7 @@ class DB_info:
                 cursor = self.coll_file.find({"gps_lat": {"$gte": lat_min, "$lte": lat_max}, "gps_long": {"$gte": long_min, "$lte": long_max}}).limit(max_files)
                 file_list = list(cursor)
                 file_list = self.__remove_end_of_life(file_list)
+                file_list = self.__remove_out_of_range(file_list, lat, long)
                 return file_list
             else:
                 if search_str[0] == '@':
@@ -262,6 +263,7 @@ class DB_info:
                     cursor = self.coll_file.find({"file_name": { "$regex" : search_str}, "gps_lat": {"$gte": lat_min, "$lte": lat_max}, "gps_long": {"$gte": long_min, "$lte": long_max}}).limit(max_files)
                 file_list = list(cursor)
                 file_list = self.__remove_end_of_life(file_list)
+                file_list = self.__remove_out_of_range(file_list, lat, long)
                 return file_list;
         except:
                 return []

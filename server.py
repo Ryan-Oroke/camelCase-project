@@ -368,6 +368,7 @@ def map_page_post():
     
     if did_login or did_lat_long_post:
         # all rendering of `map.html` is done in this post
+        print(cur_user)
         return render_template("map.html", fils=file_data, signed_in=signed_in, cur_user=cur_user, searchstr=search_str)
     elif 'upload_post' in request.form:
         # This is the form in the upload model
