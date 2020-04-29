@@ -1,4 +1,13 @@
 # camelCase-project
+
+### Organization and Structure
+
+Location-based file sharing is what we are planning on doing for our project. We created our own database server on our personal laptops and used a geo-location finder using Google Maps API. The reason we chose to use Flask and JavaScript is that we will be able to integrate our code easily on the web on any platform. 
+
+Our web app targets professionals and students who will be required to give the app access to their location in order for the application to function properly. The application will be able to support a variety of different file types, including images, videos, etc. The web server will be built using Flask as it is useful for getting the files to the users and sending them back to the correct location.
+
+By allowing users to not only publish images and text but PDFs and other files to our application’s server, we created both a new form of social media sharing as well as a useful tool for our users. By founding the sharing of files in a location-based methodology we eliminate the need for users to share links to particular websites or navigate through overly complex web-based storage systems and rather allow them to retrieve files simply and easily.  
+
 ### Organization and Structure
 ##### Templates
 Where the HTML files with neccicary JavaScript are kept to be populated by the Flask server. 
