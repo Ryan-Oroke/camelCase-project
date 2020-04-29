@@ -2,20 +2,22 @@
 
 ### Project Description
 
-Ever since the beginning of file-sharing software users have uploaded millions of files which are only important for a short period of time, and then needlessly occupy server spaces despite becoming irrelevant. Here at Free Drop, we have set out to revolutionize the way we use file-sharing systems by allowing users to limit their file distribution over a limited time frame and in a limited location. With this twist on file-sharing, Free Drop not only makes your sharing experience more efficient, easier, and more secure. Try Free Drop for free today!
-	
+Location-based file sharing is what we are planning on doing for our project. We created our own database server on our personal laptops and used a geo-location finder using Google Maps API. The reason we chose to use Flask and JavaScript is that we will be able to integrate our code easily on the web on any platform. 
+
 Our web app targets professionals and students who will be required to give the app access to their location in order for the application to function properly. The application will be able to support a variety of different file types, including images, videos, etc. The web server will be built using Flask with MongoDB as they are useful for getting the files to the users and sending them back to the correct location.
 
 By allowing users to not only publish images and text but PDFs and other files to our application’s server, we created both a new form of social media sharing as well as a useful tool for our users. By founding the sharing of files in a location-based methodology we eliminate the need for users to share links to particular websites or navigate through overly complex web-based storage systems and rather allow them to retrieve files simply and easily.  
 
 ### Organization and Structure
-##### Templates
+##### `templates/`
 Where the HTML files with neccicary JavaScript are kept to be populated by the Flask server. 
-##### Static
-Where images and CSS files are kept. This is for pathing for Flask. This is also where uploads go for server-side linking. 
-##### server.py
+##### `static/`
+Where images, CSS, and JS files are kept. This is for pathing for Flask.
+##### `static/upload_files/`
+Where uploaded files are stored.
+##### `server.py`
 The server code that dictates what gets rendered where, and calls functions that query the Mongo database.
-##### mongoIO.py
+##### `mongoIO.py`
 Contains the diffrent DB query functions, as well as other Mongo DB handlers.
 
 ## Overview for Setup
@@ -27,14 +29,14 @@ Requires PyMongo
 Requires MongoDB
 
 ### To Run
-Run server.py and connect to localhost:5000
+Run `server.py` and connect to `localhost:5000`
 
 ### To Test
-Run the mongoIO.py file. 
+Run the `mongoIO.py` file. 
 
 
 ## In-depth Setup
-We are using flask and mongo.
+We are using Flask and MongoDB.
 ### Flask Install
 We're using PyCharm but you are free to use any other IDE.
 
