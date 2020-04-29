@@ -2,8 +2,8 @@
 
 ### Project Description
 
-Location-based file sharing is what we are planning on doing for our project. We created our own database server on our personal laptops and used a geo-location finder using Google Maps API. The reason we chose to use Flask and JavaScript is that we will be able to integrate our code easily on the web on any platform. 
-
+Ever since the beginning of file-sharing software users have uploaded millions of files which are only important for a short period of time, and then needlessly occupy server spaces despite becoming irrelevant. Here at Free Drop, we have set out to revolutionize the way we use file-sharing systems by allowing users to limit their file distribution over a limited time frame and in a limited location. With this twist on file-sharing, Free Drop not only makes your sharing experience more efficient, easier, and more secure. Try Free Drop for free today!
+	
 Our web app targets professionals and students who will be required to give the app access to their location in order for the application to function properly. The application will be able to support a variety of different file types, including images, videos, etc. The web server will be built using Flask with MongoDB as they are useful for getting the files to the users and sending them back to the correct location.
 
 By allowing users to not only publish images and text but PDFs and other files to our application’s server, we created both a new form of social media sharing as well as a useful tool for our users. By founding the sharing of files in a location-based methodology we eliminate the need for users to share links to particular websites or navigate through overly complex web-based storage systems and rather allow them to retrieve files simply and easily.  
